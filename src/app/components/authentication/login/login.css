@@ -1,16 +1,11 @@
-html,body {
-  background-color: #e6f7fc !important;
 
-}
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100%;
-  max-width: 100%;
   margin: auto;
-  padding: 20px;background-color: #e6f7fc !important;
-
+  padding: 20px;
+  background-color: #e6f7fc !important;
 }
 
 .login-card {
