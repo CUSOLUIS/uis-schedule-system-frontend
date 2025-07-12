@@ -1,0 +1,29 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.no-navbar {
+  margin-left: 0;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .main-content.no-navbar {
+    padding: 0;
+  }
+}

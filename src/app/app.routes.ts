@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'login',
     loadComponent: () => import('./components/authentication/login/login'),
     title: 'Iniciar Sesión - UIS Schedule System',
     data: { animation: 'Login' }

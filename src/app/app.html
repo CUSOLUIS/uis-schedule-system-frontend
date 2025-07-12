@@ -1,2 +1,6 @@
-
-<router-outlet />
+<div class="app-container">
+  <app-navbar *ngIf="currentUser()"></app-navbar>
+  <main class="main-content" [class.no-navbar]="!currentUser()">
+    <router-outlet />
+  </main>
+</div>
