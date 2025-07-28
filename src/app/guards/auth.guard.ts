@@ -1,0 +1,33 @@
+import { inject } from '@angular/core';
+import { Router, type CanActivateFn } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+
+export const authGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  const isAuthenticated = authService.getIsAuthenticated()();
+
+  if (isAuthenticated) {
+    return true;
+  }
+
+  // Redirigir al login si no está autenticado
+  router.navigate(['/login']);
+  return false;
+};
+
+export const loginGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  const isAuthenticated = authService.getIsAuthenticated()();
+
+  if (!isAuthenticated) {
+    return true;
+  }
+
+  // Redirigir al dashboard si ya está autenticado
+  router.navigate(['/']);
+  return false;
+};

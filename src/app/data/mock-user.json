@@ -1,0 +1,76 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "admin1",
+      "password": "admin123",
+      "role": "admin",
+      "fullName": "Administrador Principal",
+      "email": "admin1@uis.edu.co"
+    },
+    {
+      "id": "2",
+      "username": "admin2",
+      "password": "admin123",
+      "role": "admin",
+      "fullName": "Administrador Secundario",
+      "email": "admin2@uis.edu.co"
+    },
+    {
+      "id": "3",
+      "username": "admin3",
+      "password": "admin123",
+      "role": "admin",
+      "fullName": "Administrador de Sistema",
+      "email": "admin3@uis.edu.co"
+    },
+    {
+      "id": "4",
+      "username": "profesor1",
+      "password": "prof123",
+      "role": "teacher",
+      "fullName": "Dr. Carlos Martínez",
+      "email": "carlos.martinez@uis.edu.co"
+    },
+    {
+      "id": "5",
+      "username": "profesor2",
+      "password": "prof123",
+      "role": "teacher",
+      "fullName": "Dra. Ana García",
+      "email": "ana.garcia@uis.edu.co"
+    },
+    {
+      "id": "6",
+      "username": "profesor3",
+      "password": "prof123",
+      "role": "teacher",
+      "fullName": "Dr. Luis Rodríguez",
+      "email": "luis.rodriguez@uis.edu.co"
+    },
+    {
+      "id": "7",
+      "username": "estudiante1",
+      "password": "est123",
+      "role": "student",
+      "fullName": "María Fernanda López",
+      "email": "maria.lopez@correo.uis.edu.co"
+    },
+    {
+      "id": "8",
+      "username": "estudiante2",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Juan Pablo Herrera",
+      "email": "juan.herrera@correo.uis.edu.co"
+    },
+    {
+      "id": "9",
+      "username": "estudiante3",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Carolina Jiménez",
+      "email": "carolina.jimenez@correo.uis.edu.co"
+    }
+  ]
+}
