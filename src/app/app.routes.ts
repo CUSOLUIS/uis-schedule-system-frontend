@@ -5,14 +5,22 @@ export const routes: Routes = [
   {
     path: '',
     redirectTo: '/login',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'login',
     loadComponent: () => import('./components/authentication/login/login'),
     title: 'Iniciar Sesión - UIS Schedule System',
     canActivate: [loginGuard],
-    data: { animation: 'Login' }
+    data: { animation: 'Login' },
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./components/shared/dashboard/dashboard.component'),
+    title: 'Dashboard - UIS Schedule System',
+    canActivate: [authGuard],
+    data: { animation: 'Dashboard' },
   },
   /* {
     path: 'admin',
@@ -48,6 +56,6 @@ export const routes: Routes = [
   }, */
   {
     path: '**',
-    redirectTo: '/login'
-  }
+    redirectTo: '/login',
+  },
 ];
