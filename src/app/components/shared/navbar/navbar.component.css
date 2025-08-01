@@ -1,0 +1,234 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 80px;
+  /*Reducirde280pxa80px*/
+  background: #2c3e50;
+  color: white;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  margin-left: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border-radius: 24px;
+}
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+/* Expandir al hacer hover */
+.navbar:hover {
+  width: 280px;
+}
+
+.navbar-header {
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 80px;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: opacity 0.3s ease;
+}
+.user-info .user-details {
+  display: none;
+  color: white;
+}
+/* .user-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  } */
+
+.navbar:hover .user-info {
+  display: block;
+}
+.navbar:hover .user-info .user-details {
+  display: block;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  min-width: 50px; /* Asegurar que no se reduzca */
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.navbar-toggle {
+  display: none;
+}
+
+/* Ocultar texto por defecto, mostrar en hover */
+.nav-text {
+  display: none;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  margin-left: 15px;
+}
+
+.navbar:hover .nav-text {
+  display: block;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+  justify-content: center;
+  position: relative;
+}
+
+.navbar:hover .nav-link {
+  justify-content: flex-start;
+  padding-left: 25px;
+}
+
+.nav-link i {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+  min-width: 20px;
+}
+
+/* Badge para mostrar primera letra del texto cuando está colapsado */
+.nav-link::after {
+  content: attr(data-label);
+  position: absolute;
+  right: -30px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  z-index: 1001;
+}
+
+.nav-link:hover::after {
+  opacity: 1;
+}
+
+.navbar:hover .nav-link::after {
+  opacity: 0;
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  justify-content: center;
+}
+
+.navbar:hover .logout-btn {
+  justify-content: flex-start;
+  padding-left: 25px;
+}
+
+.logout-btn i {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+}
+
+/* Estilos específicos por rol */
+.navbar-admin {
+  background: linear-gradient(135deg, #4a148c, #6a1b9a);
+}
+
+.navbar-teacher {
+  background: linear-gradient(135deg, #1976d2, #2196f3);
+}
+
+.navbar-student {
+  background: linear-gradient(135deg, #388e3c, #4caf50);
+}
+
+.nav-link-admin.active {
+  border-left-color: #e1bee7;
+}
+
+.nav-link-teacher.active {
+  border-left-color: #bbdefb;
+}
+
+.nav-link-student.active {
+  border-left-color: #c8e6c9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    position: relative;
+    border-radius: 24px;
+  }
+
+  .navbar-menu.collapsed {
+    display: none;
+  }
+
+  .navbar-menu {
+    padding: 10px 0;
+  }
+
+  .nav-link {
+    padding: 12px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-info .user-details {
+    display: none;
+  }
+
+  .nav-text {
+    display: none;
+  }
+
+  .nav-link {
+    justify-content: center;
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+}

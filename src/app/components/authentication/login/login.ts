@@ -74,11 +74,11 @@ export default class LoginComponent {
         this.router.navigate(['/student/schedule']);
         break; */
       default:
-        this.router.navigate(['/']);
+        this.router.navigate(['dashboard']);
     }
   }
 
-  // Método para desarrollo - mostrar usuarios de prueba
+  // method for testing purposes
   showTestCredentials(): void {
     console.log('Usuarios de prueba:', this.authService.getAllMockUsers());
   }

@@ -10,7 +10,7 @@ import { NavbarComponent } from './components/shared/navbar/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterOutlet, NavbarComponent],
   templateUrl: './app.html',
-  styleUrls: ['./app.css']
+  styleUrls: ['./app.css'],
 })
 export class AppComponent {
   title = 'UIS Schedule System';
