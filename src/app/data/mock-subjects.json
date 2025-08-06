@@ -1,0 +1,148 @@
+{
+  "subjects": [
+    {
+      "id": "1",
+      "name": "Programación Orientada a Objetos",
+      "code": "POO-2024",
+      "description": "Fundamentos de programación orientada a objetos",
+      "credits": 4,
+      "semester": 3,
+      "groups": [
+        {
+          "id": "g1",
+          "subjectId": "1",
+          "groupNumber": "01",
+          "schedule": [
+            {
+              "day": "Lunes",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "classroom": "Aula 101"
+            },
+            {
+              "day": "Miércoles",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "classroom": "Aula 101"
+            }
+          ],
+          "teacherId": "4",
+          "teacherName": "Dr. Carlos Martínez",
+          "studentIds": [
+            "7",
+            "8"
+          ],
+          "maxStudents": 30,
+          "currentStudents": 2,
+          "classroom": "Aula 101",
+          "semester": 3
+        },
+        {
+          "id": "g2",
+          "subjectId": "1",
+          "groupNumber": "02",
+          "schedule": [
+            {
+              "day": "Martes",
+              "startTime": "14:00",
+              "endTime": "16:00",
+              "classroom": "Aula 102"
+            },
+            {
+              "day": "Jueves",
+              "startTime": "14:00",
+              "endTime": "16:00",
+              "classroom": "Aula 102"
+            }
+          ],
+          "teacherId": "5",
+          "teacherName": "Dra. Ana García",
+          "studentIds": [
+            "9"
+          ],
+          "maxStudents": 30,
+          "currentStudents": 1,
+          "classroom": "Aula 102",
+          "semester": 3
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Base de Datos",
+      "code": "BD-2024",
+      "description": "Diseño e implementación de bases de datos",
+      "credits": 3,
+      "semester": 4,
+      "groups": [
+        {
+          "id": "g3",
+          "subjectId": "2",
+          "groupNumber": "01",
+          "schedule": [
+            {
+              "day": "Lunes",
+              "startTime": "10:00",
+              "endTime": "12:00",
+              "classroom": "Lab 201"
+            },
+            {
+              "day": "Viernes",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "classroom": "Lab 201"
+            }
+          ],
+          "teacherId": "6",
+          "teacherName": "Dr. Luis Rodríguez",
+          "studentIds": [
+            "7",
+            "9"
+          ],
+          "maxStudents": 25,
+          "currentStudents": 2,
+          "classroom": "Lab 201",
+          "semester": 4
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Algoritmos y Estructuras de Datos",
+      "code": "AED-2024",
+      "description": "Algoritmos fundamentales y estructuras de datos",
+      "credits": 4,
+      "semester": 2,
+      "groups": [
+        {
+          "id": "g4",
+          "subjectId": "3",
+          "groupNumber": "01",
+          "schedule": [
+            {
+              "day": "Martes",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "classroom": "Aula 103"
+            },
+            {
+              "day": "Jueves",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "classroom": "Aula 103"
+            }
+          ],
+          "teacherId": "4",
+          "teacherName": "Dr. Carlos Martínez",
+          "studentIds": [
+            "8"
+          ],
+          "maxStudents": 35,
+          "currentStudents": 1,
+          "classroom": "Aula 103",
+          "semester": 2
+        }
+      ]
+    }
+  ]
+}

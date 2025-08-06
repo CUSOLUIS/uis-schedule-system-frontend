@@ -1,10 +1,9 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
 import { MenuItem } from '../../../interfaces/user.interface';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -13,27 +12,57 @@ import { Router } from '@angular/router';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent {
+export default class NavbarComponent {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   private router = inject(Router);
 
   currentUser = this.userService.getCurrentUser();
+  userRole = () => this.currentUser()?.role;
+  menuItems = () =>
+    this.userService.getMenuItemsForUser(this.userRole()?.id || '');
 
-  menuItems = computed(() => {
-    const user = this.currentUser();
-    return user ? this.userService.getMenuItemsForUser(user.role.id) : [];
-  });
-
-  userRole = computed(() => {
-    return this.currentUser()?.role;
-  });
-
-  isCollapsed = false;
+  isCollapsed = true;
   isHovered = false;
+  isMobile = false;
+
+  constructor() {
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+    // Si cambiamos de móvil a desktop, asegurar que el menú esté colapsado
+    if (!this.isMobile && !this.isCollapsed) {
+      this.isCollapsed = true;
+    }
+  }
+
+  // Detectar si estamos en móvil
+  private checkScreenSize(): void {
+    this.isMobile = window.innerWidth <= 768;
+  }
+
+  // Cerrar menú al hacer clic fuera (solo en móvil)
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (this.isMobile && !this.isCollapsed) {
+      const target = event.target as HTMLElement;
+      const navbar = document.querySelector('.navbar');
+      const menuButton = document.querySelector('.navbar-toggle');
+
+      // Si el clic no fue en el navbar ni en el botón del menú, cerrar el menú
+      if (navbar && !navbar.contains(target) && !menuButton?.contains(target)) {
+        this.isCollapsed = true;
+      }
+    }
+  }
 
   toggleNavbar(): void {
-    this.isCollapsed = !this.isCollapsed;
+    if (this.isMobile) {
+      this.isCollapsed = !this.isCollapsed;
+    }
   }
 
   logout(): void {
@@ -46,10 +75,21 @@ export class NavbarComponent {
   }
 
   onMouseEnter(): void {
-    this.isHovered = true;
+    if (!this.isMobile) {
+      this.isHovered = true;
+    }
   }
 
   onMouseLeave(): void {
-    this.isHovered = false;
+    if (!this.isMobile) {
+      this.isHovered = false;
+    }
+  }
+
+  // Cerrar menú al navegar (solo en móvil)
+  onNavigate(): void {
+    if (this.isMobile) {
+      this.isCollapsed = true;
+    }
   }
 }

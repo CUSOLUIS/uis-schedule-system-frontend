@@ -1,10 +1,17 @@
 import { Injectable, signal } from '@angular/core';
-import { User, UserRole, MenuItem } from '../interfaces/user.interface';
+import {
+  User,
+  UserRole,
+  MenuItem,
+  LoginUser,
+} from '../interfaces/user.interface';
+import mockUsersData from '../data/mock-user.json';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  private users = signal<User[]>([]);
   private currentUser = signal<User | null>(null);
 
   readonly userRoles: Record<string, UserRole> = {
@@ -37,13 +44,7 @@ export class UserService {
         visible: true,
       },
       {
-        icon: 'fa-users',
-        label: 'Grupos',
-        route: '/admin/groups',
-        visible: true,
-      },
-      {
-        icon: 'fa-clipboard-list',
+        icon: 'fa-book',
         label: 'Asignaturas',
         route: '/admin/subjects',
         visible: true,
@@ -55,14 +56,8 @@ export class UserService {
         visible: true,
       },
       {
-        icon: 'fa-user-friends',
-        label: 'Roles',
-        route: '/admin/roles',
-        visible: true,
-      },
-      {
         icon: 'fa-cog',
-        label: 'Ajustes',
+        label: 'Configuración',
         route: '/admin/settings',
         visible: true,
       },
@@ -75,13 +70,7 @@ export class UserService {
         visible: true,
       },
       {
-        icon: 'fa-users',
-        label: 'Mis Grupos',
-        route: '/teacher/groups',
-        visible: true,
-      },
-      {
-        icon: 'fa-clipboard-list',
+        icon: 'fa-book',
         label: 'Mis Asignaturas',
         route: '/teacher/subjects',
         visible: true,
@@ -102,14 +91,8 @@ export class UserService {
       },
       {
         icon: 'fa-book',
-        label: 'Mis Materias',
+        label: 'Mis Asignaturas',
         route: '/student/subjects',
-        visible: true,
-      },
-      {
-        icon: 'fa-users',
-        label: 'Mi Grupo',
-        route: '/student/group',
         visible: true,
       },
       {
@@ -120,6 +103,34 @@ export class UserService {
       },
     ],
   };
+
+  constructor() {
+    // Inicializar usuarios después de que userRoles esté definido
+    this.initializeUsers();
+  }
+
+  private initializeUsers(): void {
+    const transformedUsers = this.transformMockUsers();
+    this.users.set(transformedUsers);
+  }
+
+  private transformMockUsers(): User[] {
+    const mockUsers = mockUsersData.users as LoginUser[];
+    return mockUsers.map((mockUser) => {
+      const role = this.userRoles[mockUser.role];
+      if (!role) {
+        throw new Error(`Rol no encontrado: ${mockUser.role}`);
+      }
+
+      return {
+        id: mockUser.id,
+        username: mockUser.username,
+        role: role,
+        fullName: mockUser.fullName,
+        email: mockUser.email,
+      };
+    });
+  }
 
   getCurrentUser() {
     return this.currentUser.asReadonly();
@@ -139,5 +150,14 @@ export class UserService {
 
   getRoleById(roleId: string): UserRole | null {
     return this.userRoles[roleId] || null;
+  }
+
+  getUsers(): User[] {
+    return this.users();
+  }
+
+  // Método adicional para obtener usuarios mock en formato LoginUser
+  getMockUsers(): LoginUser[] {
+    return mockUsersData.users as LoginUser[];
   }
 }

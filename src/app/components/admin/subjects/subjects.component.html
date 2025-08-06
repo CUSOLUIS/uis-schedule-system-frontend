@@ -1,0 +1,151 @@
+<div class="subjects-container">
+  <!-- Header con título y botón de crear -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">
+          <i class="fas fa-book"></i>
+          Gestión de Asignaturas
+        </h1>
+        <p class="page-subtitle">
+          Administra las asignaturas y sus grupos del sistema
+        </p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-create" (click)="createSubject()">
+          <i class="fas fa-plus"></i>
+          <span>Nueva Asignatura</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estadísticas rápidas -->
+  <div class="stats-section">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-book"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ subjects().length }}</div>
+        <div class="stat-label">Total Asignaturas</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ getTotalGroups() }}</div>
+        <div class="stat-label">Total Grupos</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ getTotalCredits() }}</div>
+        <div class="stat-label">Total Créditos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="content-section">
+    <!-- Grid de asignaturas -->
+    <div class="subjects-grid" *ngIf="subjects().length > 0; else noSubjects">
+      <div
+        class="subject-card"
+        *ngFor="let subject of subjects(); trackBy: trackBySubjectId"
+        (click)="viewSubjectDetail(subject.id)"
+      >
+        <!-- Header de la tarjeta -->
+        <div class="card-header">
+          <div class="subject-info-header">
+            <h3 class="subject-name">{{ subject.name }}</h3>
+            <span class="subject-code">{{ subject.code }}</span>
+          </div>
+          <div class="card-actions">
+            <button
+              class="btn-action btn-edit"
+              (click)="editSubject($event, subject.id)"
+              title="Editar asignatura"
+            >
+              <i class="fas fa-edit"></i>
+            </button>
+            <button
+              class="btn-action btn-delete"
+              (click)="deleteSubject($event, subject.id)"
+              title="Eliminar asignatura"
+            >
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Contenido de la tarjeta -->
+        <div class="card-body">
+          <p class="subject-description">{{ subject.description }}</p>
+
+          <!-- Información de la asignatura -->
+          <div class="subject-details">
+            <div class="detail-item">
+              <i class="fas fa-medal"></i>
+              <span>{{ subject.credits }} créditos</span>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-users"></i>
+              <span>{{ subject.groups.length }} grupos</span>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Semestre {{ subject.semester }}</span>
+            </div>
+          </div>
+
+          <!-- Preview de grupos -->
+          <div class="groups-preview" *ngIf="subject.groups.length > 0">
+            <h4 class="groups-title">Grupos:</h4>
+            <div class="groups-list">
+              <span
+                class="group-badge"
+                *ngFor="let group of subject.groups.slice(0, 3)"
+              >
+                {{ group.groupNumber }}
+              </span>
+              <span class="more-groups" *ngIf="subject.groups.length > 3">
+                +{{ subject.groups.length - 3 }} más
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer de la tarjeta -->
+        <div class="card-footer">
+          <button class="btn-view-details">
+            <i class="fas fa-eye"></i>
+            Ver detalles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado vacío -->
+    <ng-template #noSubjects>
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
+        <h3 class="empty-title">No hay asignaturas registradas</h3>
+        <p class="empty-description">
+          Comienza creando tu primera asignatura para el sistema de horarios
+        </p>
+        <button class="btn-create-empty" (click)="createSubject()">
+          <i class="fas fa-plus"></i>
+          Crear Primera Asignatura
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

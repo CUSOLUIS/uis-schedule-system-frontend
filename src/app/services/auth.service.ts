@@ -6,16 +6,22 @@ import {
   User,
 } from '../interfaces/user.interface';
 import { UserService } from './user.service';
-import mockUsersData from '../data/mock-user.json';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private isAuthenticated = signal<boolean>(false);
-  private mockUsers: LoginUser[] = mockUsersData.users;
+  private mockUsers: LoginUser[] = [];
 
   constructor(private userService: UserService) {
+    // Inicializar después de que UserService esté completamente cargado
+    this.initializeAuthService();
+  }
+
+  private initializeAuthService(): void {
+    // Obtener usuarios mock del UserService
+    this.mockUsers = this.userService.getMockUsers();
     // Verificar si hay una sesión guardada al inicializar
     this.checkStoredSession();
   }
