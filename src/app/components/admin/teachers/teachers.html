@@ -1,0 +1,104 @@
+<div class="teachers-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Gestión de Profesores</h1>
+    <p>Administración de docentes y sus grupos asignados</p>
+  </div>
+
+  <!-- Vista de lista de profesores -->
+  <div class="teachers-list" *ngIf="!showGroups">
+    <div class="section-header">
+      <h2>Lista de Profesores</h2>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Buscar profesor..." class="search-input">
+      </div>
+    </div>
+
+    <div class="teachers-grid">
+      <div class="teacher-card" *ngFor="let teacher of teachers" (click)="selectTeacher(teacher)">
+        <div class="teacher-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="teacher-info">
+          <h3>{{ teacher.name }}</h3>
+          <p class="career">{{ teacher.universityCareer }}</p>
+          <p class="office"><i class="fas fa-map-marker-alt"></i> {{ teacher.office }}</p>
+          <p class="email"><i class="fas fa-envelope"></i> {{ teacher.email }}</p>
+        </div>
+        <div class="teacher-stats">
+          <div class="stat-item">
+            <span class="stat-number">{{ teacher.groups.length }}</span>
+            <span class="stat-label">Grupos</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ getTotalStudents(teacher) }}</span>
+            <span class="stat-label">Estudiantes</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista de grupos del profesor seleccionado -->
+  <div class="groups-view" *ngIf="showGroups && selectedTeacher">
+    <div class="back-button" (click)="backToTeachers()">
+      <i class="fas fa-arrow-left"></i>
+      <span>Volver a Profesores</span>
+    </div>
+
+    <div class="teacher-profile">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+          <h2>{{ selectedTeacher.name }}</h2>
+          <p class="career">{{ selectedTeacher.universityCareer }}</p>
+          <p class="office"><i class="fas fa-map-marker-alt"></i> {{ selectedTeacher.office }}</p>
+          <p class="email"><i class="fas fa-envelope"></i> {{ selectedTeacher.email }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="groups-section">
+      <h3>Grupos Asignados ({{ selectedTeacher.groups.length }})</h3>
+      
+      <div class="groups-grid">
+        <div class="group-card" *ngFor="let group of selectedTeacher.groups">
+          <div class="group-header">
+            <h4>{{ group.name }}</h4>
+            <span class="student-count">{{ group.studentCount }} estudiantes</span>
+          </div>
+          <div class="group-details">
+            <div class="detail-row">
+              <i class="fas fa-book"></i>
+              <span><strong>Asignatura:</strong> {{ group.subject }}</span>
+            </div>
+            <div class="detail-row">
+              <i class="fas fa-clock"></i>
+              <span><strong>Horario:</strong> {{ group.schedule }}</span>
+            </div>
+            <div class="detail-row">
+              <i class="fas fa-door-open"></i>
+              <span><strong>Aula:</strong> {{ group.classroom }}</span>
+            </div>
+          </div>
+          <div class="group-actions">
+            <button class="action-btn view-btn">
+              <i class="fas fa-eye"></i>
+              Ver Detalles
+            </button>
+            <button class="action-btn edit-btn">
+              <i class="fas fa-edit"></i>
+              Editar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,192 @@
+<div class="roles-container">
+  <!-- Header -->
+  <div class="roles-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-user-friends"></i>
+        Gestión de Roles y Usuarios
+      </h1>
+      <p class="page-description">
+        Administra usuarios del sistema y asigna roles de acceso
+      </p>
+    </div>
+    
+    <button class="create-user-btn" (click)="toggleCreateForm()">
+      <i class="fas fa-plus"></i>
+      Crear Usuario
+    </button>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-container">
+    <div class="stat-card" *ngFor="let role of availableRoles">
+      <div class="stat-icon" [style.background-color]="role.backgroundColor">
+        <i class="fas" [class.fa-user-graduate]="role.id === 'student'" 
+           [class.fa-user-tie]="role.id === 'teacher'" 
+           [class.fa-user-shield]="role.id === 'admin'"></i>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ getRoleStats()[role.id] || 0 }}</h3>
+        <p class="stat-label">{{ getRolePlural(role.name) }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create User Form -->
+  <div class="create-form-container" *ngIf="showCreateForm()">
+    <div class="form-card">
+      <div class="form-header">
+        <h3><i class="fas fa-user-plus"></i> Crear Nuevo Usuario</h3>
+        <button class="close-btn" (click)="toggleCreateForm()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <form class="create-form" (ngSubmit)="createUser()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="username">Nombre de Usuario</label>
+            <input 
+              type="text" 
+              id="username" 
+              [(ngModel)]="newUser().username" 
+              name="username"
+              placeholder="juan.perez"
+              required
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="fullName">Nombre Completo</label>
+            <input 
+              type="text" 
+              id="fullName" 
+              [(ngModel)]="newUser().fullName" 
+              name="fullName"
+              placeholder="Juan Pérez"
+              required
+            >
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input 
+              type="email" 
+              id="email" 
+              [(ngModel)]="newUser().email" 
+              name="email"
+              placeholder="juan.perez@uis.edu.co"
+              required
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="role">Rol</label>
+            <select id="role" [(ngModel)]="newUser().role" name="role">
+              <option value="student">Estudiante</option>
+              <option value="teacher">Profesor</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" (click)="toggleCreateForm()">
+            Cancelar
+          </button>
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-save"></i>
+            Crear Usuario
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <div class="search-box">
+      <i class="fas fa-search search-icon"></i>
+      <input 
+        type="text" 
+        placeholder="Buscar usuarios por nombre, email o rol..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+        class="search-input"
+      >
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="users-table-container">
+    <div class="table-card">
+      <div class="table-header">
+        <h3><i class="fas fa-users"></i> Lista de Usuarios</h3>
+        <span class="user-count">{{ filteredUsers.length }} usuarios</span>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Nombre Completo</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Fecha Creación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredUsers" class="user-row">
+              <td class="user-info">
+                <div class="user-avatar" [style.background-color]="user.role.backgroundColor">
+                  <i class="fas fa-user"></i>
+                </div>
+                <span class="username">{{ user.username }}</span>
+              </td>
+              
+              <td class="full-name">{{ user.fullName }}</td>
+              
+              <td class="email">{{ user.email }}</td>
+              
+              <td class="role-cell">
+                <select 
+                  class="role-select" 
+                  [value]="user.role.id"
+                  (change)="onRoleChange(user.id, $event)"
+                >
+                  <option value="student">Estudiante</option>
+                  <option value="teacher">Profesor</option>
+                  <option value="admin">Administrador</option>
+                </select>
+              </td>
+              
+              <td class="created-date">
+                {{ user.createdAt | date:'dd/MM/yyyy' }}
+              </td>
+              
+              <td class="actions">
+                <button class="action-btn edit-btn" title="Editar Usuario">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn delete-btn" title="Eliminar Usuario" (click)="deleteUser(user.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="table-footer" *ngIf="filteredUsers.length === 0">
+        <div class="empty-state">
+          <i class="fas fa-search"></i>
+          <p>No se encontraron usuarios que coincidan con la búsqueda</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
