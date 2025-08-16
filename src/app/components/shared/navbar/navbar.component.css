@@ -4,7 +4,6 @@
   left: 0;
   height: 100vh;
   width: 80px;
-  /*Reducirde280pxa80px*/
   background: #2c3e50;
   color: white;
   transition: all 0.3s ease;
@@ -17,6 +16,7 @@
   margin-top: 5px;
   border-radius: 24px;
 }
+
 .nav-list {
   list-style: none;
   padding: 0;
@@ -24,8 +24,8 @@
   flex-grow: 1;
 }
 
-/* Expandir al hacer hover */
-.navbar:hover {
+/* Expandir al hacer hover en desktop */
+.navbar:not(.mobile):hover {
   width: 280px;
 }
 
@@ -33,7 +33,7 @@
   padding: 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   min-height: 80px;
-  display: grid;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -44,20 +44,13 @@
   gap: 15px;
   transition: opacity 0.3s ease;
 }
+
 .user-info .user-details {
   display: none;
   color: white;
 }
-/* .user-info {
-    flex-direction: column;
-    text-align: center;
-    gap: 10px;
-  } */
 
-.navbar:hover .user-info {
-  display: block;
-}
-.navbar:hover .user-info .user-details {
+.navbar:not(.mobile):hover .user-info .user-details {
   display: block;
 }
 
@@ -70,7 +63,7 @@
   justify-content: center;
   color: white;
   font-size: 20px;
-  min-width: 50px; /* Asegurar que no se reduzca */
+  min-width: 50px;
 }
 
 .user-details {
@@ -80,8 +73,65 @@
   overflow: hidden;
 }
 
+.username {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-role {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Botón hamburguesa */
 .navbar-toggle {
   display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.hamburger-line {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: #333;
+  margin: 5px 0;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.navbar-toggle.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.navbar-toggle.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggle.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Overlay para móvil */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
 
 /* Ocultar texto por defecto, mostrar en hover */
@@ -92,7 +142,7 @@
   margin-left: 15px;
 }
 
-.navbar:hover .nav-text {
+.navbar:not(.mobile):hover .nav-text {
   display: block;
 }
 
@@ -108,7 +158,7 @@
   position: relative;
 }
 
-.navbar:hover .nav-link {
+.navbar:not(.mobile):hover .nav-link {
   justify-content: flex-start;
   padding-left: 25px;
 }
@@ -120,15 +170,24 @@
   min-width: 20px;
 }
 
-/* Badge para mostrar primera letra del texto cuando está colapsado */
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.15);
+  border-left-color: #fff;
+}
+
+/* Tooltip para iconos cuando está colapsado */
 .nav-link::after {
   content: attr(data-label);
   position: absolute;
-  right: -30px;
+  left: 70px;
   background: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 8px 12px;
+  border-radius: 6px;
   font-size: 12px;
   opacity: 0;
   pointer-events: none;
@@ -141,7 +200,8 @@
   opacity: 1;
 }
 
-.navbar:hover .nav-link::after {
+.navbar:hover .nav-link::after,
+.navbar.mobile .nav-link::after {
   opacity: 0;
 }
 
@@ -157,17 +217,23 @@
   transition: all 0.3s ease;
   border-radius: 5px;
   justify-content: center;
+  margin-top: auto;
 }
 
-.navbar:hover .logout-btn {
+.navbar:not(.mobile):hover .logout-btn {
   justify-content: flex-start;
   padding-left: 25px;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .logout-btn i {
   width: 20px;
   text-align: center;
   font-size: 18px;
+  min-width: 20px;
 }
 
 /* Estilos específicos por rol */
@@ -195,40 +261,100 @@
   border-left-color: #c8e6c9;
 }
 
-/* Responsive */
+/* Responsive - Tablet */
 @media (max-width: 768px) {
+  .navbar-toggle {
+    display: block;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-overlay {
+    display: block;
+  }
+
   .navbar {
-    position: relative;
-    border-radius: 24px;
+    position: fixed;
+    left: -100%;
+    top: 0;
+    width: 280px;
+    margin: 0;
+    border-radius: 0;
+    transition: left 0.3s ease;
   }
 
-  .navbar-menu.collapsed {
-    display: none;
+  .navbar:not(.collapsed) {
+    left: 0;
   }
 
-  .navbar-menu {
-    padding: 10px 0;
+  .navbar-header {
+    justify-content: flex-start;
+    padding: 20px;
   }
 
-  .nav-link {
-    padding: 12px 20px;
-  }
-}
-
-@media (max-width: 480px) {
   .user-info .user-details {
-    display: none;
+    display: block;
   }
 
   .nav-text {
-    display: none;
+    display: block;
   }
 
   .nav-link {
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 25px;
+  }
+
+  .logout-btn {
+    justify-content: flex-start;
+    padding-left: 25px;
+  }
+
+  .nav-link::after {
+    display: none;
+  }
+}
+
+/* Responsive - Móvil */
+@media (max-width: 480px) {
+  .navbar {
+    width: 100%;
   }
 
   .navbar-toggle {
-    display: block;
+    top: 15px;
+    left: 15px;
   }
+}
+
+/* Animaciones adicionales */
+.navbar-menu {
+  transition: opacity 0.3s ease;
+}
+
+.navbar.collapsed.mobile .navbar-menu {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.navbar:not(.collapsed).mobile .navbar-menu {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Estilos para el botón hamburguesa según el rol */
+.navbar-toggle {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.navbar-admin ~ .navbar-toggle .hamburger-line {
+  background: #4a148c;
+}
+
+.navbar-teacher ~ .navbar-toggle .hamburger-line {
+  background: #1976d2;
+}
+
+.navbar-student ~ .navbar-toggle .hamburger-line {
+  background: #388e3c;
 }

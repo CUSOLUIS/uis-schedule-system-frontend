@@ -28,7 +28,18 @@ export const routes: Routes = [
     children: [
       // { path: 'schedule', loadComponent: () => import('./components/admin/schedule/schedule.component') },
       // { path: 'groups', loadComponent: () => import('./components/admin/groups/groups.component') },
-      // { path: 'subjects', loadComponent: () => import('./components/admin/subjects/subjects.component') },
+      {
+        path: 'subjects',
+        loadComponent: () =>
+          import('./components/admin/subjects/subjects.component'),
+        title: 'Asignaturas - Admin',
+      },
+      {
+        path: 'subjects/:id',
+        loadComponent: () =>
+          import('./components/admin/subject-detail/subject-detail.component'),
+        title: 'Detalle Asignatura - Admin',
+      },
       { path: 'teachers', loadComponent: () => import('./components/admin/teachers/teachers').then(m => m.Teachers) },
       { path: 'roles', loadComponent: () => import('./components/admin/roles').then(m => m.RolesComponent) },
       // { path: 'settings', loadComponent: () => import('./components/admin/settings/settings.component') }
