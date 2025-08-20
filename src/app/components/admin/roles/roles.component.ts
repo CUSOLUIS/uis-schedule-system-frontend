@@ -153,7 +153,7 @@ export class RolesComponent {
       case 'Administrador':
         return 'Administradores';
       default:
-        return roleName + 'es';
+        return roleName + 's';
     }
   }
 } 

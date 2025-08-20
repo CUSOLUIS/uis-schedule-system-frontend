@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Teacher {
   id: number;
@@ -22,13 +23,14 @@ interface Group {
 @Component({
   selector: 'app-teachers',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './teachers.html',
   styleUrl: './teachers.css'
 })
 export class Teachers {
   selectedTeacher: Teacher | null = null;
   showGroups = false;
+  searchTerm = '';
 
   // Datos de ejemplo para los profesores
   teachers: Teacher[] = [
@@ -90,5 +92,28 @@ export class Teachers {
 
   getTotalStudents(teacher: Teacher): number {
     return teacher.groups.reduce((total, group) => total + group.studentCount, 0);
+  }
+
+  get filteredTeachers(): Teacher[] {
+    const term = this.searchTerm.toLowerCase().trim();
+    if (!term) return this.teachers;
+    return this.teachers.filter(t =>
+      t.name.toLowerCase().includes(term) ||
+      t.email.toLowerCase().includes(term) ||
+      t.universityCareer.toLowerCase().includes(term) ||
+      t.groups.some(g => g.subject.toLowerCase().includes(term) || g.name.toLowerCase().includes(term))
+    );
+  }
+
+  get totalTeachers(): number {
+    return this.teachers.length;
+  }
+
+  get totalGroups(): number {
+    return this.teachers.reduce((sum, t) => sum + t.groups.length, 0);
+  }
+
+  get totalStudents(): number {
+    return this.teachers.reduce((sum, t) => sum + this.getTotalStudents(t), 0);
   }
 }

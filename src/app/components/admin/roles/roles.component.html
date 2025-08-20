@@ -141,18 +141,18 @@
           </thead>
           <tbody>
             <tr *ngFor="let user of filteredUsers" class="user-row">
-              <td class="user-info">
+              <td class="user-info" data-label="Usuario">
                 <div class="user-avatar" [style.background-color]="user.role.backgroundColor">
                   <i class="fas fa-user"></i>
                 </div>
                 <span class="username">{{ user.username }}</span>
               </td>
               
-              <td class="full-name">{{ user.fullName }}</td>
+              <td class="full-name" data-label="Nombre Completo">{{ user.fullName }}</td>
               
-              <td class="email">{{ user.email }}</td>
+              <td class="email" data-label="Email">{{ user.email }}</td>
               
-              <td class="role-cell">
+              <td class="role-cell" data-label="Rol">
                 <select 
                   class="role-select" 
                   [value]="user.role.id"
@@ -164,11 +164,11 @@
                 </select>
               </td>
               
-              <td class="created-date">
+              <td class="created-date" data-label="Fecha Creación">
                 {{ user.createdAt | date:'dd/MM/yyyy' }}
               </td>
               
-              <td class="actions">
+              <td class="actions" data-label="Acciones">
                 <button class="action-btn edit-btn" title="Editar Usuario">
                   <i class="fas fa-edit"></i>
                 </button>
