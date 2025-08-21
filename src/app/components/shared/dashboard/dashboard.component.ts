@@ -74,4 +74,9 @@ export default class DashboardComponent {
   navigateToTeachers(): void {
     this.router.navigate(['/admin/teachers']);
   }
+
+  // Nuevo método para navegar a roles
+  navigateToRoles(): void {
+    this.router.navigate(['/admin/roles']);
+  }
 }

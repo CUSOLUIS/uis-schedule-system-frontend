@@ -98,7 +98,7 @@
         </button>
       </div>
 
-      <!-- Tarjeta adicional para Admin -->
+      <!-- Tarjeta adicional para Admin - lista de profesores-->
       <div class="action-card" *ngIf="currentUser()?.role?.id === 'admin'">
         <div class="card-icon">
           <i class="fas fa-user-tie"></i>
@@ -116,6 +116,26 @@
           Ver
         </button>
       </div>
+
+      <!-- Tarjeta adicional para Admin - Asignar roles-->
+      <div class="action-card" *ngIf="currentUser()?.role?.id === 'admin'">
+        <div class="card-icon">
+          <i class="fas fa-user-cog"></i>
+        </div>
+        <div class="card-content">
+          <h3>Asignar Roles</h3>
+          <p>Administrar roles de los usuarios</p>
+        </div>
+        <button
+          class="card-button"
+          (click)="navigateToRoles()"
+          [style.background-color]="currentUser()?.role?.backgroundColor"
+        >
+          <i class="fas fa-arrow-right"></i>
+          Ver
+        </button>
+      </div>
+
     </div>
   </div>
 
