@@ -17,13 +17,15 @@
               "day": "Lunes",
               "startTime": "08:00",
               "endTime": "10:00",
-              "classroom": "Aula 101"
+              "classroom": "Aula 101",
+              "classroomId": "1"
             },
             {
               "day": "Miércoles",
               "startTime": "08:00",
               "endTime": "10:00",
-              "classroom": "Aula 101"
+              "classroom": "Aula 101",
+              "classroomId": "1"
             }
           ],
           "teacherId": "4",
@@ -46,13 +48,15 @@
               "day": "Martes",
               "startTime": "14:00",
               "endTime": "16:00",
-              "classroom": "Aula 102"
+              "classroom": "Aula 102",
+              "classroomId": "3"
             },
             {
               "day": "Jueves",
               "startTime": "14:00",
               "endTime": "16:00",
-              "classroom": "Aula 102"
+              "classroom": "Aula 102",
+              "classroomId": "3"
             }
           ],
           "teacherId": "5",
@@ -84,13 +88,15 @@
               "day": "Lunes",
               "startTime": "10:00",
               "endTime": "12:00",
-              "classroom": "Lab 201"
+              "classroom": "Lab 201",
+              "classroomId": "2"
             },
             {
               "day": "Viernes",
               "startTime": "08:00",
               "endTime": "10:00",
-              "classroom": "Lab 201"
+              "classroom": "Lab 201",
+              "classroomId": "2"
             }
           ],
           "teacherId": "6",
@@ -123,13 +129,15 @@
               "day": "Martes",
               "startTime": "08:00",
               "endTime": "10:00",
-              "classroom": "Aula 103"
+              "classroom": "Aula 103",
+              "classroomId": "4"
             },
             {
               "day": "Jueves",
               "startTime": "08:00",
               "endTime": "10:00",
-              "classroom": "Aula 103"
+              "classroom": "Aula 103",
+              "classroomId": "4"
             }
           ],
           "teacherId": "4",

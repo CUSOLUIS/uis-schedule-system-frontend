@@ -127,9 +127,17 @@ export default class SubjectDetailComponent implements OnInit {
       return;
     }
 
+    // Agrega validación y asignación de classroomId
+    const scheduleWithClassroomId = this.newGroup.schedule
+      .filter((s) => s.startTime && s.endTime)
+      .map((s) => ({
+        ...s,
+        classroomId: this.getClassroomIdByName(s.classroom),
+      }));
+
     const newGroup: Omit<Group, 'id' | 'subjectId'> = {
       groupNumber: this.newGroup.groupNumber,
-      schedule: this.newGroup.schedule.filter((s) => s.startTime && s.endTime),
+      schedule: scheduleWithClassroomId,
       teacherId: this.newGroup.teacherId,
       teacherName: teacher.fullName ?? '',
       studentIds: [],
@@ -142,6 +150,13 @@ export default class SubjectDetailComponent implements OnInit {
     this.subjectService.createGroup(subject.id, newGroup);
     this.loadSubject(subject.id);
     this.closeCreateGroupModal();
+  }
+
+  // Función helper para obtener classroomId por nombre
+  private getClassroomIdByName(classroomName: string): string | undefined {
+    // Esta función debería buscar en la lista de aulas disponibles
+    // Por ahora retornamos undefined, pero se debe implementar la lógica
+    return undefined;
   }
 
   deleteGroup(groupId: string): void {

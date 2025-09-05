@@ -44,6 +44,14 @@ export const routes: Routes = [
           import('./components/admin/subject-detail/subject-detail.component'),
         title: 'Detalle Asignatura - Admin',
       },
+      {
+        path: 'classrooms',
+        loadComponent: () =>
+          import('./components/admin/classrooms/classrooms.component').then(
+            (m) => m.default
+          ),
+        title: 'Gestión de Aulas - Admin',
+      },
     ],
   },
   {

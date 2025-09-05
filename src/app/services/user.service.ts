@@ -37,10 +37,16 @@ export class UserService {
 
   readonly menuItems: Record<string, MenuItem[]> = {
     admin: [
-      {
+      /* {
         icon: 'fa-calendar-alt',
         label: 'Horario',
         route: '/admin/schedule',
+        visible: true,
+      }, */
+      {
+        icon: 'fa-door-open',
+        label: 'Aulas',
+        route: '/admin/classrooms',
         visible: true,
       },
       {
