@@ -1,32 +1,18 @@
-<!-- Botón hamburguesa para móvil -->
-<button
-  class="navbar-toggle"
-  (click)="toggleNavbar()"
-  [class.active]="!isCollapsed"
-  *ngIf="currentUser()"
->
-  <span class="hamburger-line"></span>
-  <span class="hamburger-line"></span>
-  <span class="hamburger-line"></span>
-</button>
-
-<!-- Overlay para cerrar menú en móvil -->
-<div
-  class="mobile-overlay"
-  *ngIf="isMobile && !isCollapsed"
-  (click)="toggleNavbar()"
-></div>
-
 <nav
   class="navbar"
   [class]="'navbar-' + (userRole()?.id || 'default')"
-  [class.collapsed]="isCollapsed"
-  [class.mobile]="isMobile"
   (mouseenter)="onMouseEnter()"
   (mouseleave)="onMouseLeave()"
 >
   <!-- Header del navbar -->
   <div class="navbar-header">
+    <!-- <button class="navbar-toggle" (click)="toggleNavbar()">
+      <i
+        class="fas"
+        [class.fa-bars]="isCollapsed"
+        [class.fa-times]="!isCollapsed"
+      ></i>
+    </button> -->
     <div class="user-info" *ngIf="currentUser()">
       <div
         class="user-avatar"
@@ -36,13 +22,15 @@
       </div>
       <div class="user-details">
         <span class="username">{{ currentUser()?.username }}</span>
-        <span class="user-role">{{ userRole()?.name }}</span>
+        <span class="user-role">
+          {{ userRole()?.name }}
+        </span>
       </div>
     </div>
   </div>
 
   <!-- Menu items -->
-  <div class="navbar-menu">
+  <div class="navbar-menu" [class.collapsed]="isCollapsed">
     <ul class="nav-list">
       <li
         class="nav-item"
@@ -53,7 +41,6 @@
           class="nav-link"
           routerLinkActive="active"
           [class]="'nav-link-' + (userRole()?.id || 'default')"
-          (click)="onNavigate()"
         >
           <i [class]="'fas ' + item.icon"></i>
           <span class="nav-text">{{ item.label }}</span>

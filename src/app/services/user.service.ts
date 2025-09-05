@@ -62,6 +62,12 @@ export class UserService {
         visible: true,
       },
       {
+        icon: 'fas fa-user-cog',
+        label: 'Asignar Roles',
+        route: '/admin/roles',
+        visible: true,
+      },
+      {
         icon: 'fa-cog',
         label: 'Configuración',
         route: '/admin/settings',
