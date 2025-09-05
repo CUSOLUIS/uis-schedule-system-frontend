@@ -31,7 +31,7 @@ export class UserService {
       id: 'student',
       name: 'ESTUDIANTE',
       color: '#FFFFFF',
-      backgroundColor: '#388E3C',
+      backgroundColor: '#1B5E20',
     },
   };
 
@@ -42,36 +42,42 @@ export class UserService {
         label: 'Horario',
         route: '/admin/schedule',
         visible: true,
+        description: 'Gestiona los horarios académicos',
       }, */
       {
         icon: 'fa-door-open',
         label: 'Aulas',
         route: '/admin/classrooms',
         visible: true,
+        description: 'Administrar aulas y espacios',
       },
       {
         icon: 'fa-book',
         label: 'Asignaturas',
         route: '/admin/subjects',
         visible: true,
+        description: 'Gestiona materias y programas',
       },
       {
         icon: 'fa-user-tie',
         label: 'Profesores',
         route: '/admin/teachers',
         visible: true,
+        description: 'Gestionar docentes del sistema',
       },
       {
         icon: 'fas fa-user-cog',
         label: 'Asignar Roles',
         route: '/admin/roles',
         visible: true,
+        description: 'Administrar roles de usuarios',
       },
       {
         icon: 'fa-cog',
         label: 'Configuración',
         route: '/admin/settings',
         visible: true,
+        description: 'Configurar el sistema',
       },
     ],
     teacher: [
@@ -80,18 +86,21 @@ export class UserService {
         label: 'Mi Horario',
         route: '/teacher/schedule',
         visible: true,
+        description: 'Consulta tu horario académico',
       },
       {
         icon: 'fa-book',
         label: 'Mis Asignaturas',
         route: '/teacher/subjects',
         visible: true,
+        description: 'Gestiona tus materias',
       },
       {
         icon: 'fa-user-circle',
         label: 'Perfil',
         route: '/teacher/profile',
         visible: true,
+        description: 'Actualiza tu información personal',
       },
     ],
     student: [
@@ -100,24 +109,27 @@ export class UserService {
         label: 'Mi Horario',
         route: '/student/schedule',
         visible: true,
+        description: 'Consulta tu horario académico',
       },
       {
         icon: 'fa-book',
         label: 'Mis Asignaturas',
         route: '/student/subjects',
         visible: true,
+        description: 'Consulta tus materias inscritas',
       },
       {
         icon: 'fa-user-circle',
         label: 'Perfil',
         route: '/student/profile',
         visible: true,
+        description: 'Actualiza tu información personal',
       },
     ],
   };
 
   constructor() {
-    // Inicializar usuarios después de que userRoles esté definido
+    // Inicializa los usuarios después de que userRoles esté definido
     this.initializeUsers();
   }
 
