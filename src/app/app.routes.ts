@@ -40,10 +40,28 @@ export const routes: Routes = [
           import('./components/admin/subject-detail/subject-detail.component'),
         title: 'Detalle Asignatura - Admin',
       },
-      { path: 'teachers', loadComponent: () => import('./components/admin/teachers/teachers').then(m => m.Teachers) },
-      { path: 'roles', loadComponent: () => import('./components/admin/roles').then(m => m.RolesComponent) },
+      {
+        path: 'classrooms',
+        loadComponent: () =>
+          import('./components/admin/classrooms/classrooms.component').then(
+            (m) => m.default
+          ),
+        title: 'Gestión de Aulas - Admin',
+      },
+      {
+        path: 'teachers',
+        loadComponent: () =>
+          import('./components/admin/teachers/teachers').then(
+            (m) => m.Teachers
+          ),
+      },
+      {
+        path: 'roles',
+        loadComponent: () =>
+          import('./components/admin/roles').then((m) => m.RolesComponent),
+      },
       // { path: 'settings', loadComponent: () => import('./components/admin/settings/settings.component') }
-    ]
+    ],
   },
   // {
   //   path: 'teacher',

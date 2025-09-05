@@ -92,4 +92,14 @@ export default class NavbarComponent {
       this.isCollapsed = true;
     }
   }
+
+  // Agregar opción en el menú de admin
+  get adminMenuItem(): MenuItem {
+    return {
+      icon: 'fa-door-open',
+      label: 'Aulas',
+      route: '/admin/classrooms',
+      visible: true,
+    };
+  }
 }

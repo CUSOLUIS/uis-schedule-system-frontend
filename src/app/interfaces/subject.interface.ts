@@ -29,4 +29,5 @@ export interface ScheduleSlot {
   startTime: string;
   endTime: string;
   classroom: string;
+  classroomId?: string;
 }

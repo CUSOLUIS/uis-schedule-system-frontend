@@ -1,0 +1,1017 @@
+/* Contenedor principal */
+.classrooms-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Header de la página */
+.page-header {
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(74, 20, 140, 0.2);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  border-bottom: none;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.title-section {
+  flex: 1;
+  color: white;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  color: white;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-weight: 700;
+}
+
+.page-title i {
+  color: white;
+  font-size: 2.2rem;
+}
+
+.page-subtitle {
+  color: white;
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Botones */
+.btn-create,
+.btn-back,
+.btn-edit,
+.btn-assign {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.btn-create {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.btn-create:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+}
+
+.btn-back {
+  background: #2c3e50;
+  color: white;
+}
+
+.btn-back:hover {
+  background: #34495e;
+  transform: translateY(-1px);
+}
+
+.btn-edit {
+  background: #8cc63f;
+  color: white;
+}
+
+.btn-edit:hover {
+  background: #7ab82f;
+  transform: translateY(-1px);
+}
+
+.btn-assign {
+  background: #004080;
+  color: white;
+}
+
+.btn-assign:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+/* Lista de aulas */
+.classrooms-list-container {
+  margin-top: 20px;
+}
+
+.classrooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.classroom-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.classroom-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(74, 20, 140, 0.15);
+  border-color: #6a1b9a;
+}
+
+.classroom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #e6f7fc 0%, #f0f9ff 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.classroom-info h3 {
+  margin: 0 0 5px 0;
+  color: #004080;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.classroom-code {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.classroom-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-action:hover {
+  transform: scale(1.1);
+}
+
+.btn-edit {
+  background: #8cc63f;
+  color: white;
+}
+
+.btn-delete {
+  background: #c33;
+  color: white;
+}
+
+.classroom-details {
+  padding: 20px;
+}
+
+.classroom-details p {
+  margin: 8px 0;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.classroom-details i {
+  width: 16px;
+  color: #4a148c;
+  font-weight: bold;
+}
+
+.resource-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.resource-tag {
+  background: linear-gradient(135deg, #e6f7fc 0%, #f0f9ff 100%);
+  color: #004080;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid rgba(0, 64, 128, 0.2);
+}
+
+.availability-status {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.next-available {
+  color: #2c3e50;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.card-footer {
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e6f7fc 100%);
+  border-top: 1px solid #e2e8f0;
+}
+
+.click-hint {
+  color: #004080;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+/* Vista de detalle */
+.classroom-detail {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding: 30px;
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 6px 25px rgba(74, 20, 140, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.detail-header .btn-back {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.detail-header .btn-back:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.classroom-title {
+  flex: 1;
+  text-align: center;
+  z-index: 1;
+}
+
+.classroom-title h1 {
+  margin: 0 0 5px 0;
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.classroom-title .classroom-code {
+  display: block;
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.header-actions {
+  z-index: 1;
+}
+
+.header-actions .btn-edit {
+  background: #8cc63f;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(140, 198, 63, 0.3);
+}
+
+.header-actions .btn-edit:hover {
+  background: #7ab82f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(140, 198, 63, 0.4);
+}
+
+.detail-content {
+  display: grid;
+  gap: 30px;
+}
+
+/* Información del aula */
+.classroom-info-section {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.classroom-info-section h3 {
+  margin: 0 0 20px 0;
+  color: #004080;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e6f7fc 100%);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 64, 128, 0.1);
+}
+
+.info-item i {
+  color: #6a1b9a;
+  width: 20px;
+  font-weight: bold;
+}
+
+.info-item span {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.resources-section h4 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Sección de horarios */
+.schedule-section {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.schedule-header h3 {
+  margin: 0;
+  color: #004080;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.schedule-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* Controles de vista */
+.view-toggle {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.btn-toggle.active {
+  background: #6a1b9a;
+  color: white;
+}
+
+.btn-toggle:hover:not(.active) {
+  background: #e5e7eb;
+  color: #004080;
+}
+
+.toggle-text {
+  font-weight: 500;
+}
+
+/* Selector de días */
+.day-selector {
+  margin-bottom: 20px;
+}
+
+.day-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.day-tab {
+  padding: 8px 16px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  color: #6b7280;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  min-width: 60px;
+}
+
+.day-tab.active {
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  color: white;
+  border-color: #6a1b9a;
+}
+
+.day-tab:hover:not(.active) {
+  border-color: #6a1b9a;
+  color: #004080;
+}
+
+/* Vista diaria móvil */
+.daily-schedule {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.daily-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.daily-header h4 {
+  margin: 0;
+  color: #004080;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.date-info {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.daily-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.daily-slot-card {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.daily-slot-card.available {
+  border-color: rgba(140, 198, 63, 0.3);
+}
+
+.daily-slot-card.available:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(140, 198, 63, 0.2);
+  border-color: #8cc63f;
+}
+
+.daily-slot-card.occupied {
+  border-color: rgba(204, 51, 51, 0.3);
+  cursor: default;
+}
+
+.daily-slot-card.current-time {
+  border-color: #6a1b9a;
+  background: linear-gradient(135deg, #f3e5f5 0%, #e6f7fc 100%);
+}
+
+.slot-time {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+}
+
+.time-display {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.slot-content {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.schedule-details {
+  width: 100%;
+}
+
+.schedule-details .subject-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #004080;
+  margin-bottom: 5px;
+}
+
+.schedule-details .teacher-name {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  margin-bottom: 3px;
+}
+
+.schedule-details .group-info {
+  font-size: 0.8rem;
+  color: #6a1b9a;
+  font-weight: 500;
+}
+
+.available-details {
+  width: 100%;
+  text-align: center;
+}
+
+.available-details .available-text {
+  font-size: 1rem;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.available-details .click-hint {
+  display: block;
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 5px;
+}
+
+/* Scroll horizontal para tabla en móvil */
+.mobile-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-scroll .schedule-table {
+  min-width: 600px;
+}
+
+.schedule-table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border: 2px solid #e5e7eb;
+}
+
+.schedule-table th {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  color: white;
+  border-bottom: 2px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.schedule-table td {
+  padding: 0;
+  border: 2px solid #e5e7eb;
+  min-width: 120px;
+  height: 60px;
+}
+
+.time-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e6f7fc 100%) !important;
+  font-weight: 600;
+  color: #004080 !important;
+  text-align: center;
+  padding: 12px !important;
+}
+
+.time-slot {
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.time-slot.available {
+  background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+  border: 1px solid rgba(140, 198, 63, 0.3);
+}
+
+.time-slot.available:hover {
+  background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+  transform: scale(1.02);
+  border-color: #8cc63f;
+}
+
+.time-slot.occupied {
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+  border: 1px solid rgba(204, 51, 51, 0.3);
+}
+
+.time-slot.current-time {
+  border: 2px solid #6a1b9a;
+  background: linear-gradient(135deg, #e6f7fc 0%, #dbeafe 100%) !important;
+}
+
+.schedule-info {
+  padding: 8px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.subject-name {
+  font-weight: 600;
+  color: #004080;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.teacher-name {
+  color: #2c3e50;
+  font-size: 0.8rem;
+}
+
+.group-info {
+  color: #6a1b9a;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.available-slot {
+  padding: 8px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.available-text {
+  color: #2e7d32;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.available-slot .click-hint {
+  color: #2c3e50;
+  font-size: 0.75rem;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* Estados de texto */
+.text-success {
+  color: #2e7d32 !important;
+  font-weight: 600 !important;
+}
+
+.text-danger {
+  color: #c62828 !important;
+  font-weight: 600 !important;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .classrooms-container {
+    padding: 15px;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .classrooms-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .btn-back {
+    align-self: flex-start;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-back:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .classroom-title {
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .classroom-title h1 {
+    font-size: 1.8rem;
+    justify-content: center;
+    margin-bottom: 5px;
+  }
+
+  .classroom-title .classroom-code {
+    display: block;
+    font-size: 1rem;
+    opacity: 0.9;
+    font-weight: 400;
+  }
+
+  .header-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .btn-edit {
+    width: auto;
+    min-width: 140px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .schedule-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Ocultar vista semanal por defecto en móvil muy pequeño */
+  @media (max-width: 480px) {
+    .schedule-table-container:not(.mobile-scroll) {
+      display: none;
+    }
+  }
+
+  /* Mejoras adicionales para contraste en móvil */
+  .schedule-table th {
+    font-size: 0.85rem;
+    padding: 8px;
+  }
+
+  .schedule-table td {
+    height: 50px;
+    min-width: 100px;
+  }
+
+  .subject-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .teacher-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .available-text {
+    font-weight: 700;
+  }
+
+  .classroom-details p {
+    font-weight: 600;
+  }
+
+  .click-hint {
+    font-weight: 700;
+  }
+
+  /* Estilos específicos para vista diaria en móvil */
+  .daily-slots {
+    gap: 8px;
+  }
+
+  .daily-slot-card {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .slot-time {
+    min-width: 70px;
+    padding: 15px;
+  }
+
+  .time-display {
+    font-size: 1rem;
+  }
+
+  .slot-content {
+    padding: 15px;
+  }
+
+  .day-tabs {
+    justify-content: center;
+  }
+
+  .day-tab {
+    flex: 1;
+    min-width: 50px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .schedule-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .view-toggle {
+    width: 100%;
+  }
+
+  .btn-toggle {
+    flex: 1;
+    justify-content: center;
+    padding: 12px 16px; /* Más espacio para touch en móvil */
+    font-size: 14px;
+  }
+
+  .btn-assign {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .daily-header h4 {
+    font-size: 1.1rem;
+  }
+
+  .slot-time {
+    min-width: 60px;
+    padding: 12px;
+  }
+
+  .time-display {
+    font-size: 0.9rem;
+  }
+}
+
+/* Para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .view-toggle {
+    display: flex;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    gap: 1rem;
+  }
+
+  th,
+  td {
+    min-width: 100px;
+    padding: 0.5rem;
+  }
+}
