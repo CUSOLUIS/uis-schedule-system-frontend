@@ -1,0 +1,94 @@
+{
+  "teachersExtraInfo": {
+    "4": {
+      "universityCareer": "Ingeniería de Sistemas",
+      "office": "Oficina 301 - Bloque 15",
+      "department": "Escuela de Ingeniería de Sistemas e Informática",
+      "phone": "+57 7 634 4000 ext. 1201",
+      "academicTitle": "Dr.",
+      "specialization": "Bases de Datos y Sistemas de Información",
+      "yearsOfExperience": 8,
+      "education": ["PhD en Ciencias de la Computación - Universidad Nacional", "Magíster en Ingeniería de Sistemas - UIS"],
+      "researchAreas": ["Bases de Datos", "Minería de Datos", "Big Data"],
+      "publications": 15,
+      "projects": ["Sistema de Gestión Académica UIS", "Plataforma de Análisis de Datos"]
+    },
+    "5": {
+      "universityCareer": "Ingeniería de Sistemas",
+      "office": "Oficina 205 - Bloque 12",
+      "department": "Escuela de Ingeniería de Sistemas e Informática",
+      "phone": "+57 7 634 4000 ext. 1202",
+      "academicTitle": "Dra.",
+      "specialization": "Redes de Computadores y Seguridad",
+      "yearsOfExperience": 12,
+      "education": ["PhD en Ingeniería de Telecomunicaciones - Universidad Politécnica de Madrid", "Magíster en Redes - UIS"],
+      "researchAreas": ["Ciberseguridad", "Redes IoT", "Protocolos de Red"],
+      "publications": 23,
+      "projects": ["Red Segura UIS", "Sistema de Monitoreo de Red"]
+    },
+    "6": {
+      "universityCareer": "Ingeniería de Sistemas",
+      "office": "Oficina 408 - Bloque 18",
+      "department": "Escuela de Ingeniería de Sistemas e Informática",
+      "phone": "+57 7 634 4000 ext. 1203",
+      "academicTitle": "Dr.",
+      "specialization": "Programación y Desarrollo de Software",
+      "yearsOfExperience": 10,
+      "education": ["PhD en Ingeniería de Software - MIT", "Magíster en Ciencias de la Computación - UIS"],
+      "researchAreas": ["Ingeniería de Software", "Metodologías Ágiles", "Arquitectura de Software"],
+      "publications": 18,
+      "projects": ["Framework de Desarrollo UIS", "Sistema de Gestión de Proyectos"]
+    },
+    "7": {
+      "universityCareer": "Ingeniería de Sistemas",
+      "office": "Oficina 112 - Bloque 10",
+      "department": "Escuela de Ingeniería de Sistemas e Informática",
+      "phone": "+57 7 634 4000 ext. 1204",
+      "academicTitle": "Dra.",
+      "specialization": "Algoritmos y Estructuras de Datos",
+      "yearsOfExperience": 7,
+      "education": ["PhD en Ciencias de la Computación - Universidad de los Andes", "Magíster en Matemáticas Aplicadas - UIS"],
+      "researchAreas": ["Algoritmos de Optimización", "Estructuras de Datos", "Complejidad Computacional"],
+      "publications": 12,
+      "projects": ["Biblioteca de Algoritmos UIS", "Simulador de Complejidad"]
+    },
+    "16": {
+      "universityCareer": "Ingeniería de Sistemas",
+      "office": "Oficina 215 - Bloque 14",
+      "department": "Escuela de Ingeniería de Sistemas e Informática",
+      "phone": "+57 7 634 4000 ext. 1205",
+      "academicTitle": "Dr.",
+      "specialization": "Sistemas Operativos y Arquitectura",
+      "yearsOfExperience": 15,
+      "education": ["PhD en Arquitectura de Computadores - Universidad de Barcelona", "Magíster en Sistemas - UIS"],
+      "researchAreas": ["Sistemas Distribuidos", "Virtualización", "Computación en la Nube"],
+      "publications": 28,
+      "projects": ["Cloud UIS", "Sistema de Virtualización Académica"]
+    },
+    "17": {
+      "universityCareer": "Ingeniería de Sistemas",
+      "office": "Oficina 320 - Bloque 16",
+      "department": "Escuela de Ingeniería de Sistemas e Informática",
+      "phone": "+57 7 634 4000 ext. 1206",
+      "academicTitle": "Dra.",
+      "specialization": "Inteligencia Artificial y Machine Learning",
+      "yearsOfExperience": 9,
+      "education": ["PhD en Inteligencia Artificial - Stanford University", "Magíster en IA - UIS"],
+      "researchAreas": ["Machine Learning", "Deep Learning", "Procesamiento de Lenguaje Natural"],
+      "publications": 21,
+      "projects": ["Chatbot UIS", "Sistema de Recomendación Académica"]
+    }
+  },
+  "defaultInfo": {
+    "universityCareer": "Ingeniería de Sistemas",
+    "department": "Escuela de Ingeniería de Sistemas e Informática",
+    "phone": "+57 7 634 4000",
+    "academicTitle": "Profesor",
+    "specialization": "Ciencias de la Computación",
+    "yearsOfExperience": 5,
+    "education": ["Magíster en Ingeniería de Sistemas - UIS"],
+    "researchAreas": ["Ingeniería de Software"],
+    "publications": 5,
+    "projects": ["Proyecto de Investigación"]
+  }
+}

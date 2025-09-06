@@ -4,13 +4,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SubjectService } from '../../../services/subject.service';
 import { UserService } from '../../../services/user.service';
-import { Subject, Group } from '../../../interfaces/subject.interface';
+import {
+  Subject,
+  Group,
+  getCurrentStudents,
+  isGroupFull,
+} from '../../../interfaces/subject.interface';
 import { User } from '../../../interfaces/user.interface';
+import {
+  GroupCardComponent,
+  GroupCardData,
+  GroupCardConfig,
+} from '../../shared/group-card';
 
 @Component({
   selector: 'app-subject-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GroupCardComponent],
   templateUrl: './subject-detail.component.html',
   styleUrls: ['./subject-detail.component.css'],
 })
@@ -142,7 +152,6 @@ export default class SubjectDetailComponent implements OnInit {
       teacherName: teacher.fullName ?? '',
       studentIds: [],
       maxStudents: this.newGroup.maxStudents,
-      currentStudents: 0,
       classroom: this.newGroup.classroom,
       semester: subject.semester,
     };
@@ -233,5 +242,68 @@ export default class SubjectDetailComponent implements OnInit {
     return this.students().filter(
       (student) => !group.studentIds.includes(student.id)
     );
+  }
+
+  // Métodos helper para cálculos dinámicos
+  getCurrentStudents(group: Group): number {
+    return getCurrentStudents(group);
+  }
+
+  isGroupFull(group: Group): boolean {
+    return isGroupFull(group);
+  }
+
+  getAvailableSpots(group: Group): number {
+    return Math.max(0, group.maxStudents - getCurrentStudents(group));
+  }
+
+  // Configuración para las tarjetas de grupo en subject-detail
+  groupCardConfig: GroupCardConfig = {
+    showTeacher: true,
+    showSubject: false,
+    showMaxStudents: true,
+    showViewButton: true,
+    showEditButton: false,
+    showDeleteButton: true,
+    compactMode: false,
+  };
+
+  // Convierte Group a GroupCardData para subject-detail
+  convertGroupToCardData(group: Group): GroupCardData {
+    // Formatea el horario desde slots de schedule
+    const scheduleText = group.schedule
+      .map((slot) => `${slot.day} ${slot.startTime}-${slot.endTime}`)
+      .join(', ');
+
+    return {
+      id: parseInt(group.id.replace('g', '')),
+      name: `Grupo ${group.groupNumber}`,
+      subject: this.subject()?.name || '',
+      schedule: scheduleText,
+      studentCount: getCurrentStudents(group),
+      classroom: group.classroom,
+      groupNumber: group.groupNumber,
+      teacherName: group.teacherName,
+      maxStudents: group.maxStudents,
+    };
+  }
+
+  // Maneja los eventos del componente de tarjeta
+  onGroupCardView(groupData: GroupCardData): void {
+    const group = this.subject()?.groups?.find(
+      (g) => parseInt(g.id.replace('g', '')) === groupData.id
+    );
+    if (group) {
+      this.viewGroupDetail(group);
+    }
+  }
+
+  onGroupCardDelete(groupData: GroupCardData): void {
+    const groupId = `g${groupData.id}`;
+    this.deleteGroup(groupId);
+  }
+
+  onGroupCardClick(groupData: GroupCardData): void {
+    this.onGroupCardView(groupData);
   }
 }

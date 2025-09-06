@@ -30,12 +30,8 @@
           ],
           "teacherId": "4",
           "teacherName": "Dr. Carlos Martínez",
-          "studentIds": [
-            "7",
-            "8"
-          ],
+          "studentIds": ["8", "9", "10", "11", "12", "18", "19", "20", "21"],
           "maxStudents": 30,
-          "currentStudents": 2,
           "classroom": "Aula 101",
           "semester": 3
         },
@@ -61,11 +57,8 @@
           ],
           "teacherId": "5",
           "teacherName": "Dra. Ana García",
-          "studentIds": [
-            "9"
-          ],
+          "studentIds": ["13", "14", "15", "22", "23", "24"],
           "maxStudents": 30,
-          "currentStudents": 1,
           "classroom": "Aula 102",
           "semester": 3
         }
@@ -101,12 +94,8 @@
           ],
           "teacherId": "6",
           "teacherName": "Dr. Luis Rodríguez",
-          "studentIds": [
-            "7",
-            "9"
-          ],
+          "studentIds": ["8", "10", "12", "14", "25", "26", "27"],
           "maxStudents": 25,
-          "currentStudents": 2,
           "classroom": "Lab 201",
           "semester": 4
         }
@@ -142,13 +131,286 @@
           ],
           "teacherId": "4",
           "teacherName": "Dr. Carlos Martínez",
-          "studentIds": [
-            "8"
-          ],
+          "studentIds": ["9", "11", "13", "15", "28", "29"],
           "maxStudents": 35,
-          "currentStudents": 1,
           "classroom": "Aula 103",
           "semester": 2
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Redes de Computadores",
+      "code": "RC-2024",
+      "description": "Fundamentos de redes y comunicaciones",
+      "credits": 3,
+      "semester": 5,
+      "groups": [
+        {
+          "id": "g5",
+          "subjectId": "4",
+          "groupNumber": "01",
+          "schedule": [
+            {
+              "day": "Miércoles",
+              "startTime": "10:00",
+              "endTime": "12:00",
+              "classroom": "Lab 201",
+              "classroomId": "2"
+            },
+            {
+              "day": "Viernes",
+              "startTime": "10:00",
+              "endTime": "12:00",
+              "classroom": "Lab 201",
+              "classroomId": "2"
+            }
+          ],
+          "teacherId": "5",
+          "teacherName": "Dra. Ana García",
+          "studentIds": ["8", "9", "10", "30", "31"],
+          "maxStudents": 25,
+          "classroom": "Lab 201",
+          "semester": 5
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Sistemas Operativos",
+      "code": "SO-2024",
+      "description": "Administración y fundamentos de sistemas operativos",
+      "credits": 4,
+      "semester": 4,
+      "groups": [
+        {
+          "id": "g6",
+          "subjectId": "5",
+          "groupNumber": "01",
+          "schedule": [
+            {
+              "day": "Martes",
+              "startTime": "16:00",
+              "endTime": "18:00",
+              "classroom": "Aula 103",
+              "classroomId": "4"
+            },
+            {
+              "day": "Jueves",
+              "startTime": "16:00",
+              "endTime": "18:00",
+              "classroom": "Aula 103",
+              "classroomId": "4"
+            }
+          ],
+          "teacherId": "6",
+          "teacherName": "Dr. Luis Rodríguez",
+          "studentIds": ["11", "12", "13", "14", "15", "32", "33", "34"],
+          "maxStudents": 30,
+          "classroom": "Aula 103",
+          "semester": 4
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Inteligencia Artificial",
+      "code": "IA-2024",
+      "description": "Fundamentos de inteligencia artificial y machine learning",
+      "credits": 3,
+      "semester": 6,
+      "groups": [
+        {
+          "id": "g7",
+          "subjectId": "6",
+          "groupNumber": "01",
+          "schedule": [
+            {
+              "day": "Lunes",
+              "startTime": "14:00",
+              "endTime": "16:00",
+              "classroom": "Aula 101",
+              "classroomId": "1"
+            },
+            {
+              "day": "Miércoles",
+              "startTime": "14:00",
+              "endTime": "16:00",
+              "classroom": "Aula 101",
+              "classroomId": "1"
+            }
+          ],
+          "teacherId": "7",
+          "teacherName": "Dra. María González",
+          "studentIds": ["8", "10", "12", "35", "36"],
+          "maxStudents": 25,
+          "classroom": "Aula 101",
+          "semester": 6
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Desarrollo Web",
+      "code": "DW-2024",
+      "description": "Desarrollo de aplicaciones web modernas",
+      "credits": 4,
+      "semester": 5,
+      "groups": [
+        {
+          "id": "g8",
+          "subjectId": "7",
+          "groupNumber": "01",
+          "schedule": [
+            {
+              "day": "Viernes",
+              "startTime": "14:00",
+              "endTime": "16:00",
+              "classroom": "Aula 102",
+              "classroomId": "3"
+            },
+            {
+              "day": "Viernes",
+              "startTime": "16:00",
+              "endTime": "18:00",
+              "classroom": "Aula 102",
+              "classroomId": "3"
+            }
+          ],
+          "teacherId": "7",
+          "teacherName": "Dra. María González",
+          "studentIds": ["9", "11", "13", "15", "37"],
+          "maxStudents": 30,
+          "classroom": "Aula 102",
+          "semester": 5
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Sistemas Operativos",
+      "code": "SO-2024",
+      "description": "Fundamentos de sistemas operativos y administración",
+      "credits": 4,
+      "semester": 5,
+      "groups": [
+        {
+          "id": "g11",
+          "subjectId": "6",
+          "groupNumber": "01",
+          "schedule": [
+            {
+              "day": "Lunes",
+              "startTime": "14:00",
+              "endTime": "16:00",
+              "classroom": "Lab 301",
+              "classroomId": "4"
+            },
+            {
+              "day": "Miércoles",
+              "startTime": "14:00",
+              "endTime": "16:00",
+              "classroom": "Lab 301",
+              "classroomId": "4"
+            }
+          ],
+          "teacherId": "16",
+          "teacherName": "Dr. Miguel Torres",
+          "studentIds": ["8", "10", "12", "14", "16", "18", "20"],
+          "maxStudents": 25,
+          "classroom": "Lab 301",
+          "semester": 5
+        },
+        {
+          "id": "g12",
+          "subjectId": "6",
+          "groupNumber": "02",
+          "schedule": [
+            {
+              "day": "Martes",
+              "startTime": "10:00",
+              "endTime": "12:00",
+              "classroom": "Lab 302",
+              "classroomId": "5"
+            },
+            {
+              "day": "Jueves",
+              "startTime": "10:00",
+              "endTime": "12:00",
+              "classroom": "Lab 302",
+              "classroomId": "5"
+            }
+          ],
+          "teacherId": "16",
+          "teacherName": "Dr. Miguel Torres",
+          "studentIds": ["9", "11", "13", "15", "17", "19"],
+          "maxStudents": 25,
+          "classroom": "Lab 302",
+          "semester": 5
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Inteligencia Artificial",
+      "code": "IA-2024",
+      "description": "Fundamentos de inteligencia artificial y machine learning",
+      "credits": 3,
+      "semester": 7,
+      "groups": [
+        {
+          "id": "g13",
+          "subjectId": "7",
+          "groupNumber": "01",
+          "schedule": [
+            {
+              "day": "Lunes",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "classroom": "Aula 401",
+              "classroomId": "6"
+            },
+            {
+              "day": "Viernes",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "classroom": "Aula 401",
+              "classroomId": "6"
+            }
+          ],
+          "teacherId": "17",
+          "teacherName": "Dra. Patricia Silva",
+          "studentIds": ["21", "22", "23", "24", "25", "26", "27", "28"],
+          "maxStudents": 20,
+          "classroom": "Aula 401",
+          "semester": 7
+        },
+        {
+          "id": "g14",
+          "subjectId": "7",
+          "groupNumber": "02",
+          "schedule": [
+            {
+              "day": "Martes",
+              "startTime": "16:00",
+              "endTime": "18:00",
+              "classroom": "Lab IA",
+              "classroomId": "7"
+            },
+            {
+              "day": "Jueves",
+              "startTime": "16:00",
+              "endTime": "18:00",
+              "classroom": "Lab IA",
+              "classroomId": "7"
+            }
+          ],
+          "teacherId": "17",
+          "teacherName": "Dra. Patricia Silva",
+          "studentIds": ["29", "30", "31", "32", "38", "39"],
+          "maxStudents": 20,
+          "classroom": "Lab IA",
+          "semester": 7
         }
       ]
     }

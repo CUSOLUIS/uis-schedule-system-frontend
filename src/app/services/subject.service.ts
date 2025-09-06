@@ -1,5 +1,10 @@
 import { Injectable, signal } from '@angular/core';
-import { Subject, Group } from '../interfaces/subject.interface';
+import {
+  Subject,
+  Group,
+  getCurrentStudents,
+  isGroupFull,
+} from '../interfaces/subject.interface';
 import mockSubjects from '../data/mock-subjects.json';
 
 @Injectable({
@@ -109,7 +114,6 @@ export class SubjectService {
             ? {
                 ...group,
                 studentIds: [...group.studentIds, studentId],
-                currentStudents: group.currentStudents + 1,
               }
             : group
         ),
@@ -126,11 +130,23 @@ export class SubjectService {
             ? {
                 ...group,
                 studentIds: group.studentIds.filter((id) => id !== studentId),
-                currentStudents: Math.max(0, group.currentStudents - 1),
               }
             : group
         ),
       }))
     );
+  }
+
+  // Métodos helper para calcular datos dinámicamente
+  getCurrentStudentsCount(group: Group): number {
+    return getCurrentStudents(group);
+  }
+
+  isGroupFull(group: Group): boolean {
+    return isGroupFull(group);
+  }
+
+  getAvailableSpots(group: Group): number {
+    return Math.max(0, group.maxStudents - getCurrentStudents(group));
   }
 }

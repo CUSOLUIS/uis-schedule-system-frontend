@@ -51,37 +51,14 @@
     </div>
 
     <div class="groups-grid">
-      <div class="group-card" *ngFor="let group of subject()?.groups">
-        <div class="group-header">
-          <h3>Grupo {{ group.groupNumber }}</h3>
-          <div class="group-actions">
-            <button class="btn-info" (click)="viewGroupDetail(group)">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn-danger" (click)="deleteGroup(group.id)">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-        <div class="group-info">
-          <p><i class="fas fa-user-tie"></i> {{ group.teacherName }}</p>
-          <p>
-            <i class="fas fa-users"></i> {{ group.currentStudents }}/{{
-              group.maxStudents
-            }}
-            estudiantes
-          </p>
-          <p><i class="fas fa-map-marker-alt"></i> {{ group.classroom }}</p>
-        </div>
-        <div class="group-schedule">
-          <h4>Horario:</h4>
-          <div class="schedule-slots">
-            <span class="schedule-slot" *ngFor="let slot of group.schedule">
-              {{ slot.day }} {{ slot.startTime }}-{{ slot.endTime }}
-            </span>
-          </div>
-        </div>
-      </div>
+      <app-group-card
+        *ngFor="let group of subject()?.groups"
+        [group]="convertGroupToCardData(group)"
+        [config]="groupCardConfig"
+        (onView)="onGroupCardView($event)"
+        (onDelete)="onGroupCardDelete($event)"
+        (onCardClick)="onGroupCardClick($event)"
+      ></app-group-card>
     </div>
   </div>
 </div>
@@ -318,29 +295,29 @@
     <div class="modal-body">
       <div class="group-detail-info">
         <div class="info-section">
-          <h4>Información del Grupo</h4>
+          <h4><i class="fas fa-info-circle"></i> Información del Grupo</h4>
           <div class="info-grid">
             <div class="info-item">
-              <label>Profesor:</label>
+              <label><i class="fas fa-chalkboard-teacher"></i> Profesor:</label>
               <span>{{ selectedGroup()?.teacherName }}</span>
             </div>
             <div class="info-item">
-              <label>Aula:</label>
+              <label><i class="fas fa-book"></i> Asignatura:</label>
+              <span>{{ subject()?.name }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-door-open"></i> Aula:</label>
               <span>{{ selectedGroup()?.classroom }}</span>
             </div>
             <div class="info-item">
-              <label>Capacidad:</label>
-              <span
-                >{{ selectedGroup()?.currentStudents }}/{{
-                  selectedGroup()?.maxStudents
-                }}</span
-              >
+              <label><i class="fas fa-users"></i> Capacidad:</label>
+              <span>{{ getCurrentStudents(selectedGroup()!) }}/{{ selectedGroup()?.maxStudents }} estudiantes</span>
             </div>
           </div>
         </div>
 
         <div class="info-section">
-          <h4>Horario</h4>
+          <h4><i class="fas fa-clock"></i> Horario</h4>
           <div class="schedule-list">
             <div
               class="schedule-item"
@@ -356,8 +333,8 @@
         </div>
 
         <div class="info-section">
-          <h4>
-            Estudiantes Inscritos ({{ selectedGroup()?.currentStudents }})
+          <h4><i class="fas fa-user-graduate"></i>
+            Estudiantes Inscritos ({{ getCurrentStudents(selectedGroup()!) }})
           </h4>
           <div class="students-list">
             <div
@@ -379,7 +356,7 @@
             class="available-students"
             *ngIf="getAvailableStudents(selectedGroup()!).length > 0"
           >
-            <h5>Estudiantes Disponibles</h5>
+            <h5><i class="fas fa-users"></i> Estudiantes Disponibles</h5>
             <div class="students-list">
               <div
                 class="student-item"

@@ -161,13 +161,14 @@
 /* Tarjetas de acción */
 .action-card {
   background: white;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .action-card::before {
@@ -177,40 +178,58 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #4a148c, #6a1b9a);
+  background: linear-gradient(90deg, #667eea, #764ba2);
   transform: translateX(-100%);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.action-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(102, 126, 234, 0.03) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+.action-card:hover::after {
+  opacity: 1;
+}
+
 /* Animaciones dinámicas por rol */
 .action-card[data-role="admin"]::before {
-  background: linear-gradient(90deg, #4a148c, #6a1b9a);
+  background: linear-gradient(90deg, #667eea, #764ba2);
 }
 
 .action-card[data-role="teacher"]::before {
-  background: linear-gradient(90deg, #1976D2, #1565C0);
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
 }
 
 .action-card[data-role="student"]::before {
-  background: linear-gradient(90deg, #1B5E20, #2E7D32);
+  background: linear-gradient(90deg, #43e97b, #38f9d7);
 }
 
 .action-card:hover {
-  transform: translateY(-12px) scale(1.02);
+  transform: translateY(-8px);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   border-color: transparent;
 }
 
 .action-card[data-role="admin"]:hover {
-  box-shadow: 0 20px 50px rgba(74, 20, 140, 0.2);
+  box-shadow: 0 20px 50px rgba(102, 126, 234, 0.25);
 }
 
 .action-card[data-role="teacher"]:hover {
-  box-shadow: 0 20px 50px rgba(25, 118, 210, 0.2);
+  box-shadow: 0 20px 50px rgba(79, 172, 254, 0.25);
 }
 
 .action-card[data-role="student"]:hover {
-  box-shadow: 0 20px 50px rgba(27, 94, 32, 0.2);
+  box-shadow: 0 20px 50px rgba(67, 233, 123, 0.25);
 }
 
 .action-card:hover::before {
@@ -218,18 +237,20 @@
 }
 
 .card-icon {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #f7f9fc, #edf2f7);
-  border-radius: 12px;
+  width: 70px;
+  height: 70px;
+  background: white;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.8rem;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(0, 0, 0, 0.05);
 }
 
 .card-icon::before {
@@ -241,40 +262,72 @@
   bottom: 0;
   background: linear-gradient(135deg, #4a148c, #6a1b9a);
   opacity: 0;
-  transition: opacity 0.4s ease;
-  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px;
+}
+
+.card-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-icon:hover::after {
+  opacity: 1;
 }
 
 .card-icon i {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  color: #4a5568;
 }
 
 /* Animaciones de hover dinámicas por rol */
 .action-card[data-role="admin"]:hover .card-icon::before {
-  background: linear-gradient(135deg, #4a148c, #6a1b9a);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   opacity: 1;
 }
 
 .action-card[data-role="teacher"]:hover .card-icon::before {
-  background: linear-gradient(135deg, #1976D2, #1565C0);
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
   opacity: 1;
 }
 
 .action-card[data-role="student"]:hover .card-icon::before {
-  background: linear-gradient(135deg, #1B5E20, #2E7D32);
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
   opacity: 1;
 }
 
 .action-card:hover .card-icon {
-  transform: scale(1.15) rotate(5deg);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  border-color: transparent;
+}
+
+.action-card[data-role="admin"]:hover .card-icon {
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+}
+
+.action-card[data-role="teacher"]:hover .card-icon {
+  box-shadow: 0 15px 40px rgba(79, 172, 254, 0.4);
+}
+
+.action-card[data-role="student"]:hover .card-icon {
+  box-shadow: 0 15px 40px rgba(67, 233, 123, 0.4);
 }
 
 .action-card:hover .card-icon i {
   color: white;
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .card-content {
@@ -499,5 +552,31 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* Responsive Design para iconos */
+@media (max-width: 768px) {
+  .card-icon {
+    width: 65px;
+    height: 65px;
+    font-size: 1.7rem;
+  }
+  
+  .action-card {
+    padding: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+  
+  .action-card {
+    padding: 24px;
   }
 }

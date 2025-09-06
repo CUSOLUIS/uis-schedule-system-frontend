@@ -1,0 +1,122 @@
+.search-container {
+  width: 100%;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 3rem 1rem 1.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  background: #ffffff;
+  color: #2d3748;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+}
+
+.search-input::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
+}
+
+.search-icon {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.search-input:focus + .search-icon {
+  color: #007bff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-container {
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+  }
+  
+  .search-box {
+    max-width: 100%;
+  }
+  
+  .search-input {
+    padding: 0.875rem 2.5rem 0.875rem 1.25rem;
+    font-size: 0.95rem;
+  }
+  
+  .search-icon {
+    right: 1.25rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-container {
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+  }
+  
+  .search-input {
+    padding: 0.75rem 2.25rem 0.75rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 40px;
+  }
+  
+  .search-icon {
+    right: 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Animaciones adicionales */
+.search-input:hover {
+  border-color: #cbd5e0;
+  background: #f7fafc;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.search-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50px;
+  background: linear-gradient(45deg, transparent, rgba(0, 123, 255, 0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.search-input:focus ~ .search-box::before,
+.search-box:hover::before {
+  opacity: 1;
+}

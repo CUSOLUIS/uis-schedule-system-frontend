@@ -51,14 +51,14 @@ export const routes: Routes = [
       {
         path: 'teachers',
         loadComponent: () =>
-          import('./components/admin/teachers/teachers').then(
-            (m) => m.Teachers
-          ),
+          import('./components/admin/teachers/teachers').then((m) => m.default),
+        title: 'Gestión de Profesores - Admin',
       },
       {
         path: 'roles',
         loadComponent: () =>
           import('./components/admin/roles').then((m) => m.RolesComponent),
+        title: 'Gestión de Roles - Admin',
       },
       // { path: 'settings', loadComponent: () => import('./components/admin/settings/settings.component') }
     ],

@@ -1,63 +1,24 @@
 <div class="subjects-container">
-  <!-- Header con título y botón de crear -->
-  <div class="page-header">
-    <div class="header-content">
-      <div class="title-section">
-        <h1 class="page-title">
-          <i class="fas fa-book"></i>
-          Gestión de Asignaturas
-        </h1>
-        <p class="page-subtitle">
-          Administra las asignaturas y sus grupos del sistema
-        </p>
-      </div>
-      <div class="header-actions">
-        <button class="btn-create" (click)="createSubject()">
-          <i class="fas fa-plus"></i>
-          <span>Nueva Asignatura</span>
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- Header y estadísticas usando el componente plantilla -->
+  <app-admin-section-header 
+    [config]="sectionConfig"
+    (createButtonClick)="onCreateButtonClick()">
+  </app-admin-section-header>
 
-  <!-- Estadísticas rápidas -->
-  <div class="stats-section">
-    <div class="stat-card">
-      <div class="stat-icon">
-        <i class="fas fa-book"></i>
-      </div>
-      <div class="stat-content">
-        <div class="stat-number">{{ subjects().length }}</div>
-        <div class="stat-label">Total Asignaturas</div>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">
-        <i class="fas fa-users"></i>
-      </div>
-      <div class="stat-content">
-        <div class="stat-number">{{ getTotalGroups() }}</div>
-        <div class="stat-label">Total Grupos</div>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">
-        <i class="fas fa-graduation-cap"></i>
-      </div>
-      <div class="stat-content">
-        <div class="stat-number">{{ getTotalCredits() }}</div>
-        <div class="stat-label">Total Créditos</div>
-      </div>
-    </div>
-  </div>
+  <!-- Search Box -->
+  <app-search-box
+    placeholder="Buscar por nombre, código, semestre, profesor o aula..."
+    [value]="searchTerm"
+    (valueChange)="onSearchChange($event)">
+  </app-search-box>
 
-  <!-- Contenido principal -->
+  <!-- Lista de asignaturas -->
   <div class="content-section">
     <!-- Grid de asignaturas -->
-    <div class="subjects-grid" *ngIf="subjects().length > 0; else noSubjects">
+    <div class="subjects-grid" *ngIf="filteredSubjects.length > 0; else noSubjects">
       <div
         class="subject-card"
-        *ngFor="let subject of subjects(); trackBy: trackBySubjectId"
+        *ngFor="let subject of filteredSubjects; trackBy: trackBySubjectId"
         (click)="viewSubjectDetail(subject.id)"
       >
         <!-- Header de la tarjeta -->

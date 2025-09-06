@@ -1,55 +1,42 @@
 <div class="teachers-container">
   <!-- Header -->
-  <div class="header">
-    <h1><i class="fas fa-user-tie"></i> Gestión de Profesores</h1>
-    <p>Administración de docentes y sus grupos asignados</p>
-  </div>
+  <app-admin-section-header
+    [config]="sectionConfig"
+    (createButtonClick)="onCreateButtonClick()"
+  >
+  </app-admin-section-header>
 
-  <!-- Tarjetas de estadísticas -->
-  <div class="stats-container">
-    <div class="stat-card">
-      <div class="stat-icon icon-teachers"><i class="fas fa-user-tie"></i></div>
-      <div class="stat-content">
-        <h3 class="stat-number">{{ totalTeachers }}</h3>
-        <p class="stat-label">Profesores</p>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon icon-students"><i class="fas fa-users"></i></div>
-      <div class="stat-content">
-        <h3 class="stat-number">{{ totalStudents }}</h3>
-        <p class="stat-label">Estudiantes</p>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon icon-groups"><i class="fas fa-layer-group"></i></div>
-      <div class="stat-content">
-        <h3 class="stat-number">{{ totalGroups }}</h3>
-        <p class="stat-label">Grupos</p>
-      </div>
-    </div>
-  </div>
+  <!-- Search Box -->
+  <app-search-box
+    placeholder="Buscar por nombre, email, carrera, especialización, departamento o asignatura..."
+    [value]="searchTerm"
+    (valueChange)="onSearchChange($event)">
+  </app-search-box>
 
   <!-- Vista de lista de profesores -->
   <div class="teachers-list" *ngIf="!showGroups">
     <div class="section-header">
       <h2>Lista de Profesores</h2>
-      <div class="search-bar">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Buscar por nombre, email, carrera o asignatura..." class="search-input" [(ngModel)]="searchTerm">
-      </div>
     </div>
 
     <div class="teachers-grid">
-      <div class="teacher-card" *ngFor="let teacher of filteredTeachers" (click)="selectTeacher(teacher)">
+      <div
+        class="teacher-card"
+        *ngFor="let teacher of filteredTeachers"
+        (click)="selectTeacher(teacher)"
+      >
         <div class="teacher-avatar">
           <i class="fas fa-user"></i>
         </div>
         <div class="teacher-info">
-          <h3>{{ teacher.name }}</h3>
+          <h3>{{ teacher.fullName }}</h3>
           <p class="career">{{ teacher.universityCareer }}</p>
-          <p class="office"><i class="fas fa-map-marker-alt"></i> {{ teacher.office }}</p>
-          <p class="email"><i class="fas fa-envelope"></i> {{ teacher.email }}</p>
+          <p class="office">
+            <i class="fas fa-map-marker-alt"></i> {{ teacher.office }}
+          </p>
+          <p class="email">
+            <i class="fas fa-envelope"></i> {{ teacher.email }}
+          </p>
         </div>
         <div class="teacher-stats">
           <div class="stat-item">
@@ -80,46 +67,176 @@
         <div class="profile-avatar">
           <i class="fas fa-user"></i>
         </div>
-        <div class="profile-info">
-          <h2>{{ selectedTeacher.name }}</h2>
-          <p class="career">{{ selectedTeacher.universityCareer }}</p>
-          <p class="office"><i class="fas fa-map-marker-alt"></i> {{ selectedTeacher.office }}</p>
-          <p class="email"><i class="fas fa-envelope"></i> {{ selectedTeacher.email }}</p>
+        <div class="profile-basic-info">
+          <h2>{{ selectedTeacher.academicTitle }} {{ selectedTeacher.fullName }}</h2>
+          <p class="department">{{ selectedTeacher.department }}</p>
+          <p class="specialization">{{ selectedTeacher.specialization }}</p>
+        </div>
+      </div>
+
+      <div class="profile-details">
+        <!-- Información de Contacto -->
+        <div class="info-section">
+          <h3><i class="fas fa-address-card"></i> Información de Contacto</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <label><i class="fas fa-envelope"></i> Email:</label>
+              <span>{{ selectedTeacher.email }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-phone"></i> Teléfono:</label>
+              <span>{{ selectedTeacher.phone }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-map-marker-alt"></i> Oficina:</label>
+              <span>{{ selectedTeacher.office }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-graduation-cap"></i> Carrera:</label>
+              <span>{{ selectedTeacher.universityCareer }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información Académica -->
+        <div class="info-section">
+          <h3><i class="fas fa-university"></i> Información Académica</h3>
+          <div class="info-grid">
+            <div class="info-item full-width">
+              <label><i class="fas fa-graduation-cap"></i> Formación Académica:</label>
+              <ul class="education-list">
+                <li *ngFor="let degree of selectedTeacher.education">{{ degree }}</li>
+              </ul>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-calendar-alt"></i> Años de Experiencia:</label>
+              <span>{{ selectedTeacher.yearsOfExperience }} años</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-book"></i> Publicaciones:</label>
+              <span>{{ selectedTeacher.publications }} artículos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Áreas de Investigación -->
+        <div class="info-section">
+          <h3><i class="fas fa-microscope"></i> Áreas de Investigación</h3>
+          <div class="research-areas">
+            <span class="research-tag" *ngFor="let area of selectedTeacher.researchAreas">
+              {{ area }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Proyectos -->
+        <div class="info-section">
+          <h3><i class="fas fa-project-diagram"></i> Proyectos de Investigación</h3>
+          <ul class="projects-list">
+            <li *ngFor="let project of selectedTeacher.projects">
+              <i class="fas fa-cogs"></i> {{ project }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="info-section">
+          <h3><i class="fas fa-chart-bar"></i> Estadísticas</h3>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">{{ selectedTeacher.groups.length }}</div>
+              <div class="stat-label">Grupos Asignados</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{ getTotalStudents(selectedTeacher) }}</div>
+              <div class="stat-label">Total Estudiantes</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{ selectedTeacher.publications }}</div>
+              <div class="stat-label">Publicaciones</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{ selectedTeacher.yearsOfExperience }}</div>
+              <div class="stat-label">Años Experiencia</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="groups-section">
       <h3>Grupos Asignados ({{ selectedTeacher.groups.length }})</h3>
+      <p class="groups-hint">
+        <i class="fas fa-info-circle"></i>
+        Haz clic en cualquier tarjeta de grupo para ver más detalles
+      </p>
       <div class="groups-grid">
-        <div class="group-card" *ngFor="let group of selectedTeacher.groups">
-          <div class="group-header">
-            <h4>{{ group.name }}</h4>
-            <span class="student-count">{{ group.studentCount }} estudiantes</span>
+        <app-group-card
+          *ngFor="let group of selectedTeacher.groups"
+          [group]="convertToGroupCardData(group)"
+          [config]="groupCardConfig"
+          (onView)="onGroupCardView($event)"
+          (onCardClick)="onGroupCardClick($event)"
+        ></app-group-card>
+      </div>
+    </div>
+  </div>
+
+<!-- Modal para ver detalle de grupo -->
+<div class="modal-overlay" *ngIf="selectedGroup" (click)="closeGroupDetail()">
+  <div class="modal large" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ selectedGroup.name }}</h3>
+      <button class="close-btn" (click)="closeGroupDetail()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="group-detail-info">
+        <div class="info-section">
+          <h4><i class="fas fa-info-circle"></i> Información del Grupo</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <label><i class="fas fa-chalkboard-teacher"></i> Profesor:</label>
+              <span>{{ selectedTeacher?.academicTitle }} {{ selectedTeacher?.fullName }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-book"></i> Asignatura:</label>
+              <span>{{ selectedGroup.subject }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-door-open"></i> Aula:</label>
+              <span>{{ selectedGroup.classroom }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-users"></i> Capacidad:</label>
+              <span>{{ selectedGroup.studentCount }}/30 estudiantes</span>
+            </div>
           </div>
-          <div class="group-details">
-            <div class="detail-row">
-              <i class="fas fa-book"></i>
-              <span><strong>Asignatura:</strong> {{ group.subject }}</span>
-            </div>
-            <div class="detail-row">
-              <i class="fas fa-clock"></i>
-              <span><strong>Horario:</strong> {{ group.schedule }}</span>
-            </div>
-            <div class="detail-row">
-              <i class="fas fa-door-open"></i>
-              <span><strong>Aula:</strong> {{ group.classroom }}</span>
+        </div>
+
+        <div class="info-section">
+          <h4><i class="fas fa-clock"></i> Horario</h4>
+          <div class="schedule-display">
+            <div class="schedule-item">
+              <span class="schedule-text">{{ selectedGroup.schedule }}</span>
             </div>
           </div>
-          <div class="group-actions">
-            <button class="action-btn view-btn">
-              <i class="fas fa-eye"></i>
-              Ver Detalles
-            </button>
-            <button class="action-btn edit-btn">
-              <i class="fas fa-edit"></i>
-              Editar
-            </button>
+        </div>
+
+        <div class="info-section">
+          <h4><i class="fas fa-user-graduate"></i> Estudiantes Inscritos ({{ selectedGroup.studentCount }})</h4>
+          <div class="students-grid">
+            <div class="student-card" *ngFor="let student of getStudentsInGroup(selectedGroup.id); let i = index">
+              <div class="student-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="student-info">
+                <h5>{{ student.fullName }}</h5>
+                <p>{{ student.email }}</p>
+                <span class="student-number">#{{ i + 1 }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

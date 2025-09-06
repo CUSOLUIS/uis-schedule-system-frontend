@@ -13,30 +13,7 @@
         "Computador"
       ],
       "isAvailable": true,
-      "schedule": [
-        {
-          "id": "sch1",
-          "subjectId": "1",
-          "groupId": "g1",
-          "subjectName": "Programación Orientada a Objetos",
-          "teacherId": "4",
-          "teacherName": "Dr. Carlos Martínez",
-          "day": "Lunes",
-          "startTime": "08:00",
-          "endTime": "10:00"
-        },
-        {
-          "id": "sch2",
-          "subjectId": "1",
-          "groupId": "g1",
-          "subjectName": "Programación Orientada a Objetos",
-          "teacherId": "4",
-          "teacherName": "Dr. Carlos Martínez",
-          "day": "Miércoles",
-          "startTime": "08:00",
-          "endTime": "10:00"
-        }
-      ]
+      "schedule": []
     },
     {
       "id": "2",
@@ -51,30 +28,7 @@
         "30 Computadores"
       ],
       "isAvailable": true,
-      "schedule": [
-        {
-          "id": "sch5",
-          "subjectId": "2",
-          "groupId": "g3",
-          "subjectName": "Base de Datos",
-          "teacherId": "6",
-          "teacherName": "Dr. Luis Rodríguez",
-          "day": "Lunes",
-          "startTime": "10:00",
-          "endTime": "12:00"
-        },
-        {
-          "id": "sch6",
-          "subjectId": "2",
-          "groupId": "g3",
-          "subjectName": "Base de Datos",
-          "teacherId": "6",
-          "teacherName": "Dr. Luis Rodríguez",
-          "day": "Viernes",
-          "startTime": "08:00",
-          "endTime": "10:00"
-        }
-      ]
+      "schedule": []
     },
     {
       "id": "3",
@@ -88,30 +42,7 @@
         "AC"
       ],
       "isAvailable": true,
-      "schedule": [
-        {
-          "id": "sch3",
-          "subjectId": "1",
-          "groupId": "g2",
-          "subjectName": "Programación Orientada a Objetos",
-          "teacherId": "5",
-          "teacherName": "Dra. Ana García",
-          "day": "Martes",
-          "startTime": "14:00",
-          "endTime": "16:00"
-        },
-        {
-          "id": "sch4",
-          "subjectId": "1",
-          "groupId": "g2",
-          "subjectName": "Programación Orientada a Objetos",
-          "teacherId": "5",
-          "teacherName": "Dra. Ana García",
-          "day": "Jueves",
-          "startTime": "14:00",
-          "endTime": "16:00"
-        }
-      ]
+      "schedule": []
     },
     {
       "id": "4",

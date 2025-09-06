@@ -19,7 +19,7 @@ export interface Group {
   teacherName: string;
   studentIds: string[];
   maxStudents: number;
-  currentStudents: number;
+  currentStudents?: number; // Opcional: se calcula desde studentIds.length
   classroom: string;
   semester: number;
 }
@@ -30,4 +30,14 @@ export interface ScheduleSlot {
   endTime: string;
   classroom: string;
   classroomId?: string;
+}
+
+// Función helper para calcular estudiantes actuales
+export function getCurrentStudents(group: Group): number {
+  return group.studentIds.length;
+}
+
+// Función helper para verificar si un grupo está lleno
+export function isGroupFull(group: Group): boolean {
+  return getCurrentStudents(group) >= group.maxStudents;
 }

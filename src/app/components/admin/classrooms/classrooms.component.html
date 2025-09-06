@@ -1,29 +1,24 @@
 <div class="classrooms-container">
   <!-- Vista de Lista de Aulas -->
   @if (!showDetail) {
-  <div class="page-header">
-    <div class="header-content">
-      <div class="title-section">
-        <h1 class="page-title">
-          <i class="fas fa-door-open"></i>
-          Gestión de Aulas
-        </h1>
-        <p class="page-subtitle">
-          Administra las aulas y sus horarios disponibles
-        </p>
-      </div>
-      <div class="header-actions">
-        <button class="btn-create" (click)="createClassroom()">
-          <i class="fas fa-plus"></i>
-          <span>Nueva Aula</span>
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- Header y estadísticas usando el componente plantilla -->
+  <app-admin-section-header
+    [config]="sectionConfig"
+    (createButtonClick)="onCreateButtonClick()"
+  >
+  </app-admin-section-header>
+
+  <!-- Barra de búsqueda -->
+  <app-search-box
+    placeholder="Buscar por nombre, código, edificio, piso o recursos..."
+    [value]="searchTerm"
+    (valueChange)="onSearchChange($event)"
+  >
+  </app-search-box>
 
   <div class="classrooms-list-container">
     <div class="classrooms-grid">
-      @for (classroom of classrooms; track classroom.id) {
+      @for (classroom of filteredClassrooms; track classroom.id) {
       <div class="classroom-card" (click)="selectClassroom(classroom)">
         <div class="classroom-header">
           <div class="classroom-info">
@@ -53,6 +48,10 @@
           <p>
             <i class="fas fa-users"></i> Capacidad:
             {{ classroom.capacity }} estudiantes
+          </p>
+          <p>
+            <i class="fas fa-calendar-week"></i> Uso semanal:
+            {{ getClassroomUsageDays(classroom.id) }} días
           </p>
           <div class="resource-tags">
             @for (resource of classroom.resources; track resource) {
@@ -126,6 +125,13 @@
           <div class="info-item">
             <i class="fas fa-users"></i>
             <span>Capacidad: {{ selectedClassroom.capacity }} estudiantes</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-calendar-week"></i>
+            <span
+              >Uso semanal:
+              {{ getClassroomUsageDays(selectedClassroom.id) }} días</span
+            >
           </div>
           <div class="info-item">
             <i
@@ -209,9 +215,7 @@
 
         <!-- Vista semanal (solo desktop) -->
         @if (isWeekView && !isMobileView) {
-        <div
-          class="schedule-table-container"
-        >
+        <div class="schedule-table-container">
           <table class="schedule-table">
             <thead>
               <tr>
