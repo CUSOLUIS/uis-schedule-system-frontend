@@ -16,6 +16,26 @@ export default class DashboardComponent {
 
   currentUser = this.userService.getCurrentUser();
 
+  // Métodos para obtener colores dinámicos
+  getUserRoleColor(): string {
+    const roleId = this.currentUser()?.role?.id;
+    return this.userService.userRoles[roleId || 'admin']?.backgroundColor || '#4A148C';
+  }
+
+  getUserRoleGradient(): string {
+    const roleId = this.currentUser()?.role?.id;
+    switch (roleId) {
+      case 'admin':
+        return 'linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%)';
+      case 'teacher':
+        return 'linear-gradient(135deg, #1976D2 0%, #1565C0 100%)';
+      case 'student':
+        return 'linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%)';
+      default:
+        return 'linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%)';
+    }
+  }
+
   navigateToSchedule(): void {
     const user = this.currentUser();
     if (user) {
@@ -49,6 +69,19 @@ export default class DashboardComponent {
           this.router.navigate(['/student/subjects']);
           break;
       }
+    }
+  }
+
+  // Devuelve las opciones del menú según el rol del usuario
+  getMenuItems() {
+  const roleId = this.currentUser()?.role?.id || 'student';
+  return this.userService.menuItems[roleId] || [];
+  }
+
+  // Navega a la ruta indicada
+  navigateTo(route: string) {
+    if (route) {
+      this.router.navigate([route]);
     }
   }
 

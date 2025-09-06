@@ -22,12 +22,25 @@ export default class NavbarComponent {
   menuItems = () =>
     this.userService.getMenuItemsForUser(this.userRole()?.id || '');
 
+  // Método para obtener el color del rol del usuario
+  getUserRoleColor(): string {
+    const roleId = this.currentUser()?.role?.id;
+    return (
+      this.userService.userRoles[roleId || 'admin']?.backgroundColor ||
+      '#4A148C'
+    );
+  }
+
   isCollapsed = true;
   isHovered = false;
   isMobile = false;
 
   constructor() {
     this.checkScreenSize();
+    // Asegura que en móvil inicie colapsado
+    if (this.isMobile) {
+      this.isCollapsed = true;
+    }
   }
 
   @HostListener('window:resize', ['$event'])
@@ -62,6 +75,16 @@ export default class NavbarComponent {
   toggleNavbar(): void {
     if (this.isMobile) {
       this.isCollapsed = !this.isCollapsed;
+    }
+  }
+
+  // Cierra el navbar al hacer clic en un enlace (solo en móvil)
+  onNavLinkClick(): void {
+    if (this.isMobile && !this.isCollapsed) {
+      // Pequeño delay para que la navegación se complete primero
+      setTimeout(() => {
+        this.isCollapsed = true;
+      }, 150);
     }
   }
 

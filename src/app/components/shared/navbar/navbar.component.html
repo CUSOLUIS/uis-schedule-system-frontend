@@ -1,18 +1,29 @@
+<!-- Botón toggle para móvil (fuera del navbar) -->
+<button
+  class="navbar-toggle"
+  [class.menu-open]="!isCollapsed"
+  (click)="toggleNavbar()"
+  *ngIf="isMobile"
+  [style.background-color]="getUserRoleColor()"
+>
+  <i
+    class="fas"
+    [class.fa-bars]="isCollapsed"
+    [class.fa-times]="!isCollapsed"
+  ></i>
+</button>
+
 <nav
   class="navbar"
   [class]="'navbar-' + (userRole()?.id || 'default')"
+  [class.mobile]="isMobile"
+  [class.collapsed]="isCollapsed"
+  [class.hovered]="isHovered"
   (mouseenter)="onMouseEnter()"
   (mouseleave)="onMouseLeave()"
 >
   <!-- Header del navbar -->
   <div class="navbar-header">
-    <!-- <button class="navbar-toggle" (click)="toggleNavbar()">
-      <i
-        class="fas"
-        [class.fa-bars]="isCollapsed"
-        [class.fa-times]="!isCollapsed"
-      ></i>
-    </button> -->
     <div class="user-info" *ngIf="currentUser()">
       <div
         class="user-avatar"
@@ -22,9 +33,6 @@
       </div>
       <div class="user-details">
         <span class="username">{{ currentUser()?.username }}</span>
-        <span class="user-role">
-          {{ userRole()?.name }}
-        </span>
       </div>
     </div>
   </div>
@@ -41,6 +49,7 @@
           class="nav-link"
           routerLinkActive="active"
           [class]="'nav-link-' + (userRole()?.id || 'default')"
+          (click)="onNavLinkClick()"
         >
           <i [class]="'fas ' + item.icon"></i>
           <span class="nav-text">{{ item.label }}</span>
@@ -52,7 +61,7 @@
     <div class="navbar-footer" *ngIf="currentUser()">
       <button
         class="logout-btn"
-        (click)="logout()"
+        (click)="logout(); onNavLinkClick()"
         [class]="'logout-btn-' + (userRole()?.id || 'default')"
       >
         <i class="fas fa-sign-out-alt"></i>
@@ -61,3 +70,11 @@
     </div>
   </div>
 </nav>
+
+<!-- Overlay para móvil -->
+<div
+  class="mobile-overlay"
+  [class.show]="isMobile && !isCollapsed"
+  *ngIf="isMobile && !isCollapsed"
+  (click)="toggleNavbar()"
+></div>

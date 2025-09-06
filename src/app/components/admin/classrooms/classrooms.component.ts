@@ -125,14 +125,17 @@ export default class ClassroomsComponent implements OnInit {
   // Métodos para vista responsive
   checkMobileView() {
     this.isMobileView = window.innerWidth <= 768;
-    // En móvil, por defecto mostrar vista diaria
-    if (this.isMobileView && this.isWeekView) {
+    // En móvil, forzar vista diaria siempre
+    if (this.isMobileView) {
       this.isWeekView = false;
     }
   }
 
   toggleScheduleView() {
-    this.isWeekView = !this.isWeekView;
+    // Solo permitir cambio de vista en desktop
+    if (!this.isMobileView) {
+      this.isWeekView = !this.isWeekView;
+    }
   }
 
   selectDay(dayIndex: number) {

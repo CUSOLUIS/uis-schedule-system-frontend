@@ -506,29 +506,6 @@
   flex-wrap: wrap;
 }
 
-.day-tab {
-  padding: 8px 16px;
-  border: 2px solid #e5e7eb;
-  background: white;
-  color: #6b7280;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 500;
-  min-width: 60px;
-}
-
-.day-tab.active {
-  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
-  color: white;
-  border-color: #6a1b9a;
-}
-
-.day-tab:hover:not(.active) {
-  border-color: #6a1b9a;
-  color: #004080;
-}
-
 /* Vista diaria móvil */
 .daily-schedule {
   background: #f8f9fa;
@@ -661,124 +638,608 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.mobile-scroll .schedule-table {
-  min-width: 600px;
+/* === HORARIO MODERNO === */
+.schedule-section {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 20, 140, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
+.schedule-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #4a148c, #6a1b9a, #1976d2, #2e7d32);
+  border-radius: 20px 20px 0 0;
+}
+
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.schedule-header h3 {
+  color: #2d3748;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.schedule-header h3::before {
+  content: "";
+  font-size: 1.8rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.schedule-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Vista Toggle Moderna */
+.view-toggle {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 6px;
+  gap: 4px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.btn-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-toggle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #4a148c, #6a1b9a);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 12px;
+}
+
+.btn-toggle i,
+.btn-toggle .toggle-text {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.btn-toggle.active::before {
+  opacity: 1;
+}
+
+.btn-toggle.active {
+  color: white;
+  box-shadow: 0 4px 20px rgba(74, 20, 140, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-toggle:not(.active):hover {
+  background: #e2e8f0;
+  color: #475569;
+  transform: translateY(-1px);
+}
+
+/* Botón Asignar Horario */
+.btn-assign {
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(74, 20, 140, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-assign::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.btn-assign:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(74, 20, 140, 0.4);
+}
+
+.btn-assign:hover::before {
+  left: 100%;
+}
+
+/* Selector de Día Moderno */
+.day-selector {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e6f7fc 100%);
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.day-tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.day-tab {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.day-tab::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #4a148c, #6a1b9a);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 12px;
+  z-index: -1;
+}
+
+.day-tab:hover::before {
+  opacity: 0.1;
+}
+
+.day-tab.active::before {
+  opacity: 1;
+}
+
+.day-tab.active {
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(74, 20, 140, 0.3);
+  z-index: 2;
+}
+
+/* Contenedor de Tabla Moderna */
 .schedule-table-container {
-  overflow-x: auto;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 20, 140, 0.1);
+  position: relative;
 }
 
+.schedule-table-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4a148c, #6a1b9a, #1976d2, #2e7d32);
+  z-index: 5;
+}
+
+/* Tabla Moderna */
 .schedule-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background: white;
-  border: 2px solid #e5e7eb;
+  position: relative;
 }
 
 .schedule-table th {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  padding: 12px;
+  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  padding: 20px 16px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 700;
   color: white;
-  border-bottom: 2px solid #e5e7eb;
+  border: none;
   position: sticky;
   top: 0;
   z-index: 10;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-table th:first-child {
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  border-radius: 0;
 }
 
 .schedule-table td {
   padding: 0;
-  border: 2px solid #e5e7eb;
-  min-width: 120px;
-  height: 60px;
+  border: 1px solid #f1f5f9;
+  min-width: 140px;
+  height: 80px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Encabezados de Tiempo */
 .time-header {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e6f7fc 100%) !important;
-  font-weight: 600;
-  color: #004080 !important;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  font-weight: 700;
+  color: #1e293b !important;
   text-align: center;
-  padding: 12px !important;
+  padding: 20px 16px !important;
+  border-right: 2px solid #e2e8f0 !important;
+  position: relative;
+  font-size: 14px;
+  letter-spacing: 0.5px;
 }
 
+.time-header::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 3px;
+  background: linear-gradient(180deg, #4a148c, #6a1b9a);
+  border-radius: 2px;
+}
+
+/* Slots de Tiempo Modernos */
 .time-slot {
   cursor: pointer;
-  transition: all 0.2s;
   position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
+.time-slot::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.time-slot:hover::before {
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(74, 20, 140, 0.05) 70%
+  );
+}
+
+/* Slots Disponibles */
 .time-slot.available {
-  background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
-  border: 1px solid rgba(140, 198, 63, 0.3);
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-color: rgba(34, 197, 94, 0.2);
 }
 
 .time-slot.available:hover {
-  background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+  background: linear-gradient(135deg, #bbf7d0 0%, #86efac 100%);
   transform: scale(1.02);
-  border-color: #8cc63f;
+  border-color: #22c55e;
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.2);
+  z-index: 2;
 }
 
+/* Slots Ocupados */
 .time-slot.occupied {
-  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-  border: 1px solid rgba(204, 51, 51, 0.3);
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
+.time-slot.occupied:hover {
+  background: linear-gradient(135deg, #fed7d7 0%, #fc8181 100%);
+  transform: scale(1.01);
+  border-color: #ef4444;
+}
+
+/* Tiempo Actual */
 .time-slot.current-time {
-  border: 2px solid #6a1b9a;
-  background: linear-gradient(135deg, #e6f7fc 0%, #dbeafe 100%) !important;
+  border: 3px solid #4a148c !important;
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%) !important;
+  box-shadow: 0 0 20px rgba(74, 20, 140, 0.3);
+  animation: pulse 2s infinite;
 }
 
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 20px rgba(74, 20, 140, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(74, 20, 140, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(74, 20, 140, 0.3);
+  }
+}
+
+/* Información del Horario */
 .schedule-info {
-  padding: 8px;
+  padding: 12px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
+  border-radius: 8px;
+  margin: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .subject-name {
-  font-weight: 600;
-  color: #004080;
-  font-size: 0.9rem;
-  margin-bottom: 2px;
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  line-height: 1.2;
 }
 
 .teacher-name {
-  color: #2c3e50;
+  color: #64748b;
   font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 2px;
 }
 
 .group-info {
-  color: #6a1b9a;
+  color: #4a148c;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
+  background: rgba(74, 20, 140, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
 }
 
+/* Slot Disponible */
 .available-slot {
-  padding: 8px;
+  padding: 12px;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .available-text {
-  color: #2e7d32;
-  font-weight: 600;
+  color: #059669;
+  font-weight: 700;
   font-size: 0.9rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.available-text::before {
+  content: "";
+  font-size: 1rem;
 }
 
 .available-slot .click-hint {
-  color: #2c3e50;
+  color: #6b7280;
   font-size: 0.75rem;
-  margin-top: 2px;
-  font-weight: 500;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* === MEJORAS ADICIONALES PARA HORARIO === */
+
+/* Animaciones de entrada para las celdas */
+.schedule-table td {
+  animation: fadeInScale 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.schedule-table tr:nth-child(1) td {
+  animation-delay: 0.1s;
+}
+.schedule-table tr:nth-child(2) td {
+  animation-delay: 0.2s;
+}
+.schedule-table tr:nth-child(3) td {
+  animation-delay: 0.3s;
+}
+.schedule-table tr:nth-child(4) td {
+  animation-delay: 0.4s;
+}
+.schedule-table tr:nth-child(5) td {
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Efecto de brillo en slots disponibles */
+.time-slot.available::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(34, 197, 94, 0.3),
+    transparent
+  );
+  transition: left 0.8s ease;
+  pointer-events: none;
+}
+
+.time-slot.available:hover::after {
+  left: 100%;
+}
+
+/* Indicador de capacidad visual */
+.schedule-info::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background: #059669;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(5, 150, 105, 0.5);
+}
+
+/* Efecto de cargando para horarios */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Mejoras tipográficas */
+.schedule-section {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Tooltips para horarios */
+.time-slot[data-tooltip] {
+  position: relative;
+}
+
+.time-slot[data-tooltip]:hover::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 1000;
+  opacity: 0;
+  animation: tooltipShow 0.3s ease forwards;
+}
+
+@keyframes tooltipShow {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.mobile-scroll .schedule-table {
+  min-width: 700px;
+}
+
+/* Responsive - Ocultar toggle en móvil */
+@media (max-width: 768px) {
+  .view-toggle {
+    display: none;
+  }
+
+  .schedule-controls {
+    justify-content: center;
+  }
+
+  /* Forzar vista diaria en móvil - ocultar tabla semanal */
+  .schedule-table-container {
+    display: none !important;
+  }
 }
 
 /* Estados de texto */

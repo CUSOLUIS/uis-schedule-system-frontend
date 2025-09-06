@@ -10,6 +10,7 @@ export interface MenuItem {
   label: string;
   route: string;
   visible: boolean;
+  description?: string;
 }
 
 export interface User {

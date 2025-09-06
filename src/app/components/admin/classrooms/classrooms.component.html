@@ -160,8 +160,8 @@
         <div class="schedule-header">
           <h3>Horario de la Semana</h3>
           <div class="schedule-controls">
-            <!-- Controles de vista responsive -->
-            <div class="view-toggle">
+            <!-- Controles de vista responsive - Solo en desktop -->
+            <div class="view-toggle" *ngIf="!isMobileView">
               <button
                 class="btn-toggle"
                 [class.active]="isWeekView"
@@ -207,11 +207,10 @@
         </div>
         }
 
-        <!-- Vista semanal (desktop y móvil opcional) -->
-        @if (isWeekView) {
+        <!-- Vista semanal (solo desktop) -->
+        @if (isWeekView && !isMobileView) {
         <div
           class="schedule-table-container"
-          [class.mobile-scroll]="isMobileView"
         >
           <table class="schedule-table">
             <thead>

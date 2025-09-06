@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <!-- Header de bienvenida -->
   <div class="welcome-section">
-    <div class="welcome-card">
+    <div class="welcome-card" [style.background]="getUserRoleGradient()">
       <div class="user-avatar">
         <i class="fas fa-user-circle"></i>
       </div>
@@ -13,10 +13,7 @@
       <p class="welcome-subtitle">Sistema de Horarios UIS</p>
 
       <div class="role-info">
-        <span
-          class="role-badge"
-          [style.background-color]="currentUser()?.role?.backgroundColor"
-        >
+        <span class="role-badge">
           <i class="fas fa-id-badge"></i>
           {{ currentUser()?.role?.name }}
         </span>
@@ -29,113 +26,25 @@
     <h2 class="section-title">Accesos Rápidos</h2>
 
     <div class="actions-grid">
-      <!-- Tarjeta de Horario -->
-      <div class="action-card">
-        <div class="card-icon">
-          <i class="fas fa-calendar-alt"></i>
+      @for (item of getMenuItems(); track item.label) {
+      <div class="action-card" [attr.data-role]="currentUser()?.role?.id">
+        <div class="card-icon" [style.color]="getUserRoleColor()">
+          <i class="fas" [ngClass]="item.icon"></i>
         </div>
         <div class="card-content">
-          <h3>Mi Horario</h3>
-          <p>Consulta tu horario académico</p>
+          <h3>{{ item.label }}</h3>
+          <p>{{ item.description || "" }}</p>
         </div>
         <button
           class="card-button"
-          (click)="navigateToSchedule()"
-          [style.background-color]="currentUser()?.role?.backgroundColor"
+          (click)="navigateTo(item.route)"
+          [style.background-color]="getUserRoleColor()"
         >
           <i class="fas fa-arrow-right"></i>
           Ver
         </button>
       </div>
-
-      <!-- Tarjeta de Asignaturas -->
-      <div class="action-card">
-        <div class="card-icon">
-          <i class="fas fa-book"></i>
-        </div>
-        <div class="card-content">
-          <h3>Asignaturas</h3>
-          <p>Gestiona tus materias y grupos</p>
-        </div>
-        <button
-          class="card-button"
-          (click)="navigateToSubjects()"
-          [style.background-color]="currentUser()?.role?.backgroundColor"
-        >
-          <i class="fas fa-arrow-right"></i>
-          Ver
-        </button>
-      </div>
-
-      <!-- Tarjeta de Perfil -->
-      <div class="action-card">
-        <div class="card-icon">
-          <i class="fas fa-user-cog"></i>
-        </div>
-        <div class="card-content">
-          <h3>
-            {{
-              currentUser()?.role?.id === "admin"
-                ? "Configuración"
-                : "Mi Perfil"
-            }}
-          </h3>
-          <p>
-            {{
-              currentUser()?.role?.id === "admin"
-                ? "Configurar el sistema"
-                : "Actualiza tu información personal"
-            }}
-          </p>
-        </div>
-        <button
-          class="card-button"
-          (click)="navigateToProfile()"
-          [style.background-color]="currentUser()?.role?.backgroundColor"
-        >
-          <i class="fas fa-arrow-right"></i>
-          Ver
-        </button>
-      </div>
-
-      <!-- Tarjeta adicional para Admin - lista de profesores-->
-      <div class="action-card" *ngIf="currentUser()?.role?.id === 'admin'">
-        <div class="card-icon">
-          <i class="fas fa-user-tie"></i>
-        </div>
-        <div class="card-content">
-          <h3>Profesores</h3>
-          <p>Gestionar docentes del sistema</p>
-        </div>
-        <button
-          class="card-button"
-          (click)="navigateToTeachers()"
-          [style.background-color]="currentUser()?.role?.backgroundColor"
-        >
-          <i class="fas fa-arrow-right"></i>
-          Ver
-        </button>
-      </div>
-
-      <!-- Tarjeta adicional para Admin - Asignar roles-->
-      <div class="action-card" *ngIf="currentUser()?.role?.id === 'admin'">
-        <div class="card-icon">
-          <i class="fas fa-user-cog"></i>
-        </div>
-        <div class="card-content">
-          <h3>Asignar Roles</h3>
-          <p>Administrar roles de los usuarios</p>
-        </div>
-        <button
-          class="card-button"
-          (click)="navigateToRoles()"
-          [style.background-color]="currentUser()?.role?.backgroundColor"
-        >
-          <i class="fas fa-arrow-right"></i>
-          Ver
-        </button>
-      </div>
-
+      }
     </div>
   </div>
 
