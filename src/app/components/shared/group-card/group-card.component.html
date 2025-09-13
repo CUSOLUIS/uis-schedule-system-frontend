@@ -1,0 +1,64 @@
+<div 
+  class="group-card" 
+  [class.compact]="config.compactMode"
+  (click)="onCardClicked()"
+>
+  <div class="group-header">
+    <h4 class="group-title">{{ group.name }}</h4>
+    <span class="student-count">{{ getStudentText() }}</span>
+  </div>
+
+  <div class="group-details">
+    <div class="detail-row" *ngIf="config.showSubject">
+      <i class="fas fa-book"></i>
+      <span><strong>Asignatura:</strong> {{ group.subject }}</span>
+    </div>
+    
+    <div class="detail-row" *ngIf="config.showTeacher && group.teacherName">
+      <i class="fas fa-user-tie"></i>
+      <span><strong>Profesor:</strong> {{ group.teacherName }}</span>
+    </div>
+    
+    <div class="detail-row">
+      <i class="fas fa-clock"></i>
+      <span><strong>Horario:</strong> {{ group.schedule }}</span>
+    </div>
+    
+    <div class="detail-row">
+      <i class="fas fa-door-open"></i>
+      <span><strong>Aula:</strong> {{ group.classroom }}</span>
+    </div>
+  </div>
+
+  <div class="group-actions" *ngIf="hasActions()">
+    <button 
+      *ngIf="config.showViewButton"
+      class="action-btn view-btn" 
+      (click)="onViewClick($event)"
+      title="Ver detalles"
+    >
+      <i class="fas fa-eye"></i>
+      <span *ngIf="!config.compactMode">Ver Detalles</span>
+    </button>
+    
+    <button 
+      *ngIf="config.showEditButton"
+      class="action-btn edit-btn" 
+      (click)="onEditClick($event)"
+      title="Editar grupo"
+    >
+      <i class="fas fa-edit"></i>
+      <span *ngIf="!config.compactMode">Editar</span>
+    </button>
+    
+    <button 
+      *ngIf="config.showDeleteButton"
+      class="action-btn delete-btn" 
+      (click)="onDeleteClick($event)"
+      title="Eliminar grupo"
+    >
+      <i class="fas fa-trash"></i>
+      <span *ngIf="!config.compactMode">Eliminar</span>
+    </button>
+  </div>
+</div>

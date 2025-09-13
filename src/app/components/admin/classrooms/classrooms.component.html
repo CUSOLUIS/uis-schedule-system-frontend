@@ -1,0 +1,336 @@
+<div class="classrooms-container">
+  <!-- Vista de Lista de Aulas -->
+  @if (!showDetail) {
+  <!-- Header y estadísticas usando el componente plantilla -->
+  <app-admin-section-header
+    [config]="sectionConfig"
+    (createButtonClick)="onCreateButtonClick()"
+  >
+  </app-admin-section-header>
+
+  <!-- Barra de búsqueda -->
+  <app-search-box
+    placeholder="Buscar por nombre, código, edificio, piso o recursos..."
+    [value]="searchTerm"
+    (valueChange)="onSearchChange($event)"
+  >
+  </app-search-box>
+
+  <div class="classrooms-list-container">
+    <div class="classrooms-grid">
+      @for (classroom of filteredClassrooms; track classroom.id) {
+      <div class="classroom-card" (click)="selectClassroom(classroom)">
+        <div class="classroom-header">
+          <div class="classroom-info">
+            <h3>{{ classroom.name }}</h3>
+            <span class="classroom-code">{{ classroom.code }}</span>
+          </div>
+          <div class="classroom-actions">
+            <button
+              class="btn-action btn-edit"
+              (click)="editClassroom($event, classroom)"
+            >
+              <i class="fas fa-edit"></i>
+            </button>
+            <button
+              class="btn-action btn-delete"
+              (click)="deleteClassroom($event, classroom.id)"
+            >
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="classroom-details">
+          <p>
+            <i class="fas fa-building"></i> {{ classroom.building }} - Piso
+            {{ classroom.floor }}
+          </p>
+          <p>
+            <i class="fas fa-users"></i> Capacidad:
+            {{ classroom.capacity }} estudiantes
+          </p>
+          <p>
+            <i class="fas fa-calendar-week"></i> Uso semanal:
+            {{ getClassroomUsageDays(classroom.id) }} días
+          </p>
+          <div class="resource-tags">
+            @for (resource of classroom.resources; track resource) {
+            <span class="resource-tag">{{ resource }}</span>
+            }
+          </div>
+          <div class="availability-status">
+            <p
+              [class.text-success]="isCurrentlyAvailable(classroom)"
+              [class.text-danger]="!isCurrentlyAvailable(classroom)"
+            >
+              {{
+                isCurrentlyAvailable(classroom)
+                  ? "🟢 Disponible ahora"
+                  : "🔴 Ocupada"
+              }}
+            </p>
+            <small class="next-available">{{
+              getNextAvailableTime(classroom)
+            }}</small>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="click-hint">
+            <i class="fas fa-eye"></i>
+            Haz clic para ver detalles y horarios
+          </span>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Vista de Detalle del Aula -->
+  @if (showDetail && selectedClassroom) {
+  <div class="classroom-detail">
+    <div class="detail-header">
+      <button class="btn-back" (click)="goBackToList()">
+        <i class="fas fa-arrow-left"></i>
+        Volver a la lista
+      </button>
+      <div class="classroom-title">
+        <h1>{{ selectedClassroom.name }}</h1>
+        <span class="classroom-code">{{ selectedClassroom.code }}</span>
+      </div>
+      <div class="header-actions">
+        <button
+          class="btn-edit"
+          (click)="editClassroom($event, selectedClassroom)"
+        >
+          <i class="fas fa-edit"></i>
+          Editar Aula
+        </button>
+      </div>
+    </div>
+
+    <div class="detail-content">
+      <!-- Información del Aula -->
+      <div class="classroom-info-section">
+        <h3>Información del Aula</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <i class="fas fa-building"></i>
+            <span>Edificio: {{ selectedClassroom.building }}</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-layer-group"></i>
+            <span>Piso: {{ selectedClassroom.floor }}</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-users"></i>
+            <span>Capacidad: {{ selectedClassroom.capacity }} estudiantes</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-calendar-week"></i>
+            <span
+              >Uso semanal:
+              {{ getClassroomUsageDays(selectedClassroom.id) }} días</span
+            >
+          </div>
+          <div class="info-item">
+            <i
+              class="fas fa-circle"
+              [class.text-success]="selectedClassroom.isAvailable"
+              [class.text-danger]="!selectedClassroom.isAvailable"
+            ></i>
+            <span
+              >Estado:
+              {{
+                selectedClassroom.isAvailable ? "Disponible" : "No disponible"
+              }}</span
+            >
+          </div>
+        </div>
+
+        <div class="resources-section">
+          <h4>Recursos Disponibles</h4>
+          <div class="resource-tags">
+            @for (resource of selectedClassroom.resources; track resource) {
+            <span class="resource-tag">
+              <i class="fas fa-check"></i>
+              {{ resource }}
+            </span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Horario del Aula -->
+      <div class="schedule-section">
+        <div class="schedule-header">
+          <h3>Horario de la Semana</h3>
+          <div class="schedule-controls">
+            <!-- Controles de vista responsive - Solo en desktop -->
+            <div class="view-toggle" *ngIf="!isMobileView">
+              <button
+                class="btn-toggle"
+                [class.active]="isWeekView"
+                (click)="isWeekView = true"
+              >
+                <i class="fas fa-calendar-week"></i>
+                <span class="toggle-text">Semana</span>
+              </button>
+              <button
+                class="btn-toggle"
+                [class.active]="!isWeekView"
+                (click)="isWeekView = false"
+              >
+                <i class="fas fa-calendar-day"></i>
+                <span class="toggle-text">Día</span>
+              </button>
+            </div>
+
+            <button
+              class="btn-assign"
+              (click)="assignSchedule(selectedClassroom)"
+            >
+              <i class="fas fa-plus"></i>
+              Asignar Horario
+            </button>
+          </div>
+        </div>
+
+        <!-- Selector de día para vista diaria -->
+        @if (!isWeekView) {
+        <div class="day-selector">
+          <div class="day-tabs">
+            @for (day of days; track $index) {
+            <button
+              class="day-tab"
+              [class.active]="selectedDayIndex === $index"
+              (click)="selectDay($index)"
+            >
+              {{ day.substring(0, 3) }}
+            </button>
+            }
+          </div>
+        </div>
+        }
+
+        <!-- Vista semanal (solo desktop) -->
+        @if (isWeekView && !isMobileView) {
+        <div class="schedule-table-container">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>Hora</th>
+                @for (day of days; track day) {
+                <th>{{ day }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (time of timeSlots; track time) {
+              <tr>
+                <td class="time-header">{{ time }}</td>
+                @for (day of days; track day) {
+                <td
+                  class="time-slot"
+                  [class.available]="
+                    isTimeSlotAvailable(selectedClassroom, day, time)
+                  "
+                  [class.occupied]="
+                    !isTimeSlotAvailable(selectedClassroom, day, time)
+                  "
+                  [class.current-time]="
+                    day === currentDay && time === currentTime
+                  "
+                  (click)="
+                    isTimeSlotAvailable(selectedClassroom, day, time) &&
+                      assignSchedule(selectedClassroom, day, time)
+                  "
+                >
+                  @if (getScheduleForTimeSlot(selectedClassroom, day, time); as
+                  schedule) {
+                  <div class="schedule-info">
+                    <div class="subject-name">{{ schedule.subjectName }}</div>
+                    <small class="teacher-name">{{
+                      schedule.teacherName
+                    }}</small>
+                    @if (schedule.groupId) {
+                    <small class="group-info"
+                      >Grupo: {{ schedule.groupId }}</small
+                    >
+                    }
+                  </div>
+                  } @else {
+                  <div class="available-slot">
+                    <span class="available-text">Disponible</span>
+                    <small class="click-hint">Clic para asignar</small>
+                  </div>
+                  }
+                </td>
+                }
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        }
+
+        <!-- Vista diaria (móvil optimizada) -->
+        @if (!isWeekView) {
+        <div class="daily-schedule">
+          <div class="daily-header">
+            <h4>{{ getSelectedDay() }}</h4>
+            <span class="date-info">Horarios del día</span>
+          </div>
+
+          <div class="daily-slots">
+            @for (time of timeSlots; track time) {
+            <div
+              class="daily-slot-card"
+              [class.available]="
+                isTimeSlotAvailable(selectedClassroom, getSelectedDay(), time)
+              "
+              [class.occupied]="
+                !isTimeSlotAvailable(selectedClassroom, getSelectedDay(), time)
+              "
+              [class.current-time]="
+                getSelectedDay() === currentDay && time === currentTime
+              "
+              (click)="
+                isTimeSlotAvailable(
+                  selectedClassroom,
+                  getSelectedDay(),
+                  time
+                ) && assignSchedule(selectedClassroom, getSelectedDay(), time)
+              "
+            >
+              <div class="slot-time">
+                <span class="time-display">{{ time }}</span>
+              </div>
+
+              <div class="slot-content">
+                @if (getScheduleForTimeSlot(selectedClassroom, getSelectedDay(),
+                time); as schedule) {
+                <div class="schedule-details">
+                  <div class="subject-name">{{ schedule.subjectName }}</div>
+                  <div class="teacher-name">{{ schedule.teacherName }}</div>
+                  @if (schedule.groupId) {
+                  <div class="group-info">Grupo: {{ schedule.groupId }}</div>
+                  }
+                </div>
+                } @else {
+                <div class="available-details">
+                  <span class="available-text">Disponible</span>
+                  <small class="click-hint">Toca para asignar</small>
+                </div>
+                }
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>

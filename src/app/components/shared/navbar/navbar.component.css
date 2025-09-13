@@ -1,0 +1,585 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 80px;
+  color: white;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  margin-left: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border-radius: 24px;
+}
+
+/* Estilos específicos por rol */
+.navbar-admin {
+  background: linear-gradient(180deg, #4a148c 0%, #6a1b9a 100%);
+}
+
+.navbar-teacher {
+  background: linear-gradient(180deg, #1976D2 0%, #1565C0 100%);
+}
+
+.navbar-student {
+  background: linear-gradient(180deg, #2E7D32 0%, #1B5E20 100%);
+}
+
+.navbar-default {
+  background: #2c3e50;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+/* Expandir al hacer hover en desktop */
+.navbar:not(.mobile):hover {
+  width: 280px;
+}
+
+/* Estilos específicos para móvil */
+.navbar.mobile {
+  position: fixed;
+  left: -100%;
+  top: 0;
+  width: 280px;
+  height: 100vh;
+  margin: 0;
+  border-radius: 0 20px 20px 0;
+  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1001;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.navbar.mobile:not(.collapsed) {
+  left: 0;
+}
+
+.navbar.mobile .navbar-header {
+  padding: 25px 20px 20px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.navbar.mobile .user-info {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease 0.2s;
+}
+
+.navbar.mobile.collapsed .user-info {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.navbar.mobile .nav-text {
+  display: block;
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease 0.1s;
+}
+
+.navbar.mobile .nav-link {
+  justify-content: flex-start;
+  padding: 15px 25px;
+  margin: 4px 15px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.navbar.mobile .navbar-menu {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+}
+
+.navbar.mobile .nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(8px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.navbar.mobile .nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+  border-left: 4px solid white;
+}
+
+.navbar.mobile .nav-link i {
+  margin-right: 15px;
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.navbar.mobile .navbar-footer {
+  margin-top: auto;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+}
+
+.navbar.mobile .logout-btn {
+  margin: 20px 20px 15px 20px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  justify-content: flex-start;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+  backdrop-filter: none;
+  overflow: hidden;
+  max-width: calc(100% - 40px);
+  box-sizing: border-box;
+}
+
+.navbar.mobile .logout-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: none;
+  box-shadow: none;
+}
+
+.navbar-header {
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: opacity 0.3s ease;
+}
+
+.user-info .user-details {
+  display: none;
+  color: white;
+}
+
+.navbar:not(.mobile):hover .user-info .user-details {
+  display: block;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  min-width: 50px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.user-avatar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar:hover .user-avatar {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+.navbar:hover .user-avatar::before {
+  transform: scale(1);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-role {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Botón hamburguesa - visible cuando el menú está cerrado */
+.navbar-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1002;
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+/* Cuando el botón es X (menú abierto), moverlo fuera del área del menú */
+.navbar-toggle.menu-open {
+  left: 320px;
+  top: 20px;
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 50%;
+  z-index: 1003;
+}
+
+.navbar-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Overlay para móvil */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.mobile-overlay.show {
+  opacity: 1;
+}
+
+/* Ocultar texto por defecto, mostrar en hover */
+.nav-text {
+  display: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  margin-left: 15px;
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.navbar:not(.mobile):hover .nav-text {
+  display: block;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  color: white;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-left: 4px solid transparent;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.navbar:not(.mobile):hover .nav-link {
+  justify-content: flex-start;
+  padding-left: 25px;
+}
+
+.nav-link i {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+  min-width: 20px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.nav-link:hover::before {
+  left: 100%;
+}
+
+.nav-link:hover i {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.15);
+  border-left-color: #fff;
+  transform: translateX(3px);
+}
+
+.nav-link.active i {
+  transform: scale(1.1);
+}
+
+/* Estilos específicos para hover y active por rol */
+.navbar-admin .nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-admin .nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  border-left: 4px solid #ffffff;
+}
+
+.navbar-teacher .nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-teacher .nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  border-left: 4px solid #ffffff;
+}
+
+.navbar-student .nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-student .nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  border-left: 4px solid #ffffff;
+}
+
+/* Tooltip para iconos cuando está colapsado */
+.nav-link::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 70px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  z-index: 1001;
+}
+
+.nav-link:hover::after {
+  opacity: 1;
+}
+
+.navbar:hover .nav-link::after,
+.navbar.mobile .nav-link::after {
+  opacity: 0;
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.navbar:not(.mobile):hover .logout-btn {
+  justify-content: flex-start;
+  padding-left: 25px;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Estilos específicos para logout por rol */
+.navbar-admin .logout-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-teacher .logout-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-student .logout-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.logout-btn i {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+  min-width: 20px;
+}
+
+.navbar-student {
+  background: linear-gradient(135deg, #388e3c, #4caf50);
+}
+
+.nav-link-admin.active {
+  border-left-color: #e1bee7;
+}
+
+.nav-link-teacher.active {
+  border-left-color: #bbdefb;
+}
+
+.nav-link-student.active {
+  border-left-color: #c8e6c9;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 768px) {
+  .mobile-overlay {
+    display: block;
+  }
+
+  .navbar:not(.collapsed) {
+    left: 0;
+  }
+
+  .navbar-header {
+    justify-content: flex-start;
+    padding: 20px;
+  }
+
+  .user-info .user-details {
+    display: block;
+  }
+
+  .nav-text {
+    display: block;
+  }
+
+  .nav-link {
+    justify-content: flex-start;
+    padding-left: 25px;
+  }
+
+  .logout-btn {
+    justify-content: flex-start;
+    padding-left: 25px;
+  }
+
+  .nav-link::after {
+    display: none;
+  }
+}
+
+/* Responsive - Móvil */
+@media (max-width: 480px) {
+  .navbar {
+    width: 100%;
+  }
+}
+
+/* Animaciones para elementos del menú móvil */
+.navbar.mobile .nav-item {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.3s ease;
+}
+
+.navbar.mobile:not(.collapsed) .nav-item {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.navbar.mobile:not(.collapsed) .nav-item:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.navbar.mobile:not(.collapsed) .nav-item:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+.navbar.mobile:not(.collapsed) .nav-item:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.navbar.mobile:not(.collapsed) .nav-item:nth-child(4) {
+  transition-delay: 0.4s;
+}
+
+.navbar.mobile:not(.collapsed) .nav-item:nth-child(5) {
+  transition-delay: 0.5s;
+}
+
+.navbar.mobile .logout-btn {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease 0.6s;
+}
+
+.navbar.mobile:not(.collapsed) .logout-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+.navbar-menu {
+  transition: opacity 0.3s ease;
+}
+
+.navbar.collapsed.mobile .navbar-menu {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.navbar:not(.collapsed).mobile .navbar-menu {
+  opacity: 1;
+  pointer-events: auto;
+}

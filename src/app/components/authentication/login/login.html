@@ -1,0 +1,89 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Logo UIS -->
+    <div class="logo-section">
+
+      <div class="logo-image">
+        <img src="assets/images/logoUIS.png" alt="Logo UIS" class="uis-logo">
+      </div>
+    </div>
+
+    <!-- Formulario de Login -->
+    <form class="login-form" (ngSubmit)="onSubmit()">
+      <h2 class="login-title">Sign in to UIS Schedule</h2>
+
+      <!-- Mensaje de error -->
+      <div class="error-message" *ngIf="errorMessage">
+        <i class="fas fa-exclamation-triangle"></i>
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <label for="username">Código</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="username"
+          [disabled]="isLoading"
+          required
+          placeholder="Enter your Code"
+        />
+      </div>
+
+      <div class="form-group">
+        <div class="password-header">
+          <label for="password">Password</label>
+          <a href="#" class="forgot-password">Forgot password?</a>
+        </div>
+        <div class="password-container">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            [disabled]="isLoading"
+            required
+            placeholder="Enter your password"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="toggleShowPassword()"
+            [disabled]="isLoading"
+          >
+            <i
+              class="fa"
+              [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+            ></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-signin" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Sign in</span>
+          <span *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i>
+            Signing in...
+          </span>
+        </button>
+      </div>
+
+      
+
+      <!-- Footer con Create Account -->
+      <div class="login-footer">
+        <span class="footer-text">New to UIS?</span>
+        <a href="#" class="create-account">Create an account</a>
+      </div>
+
+      <!-- Botón para mostrar credenciales de prueba (solo para desarrollo) -->
+      <div class="test-credentials" *ngIf="!isLoading">
+        <button type="button" class="btn-test" (click)="showTestCredentials()">
+          Ver credenciales de prueba
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

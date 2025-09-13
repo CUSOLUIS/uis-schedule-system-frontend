@@ -1,0 +1,380 @@
+<div class="subject-detail-container" *ngIf="subject()">
+  <div class="header">
+    <button class="btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      Volver
+    </button>
+    <h1>{{ subject()?.name }}</h1>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="openEditSubjectModal()">
+        <i class="fas fa-edit"></i>
+        Editar Asignatura
+      </button>
+      <button class="btn-danger" (click)="deleteSubject()">
+        <i class="fas fa-trash"></i>
+        Eliminar
+      </button>
+    </div>
+  </div>
+
+  <div class="subject-info">
+    <div class="info-card">
+      <h3>Información General</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Código:</label>
+          <span>{{ subject()?.code }}</span>
+        </div>
+        <div class="info-item">
+          <label>Créditos:</label>
+          <span>{{ subject()?.credits }}</span>
+        </div>
+        <div class="info-item">
+          <label>Semestre:</label>
+          <span>{{ subject()?.semester }}</span>
+        </div>
+        <div class="info-item full-width">
+          <label>Descripción:</label>
+          <span>{{ subject()?.description }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="groups-section">
+    <div class="section-header">
+      <h2>Grupos ({{ subject()?.groups?.length }})</h2>
+      <button class="btn-primary" (click)="openCreateGroupModal()">
+        <i class="fas fa-plus"></i>
+        Nuevo Grupo
+      </button>
+    </div>
+
+    <div class="groups-grid">
+      <app-group-card
+        *ngFor="let group of subject()?.groups"
+        [group]="convertGroupToCardData(group)"
+        [config]="groupCardConfig"
+        (onView)="onGroupCardView($event)"
+        (onDelete)="onGroupCardDelete($event)"
+        (onCardClick)="onGroupCardClick($event)"
+      ></app-group-card>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para crear grupo -->
+<div
+  class="modal-overlay"
+  *ngIf="showCreateGroupModal()"
+  (click)="closeCreateGroupModal()"
+>
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Crear Nuevo Grupo</h3>
+      <button class="close-btn" (click)="closeCreateGroupModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="createGroup()">
+        <div class="form-group">
+          <label>Número de Grupo:</label>
+          <input
+            type="text"
+            [(ngModel)]="newGroup.groupNumber"
+            name="groupNumber"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Profesor:</label>
+          <select [(ngModel)]="newGroup.teacherId" name="teacherId" required>
+            <option value="">Seleccionar profesor</option>
+            <option *ngFor="let teacher of teachers()" [value]="teacher.id">
+              {{ teacher.fullName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Máximo Estudiantes:</label>
+            <input
+              type="number"
+              [(ngModel)]="newGroup.maxStudents"
+              name="maxStudents"
+              min="1"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Aula:</label>
+            <input
+              type="text"
+              [(ngModel)]="newGroup.classroom"
+              name="classroom"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="schedule-section">
+          <h4>Horario:</h4>
+          <div class="schedule-slots-form">
+            <div
+              class="schedule-slot-form"
+              *ngFor="let slot of newGroup.schedule; let i = index"
+            >
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Día:</label>
+                  <select [(ngModel)]="slot.day" [name]="'day_' + i">
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sábado">Sábado</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Hora Inicio:</label>
+                  <input
+                    type="time"
+                    [(ngModel)]="slot.startTime"
+                    [name]="'startTime_' + i"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Hora Fin:</label>
+                  <input
+                    type="time"
+                    [(ngModel)]="slot.endTime"
+                    [name]="'endTime_' + i"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Aula:</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="slot.classroom"
+                    [name]="'classroom_' + i"
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="btn-danger-small"
+                  (click)="removeScheduleSlot(i)"
+                  *ngIf="newGroup.schedule.length > 1"
+                >
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="addScheduleSlot()"
+          >
+            <i class="fas fa-plus"></i>
+            Agregar Horario
+          </button>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="closeCreateGroupModal()"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary">Crear Grupo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para editar asignatura -->
+<div
+  class="modal-overlay"
+  *ngIf="showEditSubjectModal()"
+  (click)="closeEditSubjectModal()"
+>
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Editar Asignatura</h3>
+      <button class="close-btn" (click)="closeEditSubjectModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="updateSubject()">
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input
+            type="text"
+            [(ngModel)]="editSubjectForm.name"
+            name="name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Código:</label>
+          <input
+            type="text"
+            [(ngModel)]="editSubjectForm.code"
+            name="code"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Descripción:</label>
+          <textarea
+            [(ngModel)]="editSubjectForm.description"
+            name="description"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Créditos:</label>
+            <input
+              type="number"
+              [(ngModel)]="editSubjectForm.credits"
+              name="credits"
+              min="1"
+              max="10"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Semestre:</label>
+            <input
+              type="number"
+              [(ngModel)]="editSubjectForm.semester"
+              name="semester"
+              min="1"
+              max="10"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="closeEditSubjectModal()"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary">Actualizar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para ver detalle de grupo -->
+<div class="modal-overlay" *ngIf="selectedGroup()" (click)="closeGroupDetail()">
+  <div class="modal large" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Grupo {{ selectedGroup()?.groupNumber }} - {{ subject()?.name }}</h3>
+      <button class="close-btn" (click)="closeGroupDetail()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="group-detail-info">
+        <div class="info-section">
+          <h4><i class="fas fa-info-circle"></i> Información del Grupo</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <label><i class="fas fa-chalkboard-teacher"></i> Profesor:</label>
+              <span>{{ selectedGroup()?.teacherName }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-book"></i> Asignatura:</label>
+              <span>{{ subject()?.name }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-door-open"></i> Aula:</label>
+              <span>{{ selectedGroup()?.classroom }}</span>
+            </div>
+            <div class="info-item">
+              <label><i class="fas fa-users"></i> Capacidad:</label>
+              <span>{{ getCurrentStudents(selectedGroup()!) }}/{{ selectedGroup()?.maxStudents }} estudiantes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h4><i class="fas fa-clock"></i> Horario</h4>
+          <div class="schedule-list">
+            <div
+              class="schedule-item"
+              *ngFor="let slot of selectedGroup()?.schedule"
+            >
+              <span class="day">{{ slot.day }}</span>
+              <span class="time"
+                >{{ slot.startTime }} - {{ slot.endTime }}</span
+              >
+              <span class="classroom">{{ slot.classroom }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h4><i class="fas fa-user-graduate"></i>
+            Estudiantes Inscritos ({{ getCurrentStudents(selectedGroup()!) }})
+          </h4>
+          <div class="students-list">
+            <div
+              class="student-item"
+              *ngFor="let studentId of selectedGroup()?.studentIds"
+            >
+              <span class="student-name">{{ getStudentName(studentId) }}</span>
+              <button
+                class="btn-danger-small"
+                (click)="unenrollStudent(selectedGroup()!.id, studentId)"
+              >
+                <i class="fas fa-user-minus"></i>
+                Desenrolar
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="available-students"
+            *ngIf="getAvailableStudents(selectedGroup()!).length > 0"
+          >
+            <h5><i class="fas fa-users"></i> Estudiantes Disponibles</h5>
+            <div class="students-list">
+              <div
+                class="student-item"
+                *ngFor="let student of getAvailableStudents(selectedGroup()!)"
+              >
+                <span class="student-name">{{ student.fullName }}</span>
+                <button
+                  class="btn-success-small"
+                  (click)="enrollStudent(selectedGroup()!.id, student.id)"
+                >
+                  <i class="fas fa-user-plus"></i>
+                  Enrollar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

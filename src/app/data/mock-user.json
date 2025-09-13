@@ -1,0 +1,348 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "admin1",
+      "password": "admin123",
+      "role": "admin",
+      "fullName": "Administrador Principal",
+      "email": "admin1@uis.edu.co"
+    },
+    {
+      "id": "2",
+      "username": "admin2",
+      "password": "admin123",
+      "role": "admin",
+      "fullName": "Administrador Secundario",
+      "email": "admin2@uis.edu.co"
+    },
+    {
+      "id": "3",
+      "username": "admin3",
+      "password": "admin123",
+      "role": "admin",
+      "fullName": "Administrador de Sistema",
+      "email": "admin3@uis.edu.co"
+    },
+    {
+      "id": "4",
+      "username": "profesor1",
+      "password": "prof123",
+      "role": "teacher",
+      "fullName": "Dr. Carlos Martínez",
+      "email": "carlos.martinez@uis.edu.co"
+    },
+    {
+      "id": "5",
+      "username": "profesor2",
+      "password": "prof123",
+      "role": "teacher",
+      "fullName": "Dra. Ana García",
+      "email": "ana.garcia@uis.edu.co"
+    },
+    {
+      "id": "6",
+      "username": "profesor3",
+      "password": "prof123",
+      "role": "teacher",
+      "fullName": "Dr. Luis Rodríguez",
+      "email": "luis.rodriguez@uis.edu.co"
+    },
+    {
+      "id": "7",
+      "username": "profesor4",
+      "password": "prof123",
+      "role": "teacher",
+      "fullName": "Dra. María González",
+      "email": "maria.gonzalez@uis.edu.co"
+    },
+    {
+      "id": "8",
+      "username": "estudiante1",
+      "password": "est123",
+      "role": "student",
+      "fullName": "María Fernanda López",
+      "email": "maria.lopez@correo.uis.edu.co"
+    },
+    {
+      "id": "9",
+      "username": "estudiante2",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Juan Pablo Herrera",
+      "email": "juan.herrera@correo.uis.edu.co"
+    },
+    {
+      "id": "10",
+      "username": "estudiante3",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Carolina Jiménez",
+      "email": "carolina.jimenez@correo.uis.edu.co"
+    },
+    {
+      "id": "11",
+      "username": "estudiante4",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Andrés Felipe Morales",
+      "email": "andres.morales@correo.uis.edu.co"
+    },
+    {
+      "id": "12",
+      "username": "estudiante5",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Laura Sofía Ramírez",
+      "email": "laura.ramirez@correo.uis.edu.co"
+    },
+    {
+      "id": "13",
+      "username": "estudiante6",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Diego Alejandro Torres",
+      "email": "diego.torres@correo.uis.edu.co"
+    },
+    {
+      "id": "14",
+      "username": "estudiante7",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Valentina Castro",
+      "email": "valentina.castro@correo.uis.edu.co"
+    },
+    {
+      "id": "15",
+      "username": "estudiante8",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Sebastian Vargas",
+      "email": "sebastian.vargas@correo.uis.edu.co"
+    },
+    {
+      "id": "16",
+      "username": "profesor5",
+      "password": "prof123",
+      "role": "teacher",
+      "fullName": "Dr. Miguel Torres",
+      "email": "miguel.torres@uis.edu.co"
+    },
+    {
+      "id": "17",
+      "username": "profesor6",
+      "password": "prof123",
+      "role": "teacher",
+      "fullName": "Dra. Patricia Silva",
+      "email": "patricia.silva@uis.edu.co"
+    },
+    {
+      "id": "18",
+      "username": "estudiante9",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Andrés Morales",
+      "email": "andres.morales@correo.uis.edu.co"
+    },
+    {
+      "id": "19",
+      "username": "estudiante10",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Valentina Cruz",
+      "email": "valentina.cruz@correo.uis.edu.co"
+    },
+    {
+      "id": "20",
+      "username": "estudiante11",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Diego Herrera",
+      "email": "diego.herrera@correo.uis.edu.co"
+    },
+    {
+      "id": "21",
+      "username": "estudiante12",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Isabella Méndez",
+      "email": "isabella.mendez@correo.uis.edu.co"
+    },
+    {
+      "id": "22",
+      "username": "estudiante13",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Mateo Ruiz",
+      "email": "mateo.ruiz@correo.uis.edu.co"
+    },
+    {
+      "id": "23",
+      "username": "estudiante14",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Camila Jiménez",
+      "email": "camila.jimenez@correo.uis.edu.co"
+    },
+    {
+      "id": "24",
+      "username": "estudiante15",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Lucas Fernández",
+      "email": "lucas.fernandez@correo.uis.edu.co"
+    },
+    {
+      "id": "25",
+      "username": "estudiante16",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Sofía Ramírez",
+      "email": "sofia.ramirez@correo.uis.edu.co"
+    },
+    {
+      "id": "26",
+      "username": "estudiante17",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Nicolás Castillo",
+      "email": "nicolas.castillo@correo.uis.edu.co"
+    },
+    {
+      "id": "27",
+      "username": "estudiante18",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Mariana Delgado",
+      "email": "mariana.delgado@correo.uis.edu.co"
+    },
+    {
+      "id": "28",
+      "username": "estudiante19",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Santiago Peña",
+      "email": "santiago.pena@correo.uis.edu.co"
+    },
+    {
+      "id": "29",
+      "username": "estudiante20",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Regina Ortega",
+      "email": "regina.ortega@correo.uis.edu.co"
+    },
+    {
+      "id": "30",
+      "username": "estudiante21",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Emilio Navarro",
+      "email": "emilio.navarro@correo.uis.edu.co"
+    },
+    {
+      "id": "31",
+      "username": "estudiante22",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Catalina Rojas",
+      "email": "catalina.rojas@correo.uis.edu.co"
+    },
+    {
+      "id": "32",
+      "username": "estudiante23",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Alejandro Vega",
+      "email": "alejandro.vega@correo.uis.edu.co"
+    },
+    {
+      "id": "33",
+      "username": "estudiante24",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Valeria Guerrero",
+      "email": "valeria.guerrero@correo.uis.edu.co"
+    },
+    {
+      "id": "34",
+      "username": "estudiante25",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Gabriel Molina",
+      "email": "gabriel.molina@correo.uis.edu.co"
+    },
+    {
+      "id": "35",
+      "username": "estudiante26",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Antonia Sánchez",
+      "email": "antonia.sanchez@correo.uis.edu.co"
+    },
+    {
+      "id": "36",
+      "username": "estudiante27",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Julián Espinoza",
+      "email": "julian.espinoza@correo.uis.edu.co"
+    },
+    {
+      "id": "37",
+      "username": "estudiante28",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Renata Moreno",
+      "email": "renata.moreno@correo.uis.edu.co"
+    },
+    {
+      "id": "38",
+      "username": "estudiante29",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Gabriel Torres",
+      "email": "gabriel.torres@correo.uis.edu.co"
+    },
+    {
+      "id": "39",
+      "username": "estudiante30",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Isabella Romero",
+      "email": "isabella.romero@correo.uis.edu.co"
+    },
+    {
+      "id": "40",
+      "username": "estudiante31",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Nicolás Vargas",
+      "email": "nicolas.vargas@correo.uis.edu.co"
+    },
+    {
+      "id": "41",
+      "username": "estudiante32",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Alejandra Cruz",
+      "email": "alejandra.cruz@correo.uis.edu.co"
+    },
+    {
+      "id": "42",
+      "username": "estudiante33",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Daniel Herrera",
+      "email": "daniel.herrera@correo.uis.edu.co"
+    },
+    {
+      "id": "43",
+      "username": "estudiante34",
+      "password": "est123",
+      "role": "student",
+      "fullName": "Camila Jiménez",
+      "email": "camila.jimenez@correo.uis.edu.co"
+    }
+  ]
+}

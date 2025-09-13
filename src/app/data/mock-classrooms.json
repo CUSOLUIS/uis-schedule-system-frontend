@@ -1,0 +1,63 @@
+{
+  "classrooms": [
+    {
+      "id": "1",
+      "name": "Aula 101",
+      "code": "IL101",
+      "building": "IL",
+      "floor": 1,
+      "capacity": 30,
+      "resources": [
+        "Proyector",
+        "AC",
+        "Computador"
+      ],
+      "isAvailable": true,
+      "schedule": []
+    },
+    {
+      "id": "2",
+      "name": "Lab 201",
+      "code": "IL201",
+      "building": "IL",
+      "floor": 2,
+      "capacity": 25,
+      "resources": [
+        "Proyector",
+        "AC",
+        "30 Computadores"
+      ],
+      "isAvailable": true,
+      "schedule": []
+    },
+    {
+      "id": "3",
+      "name": "Aula 102",
+      "code": "IL102",
+      "building": "IL",
+      "floor": 1,
+      "capacity": 30,
+      "resources": [
+        "Proyector",
+        "AC"
+      ],
+      "isAvailable": true,
+      "schedule": []
+    },
+    {
+      "id": "4",
+      "name": "Aula 103",
+      "code": "IL103",
+      "building": "IL",
+      "floor": 1,
+      "capacity": 35,
+      "resources": [
+        "Proyector",
+        "AC",
+        "Smart TV"
+      ],
+      "isAvailable": true,
+      "schedule": []
+    }
+  ]
+}
