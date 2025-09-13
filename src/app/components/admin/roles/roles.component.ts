@@ -1,16 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserRole } from '../../../interfaces/user.interface';
-
-interface User {
-  id: string;
-  username: string;
-  fullName: string;
-  email: string;
-  role: UserRole;
-  createdAt: Date;
-}
+import { MOCK_USERS, User } from '../../../mocks/mock-users';
 
 @Component({
   selector: 'app-roles',
@@ -19,7 +11,7 @@ interface User {
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.css']
 })
-export class RolesComponent {
+export class RolesComponent implements OnInit {
   users = signal<User[]>([]);
   showCreateForm = signal(false);
   searchTerm = signal('');
@@ -38,34 +30,15 @@ export class RolesComponent {
     { id: 'admin', name: 'Administrador', color: '#4A148C', backgroundColor: '#9C27B0' }
   ];
 
-  constructor() {
-    // Datos de ejemplo
-    this.users.set([
-      {
-        id: '1',
-        username: 'juan.perez',
-        fullName: 'Juan Pérez',
-        email: 'juan.perez@uis.edu.co',
-        role: { id: 'student', name: 'Estudiante', color: '#388E3C', backgroundColor: '#4CAF50' },
-        createdAt: new Date('2024-01-15')
-      },
-      {
-        id: '2',
-        username: 'maria.garcia',
-        fullName: 'María García',
-        email: 'maria.garcia@uis.edu.co',
-        role: { id: 'teacher', name: 'Profesor', color: '#1976D2', backgroundColor: '#2196F3' },
-        createdAt: new Date('2024-01-10')
-      },
-      {
-        id: '3',
-        username: 'carlos.rodriguez',
-        fullName: 'Carlos Rodríguez',
-        email: 'carlos.rodriguez@uis.edu.co',
-        role: { id: 'admin', name: 'Administrador', color: '#4A148C', backgroundColor: '#9C27B0' },
-        createdAt: new Date('2024-01-05')
-      }
-    ]);
+  constructor() {}
+
+  ngOnInit() {
+    this.loadUsers();
+  }
+
+  private loadUsers() {
+    // In a real application, this would be an API call
+    this.users.set(MOCK_USERS);
   }
 
   toggleCreateForm(): void {
