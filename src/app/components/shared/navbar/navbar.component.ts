@@ -52,12 +52,12 @@ export default class NavbarComponent {
     }
   }
 
-  // Detectar si estamos en móvil
+  // Detecta si estamos en móvil
   private checkScreenSize(): void {
     this.isMobile = window.innerWidth <= 768;
   }
 
-  // Cerrar menú al hacer clic fuera (solo en móvil)
+  // Cierra el menú al hacer clic fuera (solo en móvil)
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (this.isMobile && !this.isCollapsed) {
@@ -109,14 +109,14 @@ export default class NavbarComponent {
     }
   }
 
-  // Cerrar menú al navegar (solo en móvil)
+  // Cierra el menú al navegar (solo en móvil)
   onNavigate(): void {
     if (this.isMobile) {
       this.isCollapsed = true;
     }
   }
 
-  // Agregar opción en el menú de admin
+  // Agrega opción en el menú de admin
   get adminMenuItem(): MenuItem {
     return {
       icon: 'fa-door-open',

@@ -72,9 +72,11 @@
 </nav>
 
 <!-- Overlay para móvil -->
-<div
+<button
   class="mobile-overlay"
   [class.show]="isMobile && !isCollapsed"
-  *ngIf="isMobile && !isCollapsed"
+  [hidden]="!(isMobile && !isCollapsed)"
+  type="button"
   (click)="toggleNavbar()"
-></div>
+  (keydown)="toggleNavbar()"
+></button>

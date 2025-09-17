@@ -63,26 +63,66 @@ export const routes: Routes = [
       // { path: 'settings', loadComponent: () => import('./components/admin/settings/settings.component') }
     ],
   },
-  // {
-  //   path: 'teacher',
-  //   canActivate: [authGuard],
-  //   children: [
-  //     { path: 'schedule', loadComponent: () => import('./components/teacher/schedule/schedule.component') },
-  //     { path: 'groups', loadComponent: () => import('./components/teacher/groups/groups.component') },
-  //     { path: 'subjects', loadComponent: () => import('./components/teacher/subjects/subjects.component') },
-  //     { path: 'profile', loadComponent: () => import('./components/teacher/profile/profile.component') }
-  //   ]
-  // },
-  // {
-  //   path: 'student',
-  //   canActivate: [authGuard],
-  //   children: [
-  //     { path: 'schedule', loadComponent: () => import('./components/student/schedule/schedule.component') },
-  //     { path: 'subjects', loadComponent: () => import('./components/student/subjects/subjects.component') },
-  //     { path: 'group', loadComponent: () => import('./components/student/group/group.component') },
-  //     { path: 'profile', loadComponent: () => import('./components/student/profile/profile.component') }
-  //   ]
-  // },
+  {
+    path: 'teacher',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./components/teacher/profile/teacher-profile.component').then(
+            (m) => m.TeacherProfileComponent
+          ),
+        title: 'Mi Perfil - Profesor',
+      } /*
+      {
+        path: 'schedule',
+        loadComponent: () =>
+          import(
+            './components/teacher/schedule/teacher-schedule.component'
+          ).then((m) => m.TeacherScheduleComponent),
+        title: 'Mi Horario - Profesor',
+      }, */,
+      {
+        path: 'subjects',
+        loadComponent: () =>
+          import('./components/teacher/subjects/index').then(
+            (m) => m.TeacherSubjectsComponent
+          ),
+        title: 'Mis Materias - Profesor',
+      },
+    ],
+  },
+  {
+    path: 'student',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./components/student/profile/student-profile.component').then(
+            (m) => m.StudentProfileComponent
+          ),
+        title: 'Mi Perfil - Estudiante',
+      } /*
+      {
+        path: 'schedule',
+        loadComponent: () =>
+          import(
+            './components/student/schedule/student-schedule.component'
+          ).then((m) => m.StudentScheduleComponent),
+        title: 'Mi Horario - Estudiante',
+      }, */,
+      {
+        path: 'subjects',
+        loadComponent: () =>
+          import(
+            './components/student/subjects/student-subjects.component'
+          ).then((m) => m.StudentSubjectsComponent),
+        title: 'Mis Materias - Estudiante',
+      },
+    ],
+  },
   {
     path: '**',
     redirectTo: '/login',

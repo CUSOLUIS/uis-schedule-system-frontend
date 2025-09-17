@@ -17,7 +17,7 @@ export class ClassroomService {
   }
 
   private loadInitialData() {
-    // Importar datos mock directamente
+    // Importa los datos mock directamente
     import('../data/mock-classrooms.json')
       .then((data) => {
         this.classrooms.set(data.classrooms);
@@ -160,5 +160,50 @@ export class ClassroomService {
   private timeToMinutes(time: string): number {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
+  }
+
+  // Métodos para solicitudes de cambio con verificación de capacidad
+  getAvailableClassroomsForGroup(
+    day: string,
+    startTime: string,
+    endTime: string,
+    requiredCapacity: number
+  ): Observable<Classroom[]> {
+    const availableClassrooms = this.classrooms().filter((classroom) => {
+      // Verifica la capacidad
+      if (classroom.capacity < requiredCapacity) {
+        return false;
+      }
+
+      // Verifica la disponibilidad en el horario solicitado
+      return this.isTimeSlotAvailable(classroom, day, startTime, endTime);
+    });
+
+    return of(availableClassrooms);
+  }
+
+  getAvailableTimeSlots(
+    classroomId: string,
+    day: string,
+    duration: number = 120
+  ): Observable<{ startTime: string; endTime: string }[]> {
+    const classroom = this.classrooms().find((c) => c.id === classroomId);
+    if (!classroom) {
+      return of([]);
+    }
+
+    const availableSlots: { startTime: string; endTime: string }[] = [];
+
+    // Genera bloques de tiempo cada 2 horas desde las 6:00 hasta las 22:00
+    for (let hour = 6; hour < 22; hour += 2) {
+      const startTime = `${hour.toString().padStart(2, '0')}:00`;
+      const endTime = `${(hour + 2).toString().padStart(2, '0')}:00`;
+
+      if (this.isTimeSlotAvailable(classroom, day, startTime, endTime)) {
+        availableSlots.push({ startTime, endTime });
+      }
+    }
+
+    return of(availableSlots);
   }
 }
