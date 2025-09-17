@@ -1,12 +1,12 @@
 <div class="classrooms-container">
   <!-- Vista de Lista de Aulas -->
   @if (!showDetail) {
-  <!-- Header y estadísticas usando el componente plantilla -->
-  <app-admin-section-header
+  <!-- Header -->
+  <app-section-header
     [config]="sectionConfig"
     (createButtonClick)="onCreateButtonClick()"
   >
-  </app-admin-section-header>
+  </app-section-header>
 
   <!-- Barra de búsqueda -->
   <app-search-box
@@ -164,28 +164,8 @@
       <!-- Horario del Aula -->
       <div class="schedule-section">
         <div class="schedule-header">
-          <h3>Horario de la Semana</h3>
-          <div class="schedule-controls">
-            <!-- Controles de vista responsive - Solo en desktop -->
-            <div class="view-toggle" *ngIf="!isMobileView">
-              <button
-                class="btn-toggle"
-                [class.active]="isWeekView"
-                (click)="isWeekView = true"
-              >
-                <i class="fas fa-calendar-week"></i>
-                <span class="toggle-text">Semana</span>
-              </button>
-              <button
-                class="btn-toggle"
-                [class.active]="!isWeekView"
-                (click)="isWeekView = false"
-              >
-                <i class="fas fa-calendar-day"></i>
-                <span class="toggle-text">Día</span>
-              </button>
-            </div>
-
+          <h3>Horario de {{ selectedClassroom.name }}</h3>
+          <div class="schedule-actions">
             <button
               class="btn-assign"
               (click)="assignSchedule(selectedClassroom)"
@@ -196,139 +176,10 @@
           </div>
         </div>
 
-        <!-- Selector de día para vista diaria -->
-        @if (!isWeekView) {
-        <div class="day-selector">
-          <div class="day-tabs">
-            @for (day of days; track $index) {
-            <button
-              class="day-tab"
-              [class.active]="selectedDayIndex === $index"
-              (click)="selectDay($index)"
-            >
-              {{ day.substring(0, 3) }}
-            </button>
-            }
-          </div>
-        </div>
-        }
-
-        <!-- Vista semanal (solo desktop) -->
-        @if (isWeekView && !isMobileView) {
-        <div class="schedule-table-container">
-          <table class="schedule-table">
-            <thead>
-              <tr>
-                <th>Hora</th>
-                @for (day of days; track day) {
-                <th>{{ day }}</th>
-                }
-              </tr>
-            </thead>
-            <tbody>
-              @for (time of timeSlots; track time) {
-              <tr>
-                <td class="time-header">{{ time }}</td>
-                @for (day of days; track day) {
-                <td
-                  class="time-slot"
-                  [class.available]="
-                    isTimeSlotAvailable(selectedClassroom, day, time)
-                  "
-                  [class.occupied]="
-                    !isTimeSlotAvailable(selectedClassroom, day, time)
-                  "
-                  [class.current-time]="
-                    day === currentDay && time === currentTime
-                  "
-                  (click)="
-                    isTimeSlotAvailable(selectedClassroom, day, time) &&
-                      assignSchedule(selectedClassroom, day, time)
-                  "
-                >
-                  @if (getScheduleForTimeSlot(selectedClassroom, day, time); as
-                  schedule) {
-                  <div class="schedule-info">
-                    <div class="subject-name">{{ schedule.subjectName }}</div>
-                    <small class="teacher-name">{{
-                      schedule.teacherName
-                    }}</small>
-                    @if (schedule.groupId) {
-                    <small class="group-info"
-                      >Grupo: {{ schedule.groupId }}</small
-                    >
-                    }
-                  </div>
-                  } @else {
-                  <div class="available-slot">
-                    <span class="available-text">Disponible</span>
-                    <small class="click-hint">Clic para asignar</small>
-                  </div>
-                  }
-                </td>
-                }
-              </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-        }
-
-        <!-- Vista diaria (móvil optimizada) -->
-        @if (!isWeekView) {
-        <div class="daily-schedule">
-          <div class="daily-header">
-            <h4>{{ getSelectedDay() }}</h4>
-            <span class="date-info">Horarios del día</span>
-          </div>
-
-          <div class="daily-slots">
-            @for (time of timeSlots; track time) {
-            <div
-              class="daily-slot-card"
-              [class.available]="
-                isTimeSlotAvailable(selectedClassroom, getSelectedDay(), time)
-              "
-              [class.occupied]="
-                !isTimeSlotAvailable(selectedClassroom, getSelectedDay(), time)
-              "
-              [class.current-time]="
-                getSelectedDay() === currentDay && time === currentTime
-              "
-              (click)="
-                isTimeSlotAvailable(
-                  selectedClassroom,
-                  getSelectedDay(),
-                  time
-                ) && assignSchedule(selectedClassroom, getSelectedDay(), time)
-              "
-            >
-              <div class="slot-time">
-                <span class="time-display">{{ time }}</span>
-              </div>
-
-              <div class="slot-content">
-                @if (getScheduleForTimeSlot(selectedClassroom, getSelectedDay(),
-                time); as schedule) {
-                <div class="schedule-details">
-                  <div class="subject-name">{{ schedule.subjectName }}</div>
-                  <div class="teacher-name">{{ schedule.teacherName }}</div>
-                  @if (schedule.groupId) {
-                  <div class="group-info">Grupo: {{ schedule.groupId }}</div>
-                  }
-                </div>
-                } @else {
-                <div class="available-details">
-                  <span class="available-text">Disponible</span>
-                  <small class="click-hint">Toca para asignar</small>
-                </div>
-                }
-              </div>
-            </div>
-            }
-          </div>
-        </div>
-        }
+        <app-schedule-view
+          [scheduleSlots]="scheduleSlots"
+          [config]="scheduleConfig"
+        ></app-schedule-view>
       </div>
     </div>
   </div>

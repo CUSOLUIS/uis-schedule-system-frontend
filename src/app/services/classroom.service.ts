@@ -37,6 +37,10 @@ export class ClassroomService {
     return of(classroom);
   }
 
+  getClassroomByIdSync(id: string): Classroom | undefined {
+    return this.classrooms().find((c) => c.id === id);
+  }
+
   createClassroom(classroom: Omit<Classroom, 'id'>): Observable<Classroom> {
     const newClassroom: Classroom = {
       ...classroom,

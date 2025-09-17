@@ -1,0 +1,163 @@
+<div class="teacher-schedule-container">
+  <!-- Header usando el template compartido -->
+  <app-section-header
+    [config]="sectionConfig"
+    (createButtonClick)="onGenerateReport()"
+  ></app-section-header>
+
+  <!-- Información del profesor -->
+  <div class="teacher-info-card" [style.background]="getUserRoleGradient()">
+    <div class="teacher-details">
+      <h3>{{ currentUser?.fullName }}</h3>
+      <p>{{ currentUser?.email }}</p>
+      <div class="professional-info">
+        <span class="department-badge">{{ getDepartment() }}</span>
+        <span class="subjects-badge"
+          >{{ teachingSubjects.length }} Materias</span
+        >
+      </div>
+    </div>
+    <div class="teaching-summary">
+      <h4>Resumen de Carga Académica</h4>
+      <div class="summary-stats">
+        <div class="stat">
+          <span class="number">{{ getTotalGroups() }}</span>
+          <span class="label">Grupos</span>
+        </div>
+        <div class="stat">
+          <span class="number">{{ getTotalStudents() }}</span>
+          <span class="label">Estudiantes</span>
+        </div>
+        <div class="stat">
+          <span class="number">{{ getTotalHours() }}</span>
+          <span class="label">Horas/Semana</span>
+        </div>
+        <div class="stat">
+          <span class="number">{{ getActiveDays() }}</span>
+          <span class="label">Días de Clase</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista del horario -->
+  <div class="schedule-section">
+    <app-schedule-view
+      [scheduleSlots]="scheduleSlots"
+      [config]="scheduleConfig"
+    ></app-schedule-view>
+  </div>
+
+  <!-- Materias que enseña -->
+  <div class="teaching-subjects-section">
+    <h3>Materias a Cargo</h3>
+    <div class="subjects-grid">
+      @for (subjectInfo of teachingSubjects; track subjectInfo.subject.id) {
+      <div class="subject-card">
+        <div class="subject-header">
+          <h4>{{ subjectInfo.subject.name }}</h4>
+          <span class="subject-code">{{ subjectInfo.subject.code }}</span>
+        </div>
+        <div class="subject-stats">
+          <div class="stat-item">
+            <span class="stat-label">Grupos:</span>
+            <span class="stat-value">{{ subjectInfo.groups.length }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Estudiantes:</span>
+            <span class="stat-value">{{ subjectInfo.totalStudents }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Créditos:</span>
+            <span class="stat-value">{{ subjectInfo.subject.credits }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Horas/Semana:</span>
+            <span class="stat-value">{{ subjectInfo.totalHours }}</span>
+          </div>
+        </div>
+
+        <!-- Grupos de la materia -->
+        <div class="groups-section">
+          <h5>Grupos:</h5>
+          @for (group of subjectInfo.groups; track group.id) {
+          <div class="group-card">
+            <div class="group-header">
+              <span class="group-number">Grupo {{ group.groupNumber }}</span>
+              <span class="students-count"
+                >{{ group.studentIds.length }}/{{ group.maxStudents }}</span
+              >
+            </div>
+            <div class="group-schedule">
+              @for (schedule of group.schedule; track $index) {
+              <div class="schedule-item">
+                <span class="day">{{ schedule.day }}</span>
+                <span class="time"
+                  >{{ schedule.startTime }} - {{ schedule.endTime }}</span
+                >
+                <span class="classroom">{{ schedule.classroom }}</span>
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Información adicional del profesor -->
+  <div class="additional-info-section">
+    <div class="info-grid">
+      <div class="info-card">
+        <h4>Distribución por Semestre</h4>
+        <div class="semester-distribution">
+          @for (semester of getSemesterDistribution(); track semester.number) {
+          <div class="semester-item">
+            <span class="semester-number">Semestre {{ semester.number }}</span>
+            <div class="semester-bar">
+              <div class="bar-fill" [style.width.%]="semester.percentage"></div>
+            </div>
+            <span class="semester-count">{{ semester.count }} materias</span>
+          </div>
+          }
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h4>Horarios por Día</h4>
+        <div class="daily-distribution">
+          @for (day of getDailyDistribution(); track day.name) {
+          <div class="day-item">
+            <span class="day-name">{{ day.name }}</span>
+            <span class="hours-count">{{ day.hours }} horas</span>
+            <div class="day-bar">
+              <div class="bar-fill" [style.width.%]="day.percentage"></div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h4>Próximas Clases</h4>
+        <div class="upcoming-classes">
+          @for (nextClass of getUpcomingClasses(); track $index) {
+          <div class="class-item">
+            <div class="class-time">
+              <span class="day">{{ nextClass.day }}</span>
+              <span class="time">{{ nextClass.time }}</span>
+            </div>
+            <div class="class-details">
+              <span class="subject">{{ nextClass.subject }}</span>
+              <span class="group">Grupo {{ nextClass.group }}</span>
+              <span class="classroom">{{ nextClass.classroom }}</span>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,12 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-export interface HeaderButtonConfig {
-  text: string;
-  icon: string;
-  visible?: boolean;
-  disabled?: boolean;
-}
+import { UserService } from '../../../services/user.service';
+import { RoleService } from '../../../services/role.service';
 
 export interface StatisticCard {
   icon: string;
@@ -19,95 +14,68 @@ export interface SectionHeaderConfig {
   title: string;
   description: string;
   icon: string;
-  primaryButton?: HeaderButtonConfig;
-  secondaryButton?: HeaderButtonConfig;
-  statistics?: StatisticCard[];
-  showStatistics?: boolean;
-  gradient?: string;
+  buttonText: string;
+  statistics: StatisticCard[];
 }
 
 @Component({
   selector: 'app-section-header',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <!-- Header Principal -->
-    <div
-      class="section-header"
-      [style.background]="
-        config.gradient || 'linear-gradient(135deg, #1976D2 0%, #1565C0 100%)'
-      "
-    >
-      <div class="header-content">
-        <h1 class="page-title">
-          <i [class]="'fas ' + config.icon"></i>
-          {{ config.title }}
-        </h1>
-        <p class="page-description">
-          {{ config.description }}
-        </p>
-      </div>
-
-      <div
-        class="header-actions"
-        *ngIf="config.primaryButton || config.secondaryButton"
-      >
-        <button
-          *ngIf="
-            config.secondaryButton && config.secondaryButton.visible !== false
-          "
-          class="action-btn secondary"
-          [disabled]="config.secondaryButton.disabled"
-          (click)="onSecondaryButtonClick()"
-        >
-          <i [class]="'fas ' + config.secondaryButton.icon"></i>
-          {{ config.secondaryButton.text }}
-        </button>
-
-        <button
-          *ngIf="config.primaryButton && config.primaryButton.visible !== false"
-          class="action-btn primary"
-          [disabled]="config.primaryButton.disabled"
-          (click)="onPrimaryButtonClick()"
-        >
-          <i [class]="'fas ' + config.primaryButton.icon"></i>
-          {{ config.primaryButton.text }}
-        </button>
-      </div>
-    </div>
-
-    <!-- Estadísticas -->
-    <div
-      class="stats-container"
-      *ngIf="config.showStatistics && config.statistics"
-    >
-      <div
-        class="stat-card"
-        *ngFor="let stat of config.statistics; let i = index"
-        [style.animation-delay]="(i + 1) * 0.1 + 's'"
-      >
-        <div class="stat-icon" [style.background-color]="stat.color">
-          <i [class]="'fas ' + stat.icon"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-number">{{ stat.value }}</h3>
-          <p class="stat-label">{{ stat.label }}</p>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './section-header.component.html',
   styleUrls: ['./section-header.component.css'],
 })
 export class SectionHeaderComponent {
-  @Input() config!: SectionHeaderConfig;
-  @Output() primaryButtonClick = new EventEmitter<void>();
-  @Output() secondaryButtonClick = new EventEmitter<void>();
+  private userService = inject(UserService);
+  private roleService = inject(RoleService);
 
-  onPrimaryButtonClick() {
-    this.primaryButtonClick.emit();
+  @Input() config!: SectionHeaderConfig;
+  @Output() createButtonClick = new EventEmitter<void>();
+
+  // Obtiene el gradiente del rol actual del usuario
+  getUserRoleGradient(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+    if (!roleId) return 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+
+    const role = this.roleService.getRoleById(roleId);
+    return (
+      role?.colorScheme.gradient ||
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    );
   }
 
-  onSecondaryButtonClick() {
-    this.secondaryButtonClick.emit();
+  // Obtiene el color primario del rol
+  getUserRolePrimary(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+    if (!roleId) return '#F8F9FA';
+
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.primary || '#F8F9FA';
+  }
+
+  // Obtiene el color secundario del rol
+  getUserRoleSecondary(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+    if (!roleId) return '#E9ECEF';
+
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.secondary || '#E9ECEF';
+  }
+
+  // Obtiene el color de acento del rol
+  getUserRoleAccent(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+    if (!roleId) return '#6C757D';
+
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.accent || '#6C757D';
+  }
+
+  onCreateClick() {
+    this.createButtonClick.emit();
   }
 }

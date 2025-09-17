@@ -1,6 +1,10 @@
 <div class="teacher-subjects-container">
   <!-- Header unificado -->
-  <app-section-header [config]="headerConfig"> </app-section-header>
+  <app-section-header
+    [config]="headerConfig"
+    (createButtonClick)="onViewSchedule()"
+  >
+  </app-section-header>
 
   <div class="subjects-grid">
     <button

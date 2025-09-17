@@ -1,0 +1,220 @@
+{
+  "roles": [
+    {
+      "id": "admin",
+      "name": "Administrador",
+      "displayName": "Administrador",
+      "description": "Gestiona el sistema completo, usuarios, materias y horarios",
+      "permissions": [
+        "manage_users",
+        "manage_subjects",
+        "manage_classrooms",
+        "manage_schedules",
+        "view_reports",
+        "system_config"
+      ],
+      "colorScheme": {
+        "primary": "#E8D5EB",
+        "secondary": "#D1A3D9",
+        "accent": "#B968C7",
+        "text": "#4A148C",
+        "border": "#9C27B0",
+        "background": "#FCF8FF",
+        "gradient": "linear-gradient(180deg, #2A0A42 0%, #4A1260 100%)",
+        "shadow": "rgba(74, 20, 140, 0.1)"
+      },
+      "iconClass": "fa-user-shield",
+      "routes": [
+        "/admin/dashboard",
+        "/admin/users",
+        "/admin/subjects",
+        "/admin/classrooms",
+        "/admin/teachers",
+        "/admin/students",
+        "/admin/schedules",
+        "/admin/reports"
+      ],
+      "menuItems": [
+        {
+          "id": "dashboard",
+          "label": "Dashboard",
+          "icon": "fas fa-tachometer-alt",
+          "route": "/dashboard",
+          "order": 1
+        },
+        {
+          "id": "subjects",
+          "label": "Asignaturas",
+          "icon": "fas fa-book",
+          "route": "/admin/subjects",
+          "order": 2
+        },
+        {
+          "id": "classrooms",
+          "label": "Aulas",
+          "icon": "fas fa-door-open",
+          "route": "/admin/classrooms",
+          "order": 3
+        },
+        {
+          "id": "teachers",
+          "label": "Profesores",
+          "icon": "fas fa-chalkboard-teacher",
+          "route": "/admin/teachers",
+          "order": 4
+        },
+        {
+          "id": "roles",
+          "label": "Roles",
+          "icon": "fas fa-user-shield",
+          "route": "/admin/roles",
+          "order": 5
+        }
+      ]
+    },
+    {
+      "id": "teacher",
+      "name": "Profesor",
+      "displayName": "Profesor",
+      "description": "Gestiona sus materias, grupos y horarios de clases",
+      "permissions": [
+        "view_own_subjects",
+        "manage_own_groups",
+        "view_own_schedule",
+        "manage_grades",
+        "view_students"
+      ],
+      "colorScheme": {
+        "primary": "#D1E7FB",
+        "secondary": "#A3D1F7",
+        "accent": "#74B9F0",
+        "text": "#1565C0",
+        "border": "#42A5F5",
+        "background": "#F3F9FF",
+        "gradient": "linear-gradient(135deg, #1E5A9F 0%, #1565C0 100%)",
+        "shadow": "rgba(21, 101, 192, 0.1)"
+      },
+      "iconClass": "fa-chalkboard-teacher",
+      "routes": [
+        "/teacher/dashboard",
+        "/teacher/subjects",
+        "/teacher/schedule",
+        "/teacher/groups",
+        "/teacher/profile"
+      ],
+      "menuItems": [
+        {
+          "id": "dashboard",
+          "label": "Dashboard",
+          "icon": "fas fa-tachometer-alt",
+          "route": "/dashboard",
+          "order": 1
+        },
+        {
+          "id": "schedule",
+          "label": "Mi Horario",
+          "icon": "fas fa-calendar-alt",
+          "route": "/teacher/schedule",
+          "order": 2
+        },
+        {
+          "id": "subjects",
+          "label": "Mis Materias",
+          "icon": "fas fa-book",
+          "route": "/teacher/subjects",
+          "order": 3
+        },
+        {
+          "id": "profile",
+          "label": "Mi Perfil",
+          "icon": "fas fa-user",
+          "route": "/teacher/profile",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "id": "student",
+      "name": "Estudiante",
+      "displayName": "Estudiante",
+      "description": "Consulta su horario, materias y información académica",
+      "permissions": [
+        "view_own_schedule",
+        "view_enrolled_subjects",
+        "view_grades",
+        "view_profile"
+      ],
+      "colorScheme": {
+        "primary": "#E8F5E8",
+        "secondary": "#D1F2D1",
+        "accent": "#A8E6A8",
+        "text": "#2D5A2D",
+        "border": "#7DD87D",
+        "background": "#F5FDF5",
+        "gradient": "linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%)",
+        "shadow": "rgba(45, 90, 45, 0.1)"
+      },
+      "iconClass": "fa-user-graduate",
+      "routes": [
+        "/student/dashboard",
+        "/student/subjects",
+        "/student/schedule",
+        "/student/grades",
+        "/student/profile"
+      ],
+      "menuItems": [
+        {
+          "id": "dashboard",
+          "label": "Dashboard",
+          "icon": "fas fa-tachometer-alt",
+          "route": "/dashboard",
+          "order": 1
+        },
+        {
+          "id": "schedule",
+          "label": "Mi Horario",
+          "icon": "fas fa-calendar-alt",
+          "route": "/student/schedule",
+          "order": 2
+        },
+        {
+          "id": "subjects",
+          "label": "Mis Materias",
+          "icon": "fas fa-book",
+          "route": "/student/subjects",
+          "order": 3
+        },
+        {
+          "id": "profile",
+          "label": "Mi Perfil",
+          "icon": "fas fa-user",
+          "route": "/student/profile",
+          "order": 4
+        }
+      ]
+    }
+  ],
+  "defaultRole": {
+    "id": "guest",
+    "name": "Invitado",
+    "displayName": "Invitado",
+    "description": "Acceso limitado al sistema",
+    "permissions": [
+      "view_public_info"
+    ],
+    "colorScheme": {
+      "primary": "#F5F5F5",
+      "secondary": "#E8E8E8",
+      "accent": "#D1D1D1",
+      "text": "#4A4A4A",
+      "border": "#B8B8B8",
+      "background": "#FAFAFA",
+      "gradient": "linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%)",
+      "shadow": "rgba(74, 74, 74, 0.1)"
+    },
+    "iconClass": "fa-user",
+    "routes": [
+      "/login"
+    ]
+  }
+}

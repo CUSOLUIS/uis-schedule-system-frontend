@@ -1,0 +1,170 @@
+{
+  "systemConfig": {
+    "academicCalendar": {
+      "workDays": [
+        {
+          "id": "monday",
+          "name": "Lunes",
+          "shortName": "Lun",
+          "active": true,
+          "order": 1
+        },
+        {
+          "id": "tuesday", 
+          "name": "Martes",
+          "shortName": "Mar",
+          "active": true,
+          "order": 2
+        },
+        {
+          "id": "wednesday",
+          "name": "Miércoles", 
+          "shortName": "Mié",
+          "active": true,
+          "order": 3
+        },
+        {
+          "id": "thursday",
+          "name": "Jueves",
+          "shortName": "Jue", 
+          "active": true,
+          "order": 4
+        },
+        {
+          "id": "friday",
+          "name": "Viernes",
+          "shortName": "Vie",
+          "active": true,
+          "order": 5
+        },
+        {
+          "id": "saturday",
+          "name": "Sábado",
+          "shortName": "Sáb",
+          "active": true,
+          "order": 6
+        }
+      ],
+      "timeSlots": [
+        {
+          "id": "slot_07",
+          "startTime": "07:00",
+          "endTime": "08:00",
+          "displayTime": "07:00",
+          "active": true,
+          "order": 1
+        },
+        {
+          "id": "slot_08",
+          "startTime": "08:00", 
+          "endTime": "09:00",
+          "displayTime": "08:00",
+          "active": true,
+          "order": 2
+        },
+        {
+          "id": "slot_09",
+          "startTime": "09:00",
+          "endTime": "10:00", 
+          "displayTime": "09:00",
+          "active": true,
+          "order": 3
+        },
+        {
+          "id": "slot_10",
+          "startTime": "10:00",
+          "endTime": "11:00",
+          "displayTime": "10:00", 
+          "active": true,
+          "order": 4
+        },
+        {
+          "id": "slot_11",
+          "startTime": "11:00",
+          "endTime": "12:00",
+          "displayTime": "11:00",
+          "active": true,
+          "order": 5
+        },
+        {
+          "id": "slot_12",
+          "startTime": "12:00",
+          "endTime": "13:00",
+          "displayTime": "12:00",
+          "active": true,
+          "order": 6
+        },
+        {
+          "id": "slot_13",
+          "startTime": "13:00",
+          "endTime": "14:00", 
+          "displayTime": "13:00",
+          "active": true,
+          "order": 7
+        },
+        {
+          "id": "slot_14",
+          "startTime": "14:00",
+          "endTime": "15:00",
+          "displayTime": "14:00",
+          "active": true,
+          "order": 8
+        },
+        {
+          "id": "slot_15",
+          "startTime": "15:00",
+          "endTime": "16:00",
+          "displayTime": "15:00",
+          "active": true,
+          "order": 9
+        },
+        {
+          "id": "slot_16",
+          "startTime": "16:00",
+          "endTime": "17:00",
+          "displayTime": "16:00",
+          "active": true,
+          "order": 10
+        },
+        {
+          "id": "slot_17",
+          "startTime": "17:00",
+          "endTime": "18:00",
+          "displayTime": "17:00",
+          "active": true,
+          "order": 11
+        },
+        {
+          "id": "slot_18",
+          "startTime": "18:00",
+          "endTime": "19:00",
+          "displayTime": "18:00",
+          "active": true,
+          "order": 12
+        }
+      ]
+    },
+    "ui": {
+      "animations": {
+        "defaultDuration": 300,
+        "delayIncrement": 100,
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)"
+      },
+      "colors": {
+        "defaults": {
+          "primary": "#F5F5F5",
+          "secondary": "#E8E8E8",
+          "accent": "#D1D1D1",
+          "background": "#FAFAFA"
+        }
+      }
+    },
+    "schedule": {
+      "defaultView": "week",
+      "allowViewToggle": true,
+      "highlightCurrentTime": true,
+      "refreshInterval": 30000,
+      "maxConcurrentClasses": 2
+    }
+  }
+}

@@ -1,0 +1,36 @@
+<!-- Header -->
+<div class="admin-header" [style.background]="getUserRoleGradient()">
+  <div class="header-content">
+    <h1 class="page-title">
+      <i [class]="'fas ' + config.icon"></i>
+      {{ config.title }}
+    </h1>
+    <p class="page-description">
+      {{ config.description }}
+    </p>
+  </div>
+
+  <button class="create-btn" (click)="onCreateClick()">
+    <i class="fas fa-plus"></i>
+    {{ config.buttonText }}
+  </button>
+</div>
+
+<!-- Estadísticas rápidas -->
+<div class="stats-container">
+  <div
+    class="stat-card"
+    *ngFor="let stat of config.statistics; let i = index"
+    [style.animation-delay]="(i + 1) * 0.1 + 's'"
+    [style.background]="'linear-gradient(135deg, ' + getUserRolePrimary() + ' 0%, ' + getUserRoleSecondary() + ' 100%)'"
+    [style.border-color]="getUserRoleAccent()"
+  >
+    <div class="stat-icon" [style.background-color]="getUserRoleAccent()">
+      <i [class]="'fas ' + stat.icon"></i>
+    </div>
+    <div class="stat-content">
+      <h3 class="stat-number">{{ stat.value }}</h3>
+      <p class="stat-label">{{ stat.label }}</p>
+    </div>
+  </div>
+</div>

@@ -22,7 +22,7 @@ export class StudentProfileComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.userService.getCurrentUser()();
-    if (!this.currentUser || this.currentUser.role.name !== 'ESTUDIANTE') {
+    if (!this.currentUser || this.currentUser.role.id !== 'student') {
       this.router.navigate(['/dashboard']);
       return;
     }

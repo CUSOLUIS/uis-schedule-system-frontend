@@ -41,7 +41,7 @@ export class TeacherProfileComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.userService.getCurrentUser()();
-    if (!this.currentUser || this.currentUser.role.name !== 'PROFESOR') {
+    if (!this.currentUser || this.currentUser.role.id !== 'teacher') {
       this.router.navigate(['/dashboard']);
       return;
     }

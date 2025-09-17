@@ -9,7 +9,7 @@ import {
   SectionHeaderComponent,
   SectionHeaderConfig,
   StatisticCard,
-} from '../../shared/section-header/section-header.component';
+} from '../../shared/section-header';
 
 interface EnrolledSubjectInfo {
   subject: Subject;
@@ -74,8 +74,7 @@ export class StudentSubjectsComponent implements OnInit {
       title: 'Mis Materias',
       description: `Materias inscritas para el estudiante ${this.currentUser.fullName}`,
       icon: 'fa-user-graduate',
-      gradient: 'linear-gradient(135deg, #4CAF50 0%, #45A049 100%)',
-      showStatistics: true,
+      buttonText: 'Ver Horario',
       statistics,
     };
   }
@@ -180,5 +179,10 @@ export class StudentSubjectsComponent implements OnInit {
       '#616161',
     ];
     return colors[(semester - 1) % colors.length];
+  }
+
+  onViewSchedule() {
+    // Navega a la vista de horario del estudiante
+    this.router.navigate(['/student/schedule']);
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { SubjectService } from '../../../services/subject.service';
 import { User } from '../../../interfaces/user.interface';
@@ -8,7 +9,7 @@ import {
   SectionHeaderComponent,
   SectionHeaderConfig,
   StatisticCard,
-} from '../../shared/section-header/section-header.component';
+} from '../../shared/section-header';
 import mockUsers from '../../../data/mock-user.json';
 
 interface TeacherSubjectInfo {
@@ -34,6 +35,7 @@ interface StudentInfo {
 export class TeacherSubjectsComponent implements OnInit {
   private userService = inject(UserService);
   private subjectService = inject(SubjectService);
+  private router = inject(Router);
 
   currentUser: User | null = null;
   teacherSubjects: TeacherSubjectInfo[] = [];
@@ -86,8 +88,7 @@ export class TeacherSubjectsComponent implements OnInit {
       title: 'Mis Materias',
       description: `Gestiona las materias asignadas para el profesor ${this.currentUser.fullName}`,
       icon: 'fa-chalkboard-teacher',
-      gradient: 'linear-gradient(135deg, #1976D2 0%, #1565C0 100%)',
-      showStatistics: true,
+      buttonText: 'Ver Horario',
       statistics,
     };
   }
@@ -233,5 +234,10 @@ export class TeacherSubjectsComponent implements OnInit {
       (sum, subject) => sum + subject.totalStudents,
       0
     );
+  }
+
+  onViewSchedule() {
+    // Navega a la vista de horario del profesor
+    this.router.navigate(['/teacher/schedule']);
   }
 }

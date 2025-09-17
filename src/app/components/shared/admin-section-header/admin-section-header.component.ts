@@ -1,5 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../../services/user.service';
+import { RoleService } from '../../../services/role.service';
 
 export interface StatisticCard {
   icon: string;
@@ -20,47 +22,48 @@ export interface AdminSectionConfig {
   selector: 'app-admin-section-header',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <!-- Header -->
-    <div class="admin-header">
-      <div class="header-content">
-        <h1 class="page-title">
-          <i [class]="'fas ' + config.icon"></i>
-          {{ config.title }}
-        </h1>
-        <p class="page-description">
-          {{ config.description }}
-        </p>
-      </div>
-
-      <button class="create-btn" (click)="onCreateClick()">
-        <i class="fas fa-plus"></i>
-        {{ config.buttonText }}
-      </button>
-    </div>
-
-    <!-- Estadísticas rápidas -->
-    <div class="stats-container">
-      <div
-        class="stat-card"
-        *ngFor="let stat of config.statistics; let i = index"
-        [style.animation-delay]="(i + 1) * 0.1 + 's'"
-      >
-        <div class="stat-icon" [style.background-color]="stat.color">
-          <i [class]="'fas ' + stat.icon"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-number">{{ stat.value }}</h3>
-          <p class="stat-label">{{ stat.label }}</p>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './admin-section-header.component.html',
   styleUrls: ['./admin-section-header.component.css'],
 })
 export class AdminSectionHeaderComponent {
+  private userService = inject(UserService);
+  private roleService = inject(RoleService);
+
   @Input() config!: AdminSectionConfig;
   @Output() createButtonClick = new EventEmitter<void>();
+
+  // Obtiene el gradiente del rol actual del usuario
+  getUserRoleGradient(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+    if (!roleId) return 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+
+    const role = this.roleService.getRoleById(roleId);
+    return (
+      role?.colorScheme.gradient ||
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    );
+  }
+
+  // Obtiene el color primario del rol
+  getUserRolePrimary(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+    if (!roleId) return '#E8F5E8';
+
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.primary || '#E8F5E8';
+  }
+
+  // Obtiene el color secundario del rol
+  getUserRoleSecondary(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+    if (!roleId) return '#D1F2D1';
+
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.secondary || '#D1F2D1';
+  }
 
   onCreateClick() {
     this.createButtonClick.emit();

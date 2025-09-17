@@ -1,9 +1,9 @@
 <div class="subjects-container">
   <!-- Header y estadísticas usando el componente plantilla -->
-  <app-admin-section-header 
+    <app-section-header 
     [config]="sectionConfig"
-    (createButtonClick)="onCreateButtonClick()">
-  </app-admin-section-header>
+    (createButtonClick)="createSubject()"
+  ></app-section-header>
 
   <!-- Search Box -->
   <app-search-box

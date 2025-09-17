@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, loginGuard } from './guards/auth.guard';
+import { authGuard, loginGuard, roleGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -24,7 +24,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
     children: [
       // { path: 'schedule', loadComponent: () => import('./components/admin/schedule/schedule.component') },
       // { path: 'groups', loadComponent: () => import('./components/admin/groups/groups.component') },
@@ -65,7 +65,7 @@ export const routes: Routes = [
   },
   {
     path: 'teacher',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
     children: [
       {
         path: 'profile',
@@ -74,7 +74,7 @@ export const routes: Routes = [
             (m) => m.TeacherProfileComponent
           ),
         title: 'Mi Perfil - Profesor',
-      } /*
+      },
       {
         path: 'schedule',
         loadComponent: () =>
@@ -82,7 +82,7 @@ export const routes: Routes = [
             './components/teacher/schedule/teacher-schedule.component'
           ).then((m) => m.TeacherScheduleComponent),
         title: 'Mi Horario - Profesor',
-      }, */,
+      },
       {
         path: 'subjects',
         loadComponent: () =>
@@ -95,7 +95,7 @@ export const routes: Routes = [
   },
   {
     path: 'student',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
     children: [
       {
         path: 'profile',
@@ -104,7 +104,7 @@ export const routes: Routes = [
             (m) => m.StudentProfileComponent
           ),
         title: 'Mi Perfil - Estudiante',
-      } /*
+      },
       {
         path: 'schedule',
         loadComponent: () =>
@@ -112,7 +112,7 @@ export const routes: Routes = [
             './components/student/schedule/student-schedule.component'
           ).then((m) => m.StudentScheduleComponent),
         title: 'Mi Horario - Estudiante',
-      }, */,
+      },
       {
         path: 'subjects',
         loadComponent: () =>
