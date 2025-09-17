@@ -1,0 +1,192 @@
+<div class="student-subjects-container">
+  <!-- Header unificado -->
+  <app-section-header
+    [config]="headerConfig"
+    (createButtonClick)="onViewSchedule()"
+  >
+  </app-section-header>
+
+  <div class="subjects-grid">
+    <button
+      class="subject-card"
+      *ngFor="let subjectInfo of enrolledSubjects"
+      (click)="onSubjectClick(subjectInfo)"
+      [attr.aria-label]="'Ver detalles de ' + subjectInfo.subject.name"
+      [style.border-left-color]="getSemesterColor(subjectInfo.subject.semester)"
+    >
+      <div class="subject-header">
+        <div class="subject-title">
+          <h3>{{ subjectInfo.subject.name }}</h3>
+          <span class="subject-code">{{ subjectInfo.subject.code }}</span>
+        </div>
+        <div
+          class="semester-badge"
+          [style.background-color]="
+            getSemesterColor(subjectInfo.subject.semester)
+          "
+        >
+          Sem {{ subjectInfo.subject.semester }}
+        </div>
+      </div>
+
+      <div class="subject-content">
+        <p class="subject-description">{{ subjectInfo.subject.description }}</p>
+
+        <div class="subject-details">
+          <div class="detail-row">
+            <span class="detail-label">
+              <i class="fas fa-credit-card"></i>
+              Créditos:
+            </span>
+            <span class="detail-value">{{ subjectInfo.subject.credits }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">
+              <i class="fas fa-chalkboard-teacher"></i>
+              Profesor:
+            </span>
+            <span class="detail-value">{{
+              subjectInfo.group.teacherName
+            }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">
+              <i class="fas fa-users"></i>
+              Grupo:
+            </span>
+            <span class="detail-value"
+              >{{ subjectInfo.group.groupNumber }} ({{
+                subjectInfo.classmates
+              }}/{{ subjectInfo.group.maxStudents }})</span
+            >
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">
+              <i class="fas fa-clock"></i>
+              Próxima clase:
+            </span>
+            <span class="detail-value next-class">{{
+              subjectInfo.nextClass
+            }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="subject-footer">
+        <div class="schedule-preview">
+          <i class="fas fa-calendar"></i>
+          <span
+            *ngFor="let schedule of subjectInfo.group.schedule; let last = last"
+          >
+            {{ schedule.day.substring(0, 3) }} {{ schedule.startTime
+            }}<span *ngIf="!last">, </span>
+          </span>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <!-- Panel de detalle -->
+  <div
+    class="detail-panel-overlay"
+    *ngIf="showDetailPanel"
+    (click)="closeDetailPanel()"
+    (keydown)="$event.key === 'Escape' && closeDetailPanel()"
+  >
+    <div
+      class="detail-panel"
+      (click)="$event.stopPropagation()"
+      (keydown)="$event.stopPropagation()"
+      *ngIf="selectedSubject"
+    >
+      <div class="panel-header">
+        <div class="panel-title">
+          <h2>{{ selectedSubject.subject.name }}</h2>
+          <span class="panel-code">{{ selectedSubject.subject.code }}</span>
+        </div>
+        <button class="close-btn" (click)="closeDetailPanel()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="panel-content">
+        <div class="info-sections">
+          <!-- Información general -->
+          <div class="info-section">
+            <h3><i class="fas fa-info-circle"></i> Información General</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <strong>Descripción:</strong>
+                <span>{{ selectedSubject.subject.description }}</span>
+              </div>
+              <div class="info-item">
+                <strong>Créditos:</strong>
+                <span>{{ selectedSubject.subject.credits }}</span>
+              </div>
+              <div class="info-item">
+                <strong>Semestre:</strong>
+                <span>{{ selectedSubject.subject.semester }}</span>
+              </div>
+              <div class="info-item">
+                <strong>Profesor:</strong>
+                <span>{{ selectedSubject.group.teacherName }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Información del grupo -->
+          <div class="info-section">
+            <h3><i class="fas fa-users"></i> Información del Grupo</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <strong>Grupo:</strong>
+                <span>{{ selectedSubject.group.groupNumber }}</span>
+              </div>
+              <div class="info-item">
+                <strong>Estudiantes:</strong>
+                <span
+                  >{{ selectedSubject.classmates }} /
+                  {{ selectedSubject.group.maxStudents }}</span
+                >
+              </div>
+              <div class="info-item">
+                <strong>Aula:</strong>
+                <span>{{ selectedSubject.group.classroom }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Horario completo -->
+          <div class="info-section">
+            <h3><i class="fas fa-calendar-alt"></i> Horario de Clases</h3>
+            <div class="schedule-list">
+              <div
+                class="schedule-item"
+                *ngFor="let schedule of selectedSubject.group.schedule"
+              >
+                <div class="schedule-day">{{ schedule.day }}</div>
+                <div class="schedule-time">
+                  {{ schedule.startTime }} - {{ schedule.endTime }}
+                </div>
+                <div class="schedule-classroom">{{ schedule.classroom }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Información Adicional -->
+          <div class="info-section">
+            <h3><i class="fas fa-info-circle"></i> Información Adicional</h3>
+            <div class="additional-info">
+              <p><strong>Modalidad:</strong> Presencial</p>
+              <p><strong>Estado:</strong> Activa</p>
+              <p><strong>Período:</strong> 2024-1</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

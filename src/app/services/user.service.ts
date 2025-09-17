@@ -1,39 +1,15 @@
-import { Injectable, signal } from '@angular/core';
-import {
-  User,
-  UserRole,
-  MenuItem,
-  LoginUser,
-} from '../interfaces/user.interface';
+import { Injectable, signal, inject } from '@angular/core';
+import { User, MenuItem, LoginUser } from '../interfaces/user.interface';
+import { RoleService } from './role.service';
 import mockUsersData from '../data/mock-user.json';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  private roleService = inject(RoleService);
   private users = signal<User[]>([]);
   private currentUser = signal<User | null>(null);
-
-  readonly userRoles: Record<string, UserRole> = {
-    admin: {
-      id: 'admin',
-      name: 'ADMIN',
-      color: '#FFFFFF',
-      backgroundColor: '#4A148C',
-    },
-    teacher: {
-      id: 'teacher',
-      name: 'PROFESOR',
-      color: '#FFFFFF',
-      backgroundColor: '#1976D2',
-    },
-    student: {
-      id: 'student',
-      name: 'ESTUDIANTE',
-      color: '#FFFFFF',
-      backgroundColor: '#1B5E20',
-    },
-  };
 
   readonly menuItems: Record<string, MenuItem[]> = {
     admin: [
@@ -128,33 +104,7 @@ export class UserService {
     ],
   };
 
-  constructor() {
-    // Inicializa los usuarios después de que userRoles esté definido
-    this.initializeUsers();
-  }
-
-  private initializeUsers(): void {
-    const transformedUsers = this.transformMockUsers();
-    this.users.set(transformedUsers);
-  }
-
-  private transformMockUsers(): User[] {
-    const mockUsers = mockUsersData.users as LoginUser[];
-    return mockUsers.map((mockUser) => {
-      const role = this.userRoles[mockUser.role];
-      if (!role) {
-        throw new Error(`Rol no encontrado: ${mockUser.role}`);
-      }
-
-      return {
-        id: mockUser.id,
-        username: mockUser.username,
-        role: role,
-        fullName: mockUser.fullName,
-        email: mockUser.email,
-      };
-    });
-  }
+  constructor() {}
 
   getCurrentUser() {
     return this.currentUser.asReadonly();
@@ -169,11 +119,23 @@ export class UserService {
   }
 
   getMenuItemsForUser(roleId: string): MenuItem[] {
-    return this.menuItems[roleId] || [];
-  }
+    // Primero intentar obtener del RoleService
+    const roleMenuItems = this.roleService.getRoleMenuItems(roleId);
+    if (roleMenuItems.length > 0) {
+      // Convierte MenuItem del RoleService al formato MenuItem del UserService
+      return roleMenuItems
+        .sort((a, b) => a.order - b.order)
+        .map((item) => ({
+          icon: item.icon,
+          label: item.label,
+          route: item.route,
+          visible: item.visible !== false, // Default to true si no está especificado
+          description: `${item.label} - ${roleId}`,
+        }));
+    }
 
-  getRoleById(roleId: string): UserRole | null {
-    return this.userRoles[roleId] || null;
+    // Fallback al menú estático existente
+    return this.menuItems[roleId] || [];
   }
 
   getUsers(): User[] {

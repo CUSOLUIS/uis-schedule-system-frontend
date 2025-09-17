@@ -1,0 +1,81 @@
+<div class="student-schedule-container">
+  <!-- Header usando el template compartido -->
+  <app-section-header
+    [config]="sectionConfig"
+    (createButtonClick)="onExportSchedule()"
+  ></app-section-header>
+
+  <!-- Información del estudiante -->
+  <div class="student-info-card" [style.background]="getUserRoleGradient()">
+    <div class="student-details">
+      <h3>{{ currentUser?.fullName }}</h3>
+      <p>{{ currentUser?.email }}</p>
+      <div class="academic-info">
+        <span class="semester-badge"
+          >Semestre Actual: {{ getCurrentSemester() }}</span
+        >
+        <span class="credits-badge"
+          >Total Créditos: {{ getTotalCredits() }}</span
+        >
+      </div>
+    </div>
+    <div class="schedule-summary">
+      <h4>Resumen del Horario</h4>
+      <div class="summary-stats">
+        <div class="stat">
+          <span class="number">{{ enrolledSubjects.length }}</span>
+          <span class="label">Materias</span>
+        </div>
+        <div class="stat">
+          <span class="number">{{ getTotalHours() }}</span>
+          <span class="label">Horas/Semana</span>
+        </div>
+        <div class="stat">
+          <span class="number">{{ getBusiestDay() }}</span>
+          <span class="label">Día más ocupado</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista del horario -->
+  <div class="schedule-section">
+    <app-schedule-view
+      [scheduleSlots]="scheduleSlots"
+      [config]="scheduleConfig"
+    ></app-schedule-view>
+  </div>
+
+  <!-- Lista de materias matriculadas -->
+  <div class="enrolled-subjects-section">
+    <h3>Materias Matriculadas</h3>
+    <div class="subjects-grid">
+      @for (subjectInfo of enrolledSubjects; track subjectInfo.subject.id) {
+      <div class="subject-card">
+        <div class="subject-header">
+          <h4>{{ subjectInfo.subject.name }}</h4>
+          <span class="subject-code">{{ subjectInfo.subject.code }}</span>
+        </div>
+        <div class="subject-details">
+          <p><strong>Grupo:</strong> {{ subjectInfo.group.groupNumber }}</p>
+          <p><strong>Profesor:</strong> {{ subjectInfo.group.teacherName }}</p>
+          <p><strong>Créditos:</strong> {{ subjectInfo.subject.credits }}</p>
+          <p><strong>Semestre:</strong> {{ subjectInfo.subject.semester }}</p>
+        </div>
+        <div class="subject-schedule">
+          <h5>Horarios:</h5>
+          @for (schedule of subjectInfo.group.schedule; track $index) {
+          <div class="schedule-item">
+            <span class="day">{{ schedule.day }}</span>
+            <span class="time"
+              >{{ schedule.startTime }} - {{ schedule.endTime }}</span
+            >
+            <span class="classroom">{{ schedule.classroom }}</span>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

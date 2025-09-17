@@ -30,7 +30,17 @@
           ],
           "teacherId": "4",
           "teacherName": "Dr. Carlos Martínez",
-          "studentIds": ["8", "9", "10", "11", "12", "18", "19", "20", "21"],
+          "studentIds": [
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "18",
+            "19",
+            "20",
+            "21"
+          ],
           "maxStudents": 30,
           "classroom": "Aula 101",
           "semester": 3
@@ -57,7 +67,14 @@
           ],
           "teacherId": "5",
           "teacherName": "Dra. Ana García",
-          "studentIds": ["13", "14", "15", "22", "23", "24"],
+          "studentIds": [
+            "13",
+            "14",
+            "15",
+            "22",
+            "23",
+            "24"
+          ],
           "maxStudents": 30,
           "classroom": "Aula 102",
           "semester": 3
@@ -94,7 +111,15 @@
           ],
           "teacherId": "6",
           "teacherName": "Dr. Luis Rodríguez",
-          "studentIds": ["8", "10", "12", "14", "25", "26", "27"],
+          "studentIds": [
+            "8",
+            "10",
+            "12",
+            "14",
+            "25",
+            "26",
+            "27"
+          ],
           "maxStudents": 25,
           "classroom": "Lab 201",
           "semester": 4
@@ -131,7 +156,14 @@
           ],
           "teacherId": "4",
           "teacherName": "Dr. Carlos Martínez",
-          "studentIds": ["9", "11", "13", "15", "28", "29"],
+          "studentIds": [
+            "9",
+            "11",
+            "13",
+            "15",
+            "28",
+            "29"
+          ],
           "maxStudents": 35,
           "classroom": "Aula 103",
           "semester": 2
@@ -168,7 +200,13 @@
           ],
           "teacherId": "5",
           "teacherName": "Dra. Ana García",
-          "studentIds": ["8", "9", "10", "30", "31"],
+          "studentIds": [
+            "8",
+            "9",
+            "10",
+            "30",
+            "31"
+          ],
           "maxStudents": 25,
           "classroom": "Lab 201",
           "semester": 5
@@ -205,7 +243,16 @@
           ],
           "teacherId": "6",
           "teacherName": "Dr. Luis Rodríguez",
-          "studentIds": ["11", "12", "13", "14", "15", "32", "33", "34"],
+          "studentIds": [
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "32",
+            "33",
+            "34"
+          ],
           "maxStudents": 30,
           "classroom": "Aula 103",
           "semester": 4
@@ -242,7 +289,13 @@
           ],
           "teacherId": "7",
           "teacherName": "Dra. María González",
-          "studentIds": ["8", "10", "12", "35", "36"],
+          "studentIds": [
+            "8",
+            "10",
+            "12",
+            "35",
+            "36"
+          ],
           "maxStudents": 25,
           "classroom": "Aula 101",
           "semester": 6
@@ -279,7 +332,13 @@
           ],
           "teacherId": "7",
           "teacherName": "Dra. María González",
-          "studentIds": ["9", "11", "13", "15", "37"],
+          "studentIds": [
+            "9",
+            "11",
+            "13",
+            "15",
+            "37"
+          ],
           "maxStudents": 30,
           "classroom": "Aula 102",
           "semester": 5
@@ -316,7 +375,15 @@
           ],
           "teacherId": "16",
           "teacherName": "Dr. Miguel Torres",
-          "studentIds": ["8", "10", "12", "14", "16", "18", "20"],
+          "studentIds": [
+            "8",
+            "10",
+            "12",
+            "14",
+            "16",
+            "18",
+            "20"
+          ],
           "maxStudents": 25,
           "classroom": "Lab 301",
           "semester": 5
@@ -343,7 +410,14 @@
           ],
           "teacherId": "16",
           "teacherName": "Dr. Miguel Torres",
-          "studentIds": ["9", "11", "13", "15", "17", "19"],
+          "studentIds": [
+            "9",
+            "11",
+            "13",
+            "15",
+            "17",
+            "19"
+          ],
           "maxStudents": 25,
           "classroom": "Lab 302",
           "semester": 5
@@ -380,7 +454,16 @@
           ],
           "teacherId": "17",
           "teacherName": "Dra. Patricia Silva",
-          "studentIds": ["21", "22", "23", "24", "25", "26", "27", "28"],
+          "studentIds": [
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28"
+          ],
           "maxStudents": 20,
           "classroom": "Aula 401",
           "semester": 7
@@ -407,7 +490,14 @@
           ],
           "teacherId": "17",
           "teacherName": "Dra. Patricia Silva",
-          "studentIds": ["29", "30", "31", "32", "38", "39"],
+          "studentIds": [
+            "29",
+            "30",
+            "31",
+            "32",
+            "38",
+            "39"
+          ],
           "maxStudents": 20,
           "classroom": "Lab IA",
           "semester": 7

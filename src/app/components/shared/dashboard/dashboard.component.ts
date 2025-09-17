@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
+import { RoleService } from '../../../services/role.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,6 +13,7 @@ import { UserService } from '../../../services/user.service';
 })
 export default class DashboardComponent {
   private userService = inject(UserService);
+  private roleService = inject(RoleService);
   private router = inject(Router);
 
   currentUser = this.userService.getCurrentUser();
@@ -19,21 +21,17 @@ export default class DashboardComponent {
   // Métodos para obtener colores dinámicos
   getUserRoleColor(): string {
     const roleId = this.currentUser()?.role?.id;
-    return this.userService.userRoles[roleId || 'admin']?.backgroundColor || '#4A148C';
+    const role = this.roleService.getRoleById(roleId || 'admin');
+    return role?.colorScheme?.background || '#4A148C';
   }
 
   getUserRoleGradient(): string {
     const roleId = this.currentUser()?.role?.id;
-    switch (roleId) {
-      case 'admin':
-        return 'linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%)';
-      case 'teacher':
-        return 'linear-gradient(135deg, #1976D2 0%, #1565C0 100%)';
-      case 'student':
-        return 'linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%)';
-      default:
-        return 'linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%)';
-    }
+    const role = this.roleService.getRoleById(roleId || 'admin');
+    return (
+      role?.colorScheme?.gradient ||
+      'linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%)'
+    );
   }
 
   navigateToSchedule(): void {
@@ -74,8 +72,8 @@ export default class DashboardComponent {
 
   // Devuelve las opciones del menú según el rol del usuario
   getMenuItems() {
-  const roleId = this.currentUser()?.role?.id || 'student';
-  return this.userService.menuItems[roleId] || [];
+    const roleId = this.currentUser()?.role?.id || 'student';
+    return this.userService.menuItems[roleId] || [];
   }
 
   // Navega a la ruta indicada

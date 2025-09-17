@@ -1,0 +1,231 @@
+<div
+  class="schedule-view-container"
+  [style.border-color]="getUserRoleAccent()"
+  [style.background]="
+    'linear-gradient(135deg, ' +
+    getUserRolePrimary() +
+    ' 0%, ' +
+    getUserRoleSecondary() +
+    ' 100%)'
+  "
+>
+  <!-- Controles de vista -->
+  <div class="schedule-controls">
+    @if (config.allowViewToggle) {
+    <div class="view-toggle">
+      <button
+        class="toggle-btn"
+        [class.active]="isWeekView"
+        (click)="toggleView('week')"
+        [style.background]="isWeekView ? getUserRoleGradient() : ''"
+      >
+        Vista Semanal
+      </button>
+      <button
+        class="toggle-btn"
+        [class.active]="!isWeekView"
+        (click)="toggleView('day')"
+        [style.background]="!isWeekView ? getUserRoleGradient() : ''"
+      >
+        Vista Diaria
+      </button>
+    </div>
+    }
+  </div>
+
+  <!-- Selector de día para vista diaria -->
+  @if (!isWeekView) {
+  <div class="day-selector">
+    <div class="day-tabs">
+      @for (day of days; track $index) {
+      <button
+        class="day-tab"
+        [class.active]="selectedDayIndex === $index"
+        (click)="selectDay($index)"
+        [style.background]="
+          selectedDayIndex === $index ? getUserRoleGradient() : ''
+        "
+        [style.border-color]="getUserRoleAccent()"
+      >
+        {{ day.substring(0, 3) }}
+      </button>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Vista semanal -->
+  @if (isWeekView) {
+  <div
+    class="schedule-table-container"
+    [style.border-color]="getUserRoleAccent()"
+  >
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th class="time-header-cell">Hora</th>
+          @for (day of days; track day) {
+          <th
+            class="day-header-cell"
+            [style.background]="
+              'linear-gradient(135deg, ' +
+              getUserRoleSecondary() +
+              ' 0%, ' +
+              getUserRoleAccent() +
+              ' 100%)'
+            "
+          >
+            {{ day }}
+          </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (time of timeSlots; track time) {
+        <tr>
+          <td class="time-cell">{{ time }}</td>
+          @for (day of days; track day) {
+          <td
+            class="schedule-cell"
+            [class.has-class]="getScheduleForSlot(day, time)"
+            [class.available]="!getScheduleForSlot(day, time)"
+            [class.current-time]="
+              config.highlightCurrentTime && isCurrentTimeSlot(day, time)
+            "
+            [style.background]="
+              config.highlightCurrentTime && isCurrentTimeSlot(day, time)
+                ? getUserRoleGradient()
+                : ''
+            "
+            [style.border-color]="
+              config.highlightCurrentTime && isCurrentTimeSlot(day, time)
+                ? getUserRoleAccent()
+                : ''
+            "
+            [style.box-shadow]="
+              config.highlightCurrentTime && isCurrentTimeSlot(day, time)
+                ? '0 4px 12px ' + getUserRoleAccent() + '40'
+                : ''
+            "
+          >
+            @if (getScheduleForSlot(day, time); as schedule) {
+            <div class="class-info">
+              <div class="subject-name">{{ schedule.subjectName }}</div>
+              @if (schedule.subjectCode) {
+              <div class="subject-code">{{ schedule.subjectCode }}</div>
+              } @if (schedule.teacherName) {
+              <div class="teacher-name">{{ schedule.teacherName }}</div>
+              } @if (schedule.groupNumber) {
+              <div class="group-info">Grupo {{ schedule.groupNumber }}</div>
+              }
+              <div class="location-info">
+                <div class="classroom-info">{{ schedule.classroom }}</div>
+                @if (schedule.building) {
+                <div class="building-info">
+                  {{ schedule.building }}@if (schedule.floor) { - Piso
+                  {{ schedule.floor }} }
+                </div>
+                }
+              </div>
+              <div class="time-info">
+                {{ schedule.startTime }} - {{ schedule.endTime }}
+              </div>
+            </div>
+            } @else {
+            <div class="empty-slot">
+              <span class="empty-text">Libre</span>
+            </div>
+            }
+          </td>
+          }
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+
+  <!-- Vista diaria -->
+  @if (!isWeekView) {
+  <div class="daily-schedule" [style.border-color]="getUserRoleAccent()">
+    <div class="daily-header" [style.background]="getUserRoleGradient()">
+      <h4>{{ getSelectedDay() }}</h4>
+      <span class="date-info">{{ getCurrentDate() }}</span>
+    </div>
+
+    <div class="daily-slots">
+      @for (time of getFilteredTimeSlots(); track time) {
+      <div
+        class="daily-slot-card"
+        [class.has-class]="getScheduleForSlot(getSelectedDay(), time)"
+        [class.available]="!getScheduleForSlot(getSelectedDay(), time)"
+        [class.current-time]="
+          config.highlightCurrentTime &&
+          isCurrentTimeSlot(getSelectedDay(), time)
+        "
+        [style.border-color]="
+          getScheduleForSlot(getSelectedDay(), time)
+            ? getUserRoleAccent()
+            : config.highlightCurrentTime &&
+              isCurrentTimeSlot(getSelectedDay(), time)
+            ? getUserRoleAccent()
+            : ''
+        "
+        [style.background]="
+          getScheduleForSlot(getSelectedDay(), time)
+            ? 'linear-gradient(135deg, ' +
+              getUserRolePrimary() +
+              ' 0%, ' +
+              getUserRoleSecondary() +
+              ' 100%)'
+            : config.highlightCurrentTime &&
+              isCurrentTimeSlot(getSelectedDay(), time)
+            ? getUserRoleGradient()
+            : ''
+        "
+        [style.box-shadow]="
+          config.highlightCurrentTime &&
+          isCurrentTimeSlot(getSelectedDay(), time)
+            ? '0 4px 12px ' + getUserRoleAccent() + '40'
+            : ''
+        "
+      >
+        <div class="slot-time">{{ time }}</div>
+        <div class="slot-content">
+          @if (getScheduleForSlot(getSelectedDay(), time); as schedule) {
+          <div class="class-details">
+            <h5 class="subject-name">{{ schedule.subjectName }}</h5>
+            @if (schedule.subjectCode) {
+            <span class="subject-code">{{ schedule.subjectCode }}</span>
+            } @if (schedule.teacherName) {
+            <p class="teacher-name">{{ schedule.teacherName }}</p>
+            } @if (schedule.groupNumber) {
+            <p class="group-info">Grupo {{ schedule.groupNumber }}</p>
+            }
+            <div class="location-time">
+              <div class="location-details">
+                <span class="classroom">{{ schedule.classroom }}</span>
+                @if (schedule.building) {
+                <span class="building"
+                  >{{ schedule.building }}@if (schedule.floor) { - Piso
+                  {{ schedule.floor }} }</span
+                >
+                }
+              </div>
+              <span class="duration"
+                >{{ schedule.startTime }} - {{ schedule.endTime }}</span
+              >
+            </div>
+          </div>
+          } @else {
+          <div class="empty-slot-daily">
+            <span class="empty-message">Tiempo libre</span>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>

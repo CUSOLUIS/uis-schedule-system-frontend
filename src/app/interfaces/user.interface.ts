@@ -1,3 +1,5 @@
+import { Role } from '../services/role.service';
+
 export interface UserRole {
   id: string;
   name: string;
@@ -16,7 +18,7 @@ export interface MenuItem {
 export interface User {
   id: string;
   username: string;
-  role: UserRole;
+  role: Role;
   fullName: string;
   email: string;
 }

@@ -1,0 +1,378 @@
+/* Contenedor principal */
+.student-schedule-container {
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Tarjeta de información del estudiante */
+.student-info-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.student-details h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.student-details p {
+  margin: 0 0 1rem 0;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+.academic-info {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.semester-badge,
+.credits-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.schedule-summary {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-width: 250px;
+}
+
+.schedule-summary h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.summary-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat .number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat .label {
+  font-size: 0.8rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+/* Sección del horario */
+.schedule-section {
+  margin-bottom: 2rem;
+}
+
+/* Sección de materias matriculadas */
+.enrolled-subjects-section {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.enrolled-subjects-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.enrolled-subjects-section h3::before {
+  content: "📚";
+  font-size: 1.2rem;
+}
+
+.subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.subject-card {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.subject-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #007bff, #28a745, #ffc107, #dc3545);
+}
+
+.subject-card:hover {
+  border-color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
+}
+
+.subject-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.subject-header h4 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.subject-code {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.subject-details {
+  margin-bottom: 1rem;
+}
+
+.subject-details p {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subject-details strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.subject-schedule h5 {
+  margin: 0 0 0.75rem 0;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.subject-schedule h5::before {
+  content: "🕒";
+  font-size: 0.9rem;
+}
+
+.schedule-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #e9ecef;
+  font-size: 0.85rem;
+}
+
+.schedule-item:last-child {
+  margin-bottom: 0;
+}
+
+.schedule-item .day {
+  font-weight: 600;
+  color: #007bff;
+  min-width: 80px;
+}
+
+.schedule-item .time {
+  color: #666;
+  font-weight: 500;
+}
+
+.schedule-item .classroom {
+  background: #e8f5e8;
+  color: #28a745;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .student-schedule-container {
+    padding: 0.5rem;
+  }
+
+  .student-info-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .schedule-summary {
+    min-width: auto;
+  }
+
+  .summary-stats {
+    justify-content: space-around;
+  }
+
+  .subjects-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .subject-card {
+    padding: 1rem;
+  }
+
+  .schedule-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .schedule-item .day {
+    min-width: auto;
+  }
+
+  .enrolled-subjects-section {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .academic-info {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .semester-badge,
+  .credits-badge {
+    text-align: center;
+    padding: 0.75rem;
+  }
+
+  .summary-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .subject-details p {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
+
+/* Animaciones */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.subject-card {
+  animation: slideInUp 0.5s ease-out backwards;
+}
+
+.subject-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.subject-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.subject-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.subject-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.subject-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.subject-card:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+/* Estados especiales */
+.schedule-item:hover {
+  background: #f0f8ff;
+  border-color: #007bff;
+  transform: translateX(4px);
+}
+
+.subject-card:hover .subject-code {
+  background: #1976d2;
+  color: white;
+}
+
+/* Scrollbar personalizado para dispositivos webkit */
+.enrolled-subjects-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.enrolled-subjects-section::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.enrolled-subjects-section::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.enrolled-subjects-section::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}

@@ -6,6 +6,7 @@ import {
   User,
 } from '../interfaces/user.interface';
 import { UserService } from './user.service';
+import { RoleService } from './role.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,11 @@ export class AuthService {
   private isAuthenticated = signal<boolean>(false);
   private mockUsers: LoginUser[] = [];
 
-  constructor(private userService: UserService) {
-    // Inicializar después de que UserService esté completamente cargado
+  constructor(
+    private userService: UserService,
+    private roleService: RoleService
+  ) {
+    // Inicializa después de que UserService esté completamente cargado
     this.initializeAuthService();
   }
 
@@ -38,7 +42,7 @@ export class AuthService {
       );
 
       if (foundUser) {
-        const roleData = this.userService.getRoleById(foundUser.role);
+        const roleData = this.roleService.getRoleById(foundUser.role);
 
         if (roleData) {
           const authenticatedUser: User = {
@@ -49,11 +53,11 @@ export class AuthService {
             email: foundUser.email,
           };
 
-          // Guardar usuario en el servicio
+          // Guarda usuario en el servicio
           this.userService.setCurrentUser(authenticatedUser);
           this.isAuthenticated.set(true);
 
-          // Guardar en localStorage para persistencia
+          // Guarda en localStorage para persistencia
           this.saveSession(authenticatedUser);
 
           return {

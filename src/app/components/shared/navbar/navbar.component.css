@@ -5,15 +5,17 @@
   height: 100vh;
   width: 80px;
   color: white;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  margin-left: 5px;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  border-radius: 24px;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+  margin-left: 8px;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  border-radius: 28px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Estilos específicos por rol */
@@ -22,15 +24,15 @@
 }
 
 .navbar-teacher {
-  background: linear-gradient(180deg, #1976D2 0%, #1565C0 100%);
+  background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
 }
 
 .navbar-student {
-  background: linear-gradient(180deg, #2E7D32 0%, #1B5E20 100%);
+  background: linear-gradient(180deg, #2e7d32 0%, #1b5e20 100%);
 }
 
 .navbar-default {
-  background: #2c3e50;
+  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
 }
 
 .nav-list {
@@ -156,6 +158,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0.1s;
 }
 
 .user-info {
@@ -163,6 +167,7 @@
   align-items: center;
   gap: 15px;
   transition: opacity 0.3s ease;
+  transition-delay: 0.15s;
 }
 
 .user-info .user-details {
@@ -172,6 +177,20 @@
 
 .navbar:not(.mobile):hover .user-info .user-details {
   display: block;
+  animation: slideInUser 0.4s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+@keyframes slideInUser {
+  0% {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .user-avatar {
@@ -185,6 +204,7 @@
   font-size: 20px;
   min-width: 50px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0.6s;
   position: relative;
   overflow: hidden;
 }
@@ -273,24 +293,6 @@
   transform: scale(0.95);
 }
 
-/* Overlay para móvil */
-.mobile-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 999;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.mobile-overlay.show {
-  opacity: 1;
-}
-
 /* Ocultar texto por defecto, mostrar en hover */
 .nav-text {
   display: none;
@@ -327,8 +329,17 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
   transition: left 0.6s ease;
+  -webkit-transition: left 0.6s ease;
+  -moz-transition: left 0.6s ease;
+  -ms-transition: left 0.6s ease;
+  -o-transition: left 0.6s ease;
 }
 
 .navbar:not(.mobile):hover .nav-link {
@@ -485,10 +496,6 @@
 
 /* Responsive - Tablet */
 @media (max-width: 768px) {
-  .mobile-overlay {
-    display: block;
-  }
-
   .navbar:not(.collapsed) {
     left: 0;
   }

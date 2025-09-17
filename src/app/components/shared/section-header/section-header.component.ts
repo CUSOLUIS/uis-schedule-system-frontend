@@ -10,7 +10,7 @@ export interface StatisticCard {
   color: string;
 }
 
-export interface AdminSectionConfig {
+export interface SectionHeaderConfig {
   title: string;
   description: string;
   icon: string;
@@ -19,17 +19,17 @@ export interface AdminSectionConfig {
 }
 
 @Component({
-  selector: 'app-admin-section-header',
+  selector: 'app-section-header',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './admin-section-header.component.html',
-  styleUrls: ['./admin-section-header.component.css'],
+  templateUrl: './section-header.component.html',
+  styleUrls: ['./section-header.component.css'],
 })
-export class AdminSectionHeaderComponent {
+export class SectionHeaderComponent {
   private userService = inject(UserService);
   private roleService = inject(RoleService);
 
-  @Input() config!: AdminSectionConfig;
+  @Input() config!: SectionHeaderConfig;
   @Output() createButtonClick = new EventEmitter<void>();
 
   // Obtiene el gradiente del rol actual del usuario
@@ -49,20 +49,30 @@ export class AdminSectionHeaderComponent {
   getUserRolePrimary(): string {
     const currentUser = this.userService.getCurrentUser()();
     const roleId = currentUser?.role?.id;
-    if (!roleId) return '#E8F5E8';
+    if (!roleId) return '#F8F9FA';
 
     const role = this.roleService.getRoleById(roleId);
-    return role?.colorScheme.primary || '#E8F5E8';
+    return role?.colorScheme.primary || '#F8F9FA';
   }
 
   // Obtiene el color secundario del rol
   getUserRoleSecondary(): string {
     const currentUser = this.userService.getCurrentUser()();
     const roleId = currentUser?.role?.id;
-    if (!roleId) return '#D1F2D1';
+    if (!roleId) return '#E9ECEF';
 
     const role = this.roleService.getRoleById(roleId);
-    return role?.colorScheme.secondary || '#D1F2D1';
+    return role?.colorScheme.secondary || '#E9ECEF';
+  }
+
+  // Obtiene el color de acento del rol
+  getUserRoleAccent(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+    if (!roleId) return '#6C757D';
+
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.accent || '#6C757D';
   }
 
   onCreateClick() {

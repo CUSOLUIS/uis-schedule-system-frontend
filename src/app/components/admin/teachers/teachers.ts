@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  AdminSectionHeaderComponent,
-  AdminSectionConfig,
+  SectionHeaderComponent,
+  SectionHeaderConfig,
   StatisticCard,
-} from '../../shared/admin-section-header';
+} from '../../shared/section-header';
 import { SearchBoxComponent } from '../../shared/search-box/search-box.component';
 import {
   GroupCardComponent,
@@ -57,7 +57,7 @@ interface Group {
   imports: [
     CommonModule,
     FormsModule,
-    AdminSectionHeaderComponent,
+    SectionHeaderComponent,
     SearchBoxComponent,
     GroupCardComponent,
   ],
@@ -74,7 +74,7 @@ export default class TeachersComponent {
   teachers: Teacher[] = [];
 
   // Configuración para el header y estadísticas
-  sectionConfig: AdminSectionConfig = {
+  sectionConfig: SectionHeaderConfig = {
     title: 'Gestión de Profesores',
     description: 'Administra los profesores y sus asignaciones',
     icon: 'fa-chalkboard-teacher',

@@ -5,6 +5,7 @@ import { ClassroomService } from '../../../services/classroom.service';
 import { SubjectService } from '../../../services/subject.service';
 import { UserService } from '../../../services/user.service';
 import { SearchService } from '../../../services/search.service';
+import { SystemConfigService } from '../../../services/system-config.service';
 import {
   Classroom,
   ClassroomSchedule,
@@ -12,11 +13,16 @@ import {
 import { Subject, Group } from '../../../interfaces/subject.interface';
 import { User } from '../../../interfaces/user.interface';
 import {
-  AdminSectionHeaderComponent,
-  AdminSectionConfig,
+  SectionHeaderComponent,
+  SectionHeaderConfig,
   StatisticCard,
-} from '../../shared/admin-section-header';
+} from '../../shared/section-header';
 import { SearchBoxComponent } from '../../shared/search-box/search-box.component';
+import {
+  ScheduleViewComponent,
+  ScheduleSlot,
+  ScheduleViewConfig,
+} from '../../shared/schedule-view/schedule-view.component';
 import mockClassroomsData from '../../../data/mock-classrooms.json';
 import mockSubjectsData from '../../../data/mock-subjects.json';
 
@@ -27,8 +33,9 @@ import mockSubjectsData from '../../../data/mock-subjects.json';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    AdminSectionHeaderComponent,
+    SectionHeaderComponent,
     SearchBoxComponent,
+    ScheduleViewComponent,
   ],
   templateUrl: './classrooms.component.html',
   styleUrls: ['./classrooms.component.css'],
@@ -38,6 +45,7 @@ export default class ClassroomsComponent implements OnInit {
   private subjectService = inject(SubjectService);
   private userService = inject(UserService);
   private searchService = inject(SearchService);
+  private systemConfigService = inject(SystemConfigService);
 
   classrooms: Classroom[] = [];
   subjects: Subject[] = [];
@@ -52,6 +60,16 @@ export default class ClassroomsComponent implements OnInit {
   isWeekView: boolean = true;
   selectedDayIndex: number = 0;
   isMobileView: boolean = false;
+
+  // Propiedades para ScheduleViewComponent
+  scheduleSlots: ScheduleSlot[] = [];
+  scheduleConfig: ScheduleViewConfig = {
+    title: 'Horario del Aula',
+    subtitle: 'Disponibilidad y asignaciones',
+    showWeekView: true,
+    allowViewToggle: true,
+    highlightCurrentTime: true,
+  };
 
   // Getter para aulas filtradas
   get filteredClassrooms(): Classroom[] {
@@ -77,27 +95,11 @@ export default class ClassroomsComponent implements OnInit {
     this.searchTerm = searchTerm;
   }
 
-  days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-  timeSlots = [
-    '06:00',
-    '07:00',
-    '08:00',
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
-    '18:00',
-    '19:00',
-    '20:00',
-  ];
+  days: string[] = [];
+  timeSlots: string[] = [];
 
   // Configuración para el header y estadísticas
-  sectionConfig: AdminSectionConfig = {
+  sectionConfig: SectionHeaderConfig = {
     title: 'Gestión de Aulas',
     description: 'Administra las aulas y sus horarios disponibles',
     icon: 'fa-door-open',
@@ -147,41 +149,45 @@ export default class ClassroomsComponent implements OnInit {
     ][date.getDay()];
     this.currentTime = date.getHours().toString().padStart(2, '0') + ':00';
 
-    // Establecer el día actual como seleccionado
-    this.selectedDayIndex = this.days.indexOf(this.currentDay);
-    if (this.selectedDayIndex === -1) this.selectedDayIndex = 0;
-
-    // Asegurar que siempre se muestre la lista al inicializar
+    // Asegura que siempre se muestre la lista al inicializar
     this.showDetail = false;
     this.selectedClassroom = null;
 
-    // Detectar vista móvil
+    // Detecta vista móvil
     this.checkMobileView();
     window.addEventListener('resize', () => this.checkMobileView());
   }
 
   ngOnInit() {
-    // Asegurar que siempre inicie mostrando la lista
+    // Carga configuración del sistema
+    this.days = this.systemConfigService.getWorkDayNames();
+    this.timeSlots = this.systemConfigService.getTimeSlotDisplayTimes();
+
+    // Asegura que siempre inicie mostrando la lista
     this.showDetail = false;
     this.selectedClassroom = null;
     this.loadData();
   }
 
   private loadData() {
-    // Asegurar que esté en modo lista
+    // Asegura que esté en modo lista
     this.showDetail = false;
     this.selectedClassroom = null;
+
+    // Establece el día actual como seleccionado después de cargar los días
+    this.selectedDayIndex = this.days.indexOf(this.currentDay);
+    if (this.selectedDayIndex === -1) this.selectedDayIndex = 0;
 
     // Carga las aulas directamente desde mock data sin sus schedules hardcodeados
     this.classrooms = mockClassroomsData.classrooms.map((classroom) => ({
       ...classroom,
-      schedule: [], // Vaciar el schedule ya que lo generamos dinámicamente
+      schedule: [], // Vacia el schedule ya que lo generamos dinámicamente
     }));
 
-    this.updateStatistics(); // Actualizar estadísticas cuando se cargan las aulas
+    this.updateStatistics(); // Actualiza estadísticas cuando se cargan las aulas
     console.log('Aulas cargadas:', this.classrooms);
 
-    // Obtener materias usando signals
+    // Obtiene materias usando signals
     this.subjects = this.subjectService.getAllSubjects()();
     console.log('Materias cargadas:', this.subjects);
 
@@ -192,7 +198,35 @@ export default class ClassroomsComponent implements OnInit {
 
   selectClassroom(classroom: Classroom) {
     this.selectedClassroom = classroom;
+    this.generateScheduleSlots(classroom);
     this.showDetail = true;
+  }
+
+  private generateScheduleSlots(classroom: Classroom) {
+    this.scheduleSlots = [];
+
+    // Genera slots basados en las asignaciones reales del aula
+    const subjects = this.subjectService.getAllSubjects()();
+
+    subjects.forEach((subject: Subject) => {
+      subject.groups.forEach((group: Group) => {
+        if (group.classroom === classroom.name) {
+          group.schedule.forEach((scheduleItem) => {
+            this.scheduleSlots.push({
+              day: scheduleItem.day,
+              startTime: scheduleItem.startTime,
+              endTime: scheduleItem.endTime,
+              subjectName: subject.name,
+              subjectCode: subject.code,
+              teacherName: group.teacherName,
+              groupNumber: group.groupNumber,
+              classroom: classroom.name,
+              classroomId: classroom.id,
+            });
+          });
+        }
+      });
+    });
   }
 
   goBackToList() {
@@ -210,7 +244,7 @@ export default class ClassroomsComponent implements OnInit {
   }
 
   toggleScheduleView() {
-    // Solo permitir cambio de vista en desktop
+    // Solo permite cambio de vista en desktop
     if (!this.isMobileView) {
       this.isWeekView = !this.isWeekView;
     }

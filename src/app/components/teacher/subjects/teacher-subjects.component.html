@@ -1,0 +1,263 @@
+<div class="teacher-subjects-container">
+  <!-- Header unificado -->
+  <app-section-header
+    [config]="headerConfig"
+    (createButtonClick)="onViewSchedule()"
+  >
+  </app-section-header>
+
+  <div class="subjects-grid">
+    <button
+      class="subject-card"
+      *ngFor="let subjectInfo of teacherSubjects"
+      (click)="onSubjectClick(subjectInfo)"
+      [attr.aria-label]="'Ver detalles de ' + subjectInfo.subject.name"
+      [style.border-left-color]="getSemesterColor(subjectInfo.subject.semester)"
+    >
+      <div class="subject-header">
+        <div class="subject-title">
+          <h3>{{ subjectInfo.subject.name }}</h3>
+          <span class="subject-code">{{ subjectInfo.subject.code }}</span>
+        </div>
+        <div
+          class="semester-badge"
+          [style.background-color]="
+            getSemesterColor(subjectInfo.subject.semester)
+          "
+        >
+          Sem {{ subjectInfo.subject.semester }}
+        </div>
+      </div>
+
+      <div class="subject-content">
+        <p class="subject-description">{{ subjectInfo.subject.description }}</p>
+
+        <div class="subject-stats">
+          <div class="stat-row">
+            <span class="stat-label">
+              <i class="fas fa-users"></i>
+              Grupos:
+            </span>
+            <span class="stat-value">{{ subjectInfo.groups.length }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">
+              <i class="fas fa-user-graduate"></i>
+              Total Estudiantes:
+            </span>
+            <span class="stat-value">{{ subjectInfo.totalStudents }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">
+              <i class="fas fa-credit-card"></i>
+              Créditos:
+            </span>
+            <span class="stat-value">{{ subjectInfo.subject.credits }}</span>
+          </div>
+        </div>
+
+        <div class="occupancy-section">
+          <div class="occupancy-header">
+            <span>Ocupación Promedio</span>
+            <span class="occupancy-percentage"
+              >{{ subjectInfo.averageOccupancy.toFixed(1) }}%</span
+            >
+          </div>
+          <div class="occupancy-bar">
+            <div
+              class="occupancy-fill"
+              [style.width.%]="subjectInfo.averageOccupancy"
+              [style.background-color]="
+                getOccupancyColor(subjectInfo.averageOccupancy)
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="groups-preview">
+        <div
+          class="group-item"
+          *ngFor="let group of subjectInfo.groups; let i = index"
+        >
+          <span class="group-name">Grupo {{ group.groupNumber }}</span>
+          <span class="group-students"
+            >{{ group.studentIds.length }}/{{ group.maxStudents }}</span
+          >
+        </div>
+      </div>
+    </button>
+  </div>
+</div>
+
+<!-- Subject Details Modal -->
+<div
+  class="modal-overlay"
+  *ngIf="showSubjectDetails"
+  (click)="closeSubjectDetails()"
+  (keydown)="$event.key === 'Escape' && closeSubjectDetails()"
+>
+  <div
+    class="modal large"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.stopPropagation()"
+    *ngIf="selectedSubject"
+  >
+    <div class="modal-header">
+      <div class="modal-title">
+        <h2>{{ selectedSubject.subject.name }}</h2>
+        <span class="modal-code">{{ selectedSubject.subject.code }}</span>
+      </div>
+      <button class="close-btn" (click)="closeSubjectDetails()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-content">
+      <!-- Subject Info -->
+      <div class="info-section">
+        <h3><i class="fas fa-info-circle"></i> Información de la Materia</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <strong>Descripción:</strong>
+            <span>{{ selectedSubject.subject.description }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Créditos:</strong>
+            <span>{{ selectedSubject.subject.credits }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Semestre:</strong>
+            <span>{{ selectedSubject.subject.semester }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Total Estudiantes:</strong>
+            <span>{{ selectedSubject.totalStudents }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Groups List -->
+      <div class="info-section">
+        <h3><i class="fas fa-users"></i> Grupos Asignados</h3>
+        <div class="groups-list">
+          <button
+            class="group-card"
+            *ngFor="let group of selectedSubject.groups"
+            (click)="onGroupClick(group)"
+            [attr.aria-label]="'Ver estudiantes del grupo ' + group.groupNumber"
+          >
+            <div class="group-header">
+              <div class="group-info">
+                <h4>Grupo {{ group.groupNumber }}</h4>
+                <span class="classroom">{{ group.classroom }}</span>
+              </div>
+              <div class="group-stats">
+                <span class="students-count"
+                  >{{ group.studentIds.length }}/{{ group.maxStudents }}</span
+                >
+                <div
+                  class="occupancy-indicator"
+                  [style.background-color]="
+                    getOccupancyColor(
+                      (group.studentIds.length / group.maxStudents) * 100
+                    )
+                  "
+                ></div>
+              </div>
+            </div>
+
+            <div class="group-schedule">
+              <div
+                class="schedule-item"
+                *ngFor="let schedule of group.schedule"
+              >
+                <span
+                  >{{ schedule.day }} {{ schedule.startTime }}-{{
+                    schedule.endTime
+                  }}</span
+                >
+                <span class="schedule-classroom">{{ schedule.classroom }}</span>
+              </div>
+            </div>
+
+            <button
+              class="view-students-btn"
+              (click)="$event.stopPropagation(); onGroupClick(group)"
+            >
+              <i class="fas fa-list"></i>
+              Ver Lista de Estudiantes
+            </button>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Students List Modal -->
+<div
+  class="modal-overlay"
+  *ngIf="showStudentsList"
+  (click)="closeStudentsList()"
+  (keydown)="$event.key === 'Escape' && closeStudentsList()"
+>
+  <div
+    class="modal medium"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.stopPropagation()"
+    *ngIf="selectedGroup"
+  >
+    <div class="modal-header">
+      <div class="modal-title">
+        <h2>Estudiantes - Grupo {{ selectedGroup.groupNumber }}</h2>
+        <span class="modal-subtitle">{{ selectedSubject?.subject?.name }}</span>
+      </div>
+      <div class="header-actions">
+        <button class="export-btn" (click)="exportStudentsList()">
+          <i class="fas fa-download"></i>
+          Exportar
+        </button>
+        <button class="close-btn" (click)="closeStudentsList()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-content">
+      <div class="students-header">
+        <span class="students-count"
+          >{{ students.length }} estudiantes inscritos</span
+        >
+        <span class="occupancy"
+          >Ocupación:
+          {{
+            ((students.length / selectedGroup.maxStudents) * 100).toFixed(1)
+          }}%</span
+        >
+      </div>
+
+      <div class="students-list">
+        <div
+          class="student-item"
+          *ngFor="let student of students; let i = index"
+        >
+          <div class="student-number">{{ i + 1 }}</div>
+          <div class="student-info">
+            <div class="student-name">{{ student.fullName }}</div>
+            <div class="student-email">{{ student.email }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="students-actions" *ngIf="students.length === 0">
+        <div class="empty-state">
+          <i class="fas fa-user-slash"></i>
+          <p>No hay estudiantes inscritos en este grupo</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

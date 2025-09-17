@@ -1,0 +1,219 @@
+<div class="teacher-profile-container">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <i class="fas fa-chalkboard-teacher"></i>
+    </div>
+    <div class="profile-info">
+      <h1>{{ teacherInfo?.academicTitle }} {{ currentUser?.fullName }}</h1>
+      <p class="user-role">{{ currentUser?.role?.name }}</p>
+      <p class="specialization">{{ teacherInfo?.specialization }}</p>
+      <p class="department">{{ teacherInfo?.department }}</p>
+    </div>
+    <div class="profile-actions">
+      <div
+        class="experience-badge"
+        [style.background-color]="getExperienceColor()"
+      >
+        <span class="experience-years">{{
+          teacherInfo?.yearsOfExperience
+        }}</span>
+        <span class="experience-label">años</span>
+        <span class="experience-level">{{ getExperienceLevel() }}</span>
+      </div>
+      <button class="edit-btn" (click)="editProfile()">
+        <i class="fas fa-edit"></i>
+        Editar Perfil
+      </button>
+    </div>
+  </div>
+
+  <div class="profile-content">
+    <!-- Estadísticas principales -->
+    <div class="stats-section">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-book"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number">{{ assignedSubjects.length }}</span>
+          <span class="stat-label">Materias</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number">{{ totalGroups }}</span>
+          <span class="stat-label">Grupos</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number">{{ totalStudents }}</span>
+          <span class="stat-label">Estudiantes</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number">{{ teacherInfo?.publications }}</span>
+          <span class="stat-label">Publicaciones</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secciones de información -->
+    <div class="info-sections">
+      <!-- Información personal -->
+      <div class="info-card">
+        <div class="card-header">
+          <i class="fas fa-user"></i>
+          <h3>Información Personal</h3>
+        </div>
+        <div class="card-content">
+          <div class="info-item">
+            <strong>Nombre Completo:</strong>
+            <span>{{ currentUser?.fullName }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Email:</strong>
+            <span>{{ currentUser?.email }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Usuario:</strong>
+            <span>{{ currentUser?.username }}</span>
+          </div>
+          <div class="info-item">
+            <strong>ID Profesor:</strong>
+            <span>{{ currentUser?.id }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información académica -->
+      <div class="info-card">
+        <div class="card-header">
+          <i class="fas fa-graduation-cap"></i>
+          <h3>Información Académica</h3>
+        </div>
+        <div class="card-content">
+          <div class="info-item">
+            <strong>Título Académico:</strong>
+            <span>{{ teacherInfo?.academicTitle }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Especialización:</strong>
+            <span>{{ teacherInfo?.specialization }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Carrera Universitaria:</strong>
+            <span>{{ teacherInfo?.universityCareer }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Años de Experiencia:</strong>
+            <span>{{ teacherInfo?.yearsOfExperience }} años</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información institucional -->
+      <div class="info-card">
+        <div class="card-header">
+          <i class="fas fa-building"></i>
+          <h3>Información Institucional</h3>
+        </div>
+        <div class="card-content">
+          <div class="info-item">
+            <strong>Departamento:</strong>
+            <span>{{ teacherInfo?.department }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Oficina:</strong>
+            <span>{{ teacherInfo?.office }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Teléfono:</strong>
+            <span>{{ teacherInfo?.phone }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formación académica -->
+      <div class="info-card" *ngIf="teacherInfo?.education">
+        <div class="card-header">
+          <i class="fas fa-certificate"></i>
+          <h3>Formación Académica</h3>
+        </div>
+        <div class="card-content">
+          <div class="education-list">
+            <div
+              class="education-item"
+              *ngFor="let education of teacherInfo?.education"
+            >
+              <i class="fas fa-graduation-cap"></i>
+              <span>{{ education }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Áreas de investigación -->
+      <div class="info-card" *ngIf="teacherInfo?.researchAreas">
+        <div class="card-header">
+          <i class="fas fa-microscope"></i>
+          <h3>Áreas de Investigación</h3>
+        </div>
+        <div class="card-content">
+          <div class="research-areas">
+            <span
+              class="research-tag"
+              *ngFor="let area of teacherInfo?.researchAreas"
+            >
+              {{ area }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proyectos -->
+      <div class="info-card" *ngIf="teacherInfo?.projects">
+        <div class="card-header">
+          <i class="fas fa-project-diagram"></i>
+          <h3>Proyectos Activos</h3>
+        </div>
+        <div class="card-content">
+          <div class="project-list">
+            <div
+              class="project-item"
+              *ngFor="let project of teacherInfo?.projects"
+            >
+              <i class="fas fa-folder-open"></i>
+              <span>{{ project }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="action-buttons">
+      <button class="action-btn primary" (click)="goToSchedule()">
+        <i class="fas fa-calendar-alt"></i>
+        Ver Mi Horario
+      </button>
+      <button class="action-btn secondary" (click)="goToSubjects()">
+        <i class="fas fa-chalkboard"></i>
+        Mis Materias
+      </button>
+    </div>
+  </div>
+</div>

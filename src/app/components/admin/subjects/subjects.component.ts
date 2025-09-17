@@ -7,16 +7,16 @@ import { UserService } from '../../../services/user.service';
 import { SearchService } from '../../../services/search.service';
 import { Subject } from '../../../interfaces/subject.interface';
 import { 
-  AdminSectionHeaderComponent, 
-  AdminSectionConfig, 
+  SectionHeaderComponent, 
+  SectionHeaderConfig, 
   StatisticCard 
-} from '../../shared/admin-section-header';
+} from '../../shared/section-header';
 import { SearchBoxComponent } from '../../shared/search-box/search-box.component';
 
 @Component({
   selector: 'app-admin-subjects',
   standalone: true,
-  imports: [CommonModule, AdminSectionHeaderComponent, SearchBoxComponent, FormsModule],
+  imports: [CommonModule, SectionHeaderComponent, SearchBoxComponent, FormsModule],
   templateUrl: './subjects.component.html',
   styleUrls: ['./subjects.component.css'],
 })
@@ -30,7 +30,7 @@ export default class AdminSubjectsComponent {
   searchTerm = '';
   
   // Configuración para el header y estadísticas
-  sectionConfig: AdminSectionConfig = {
+  sectionConfig: SectionHeaderConfig = {
     title: 'Gestión de Asignaturas',
     description: 'Administra las asignaturas y sus configuraciones',
     icon: 'fa-book-open',

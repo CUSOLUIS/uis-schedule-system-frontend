@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
+import { RoleService } from '../../../services/role.service';
 import { MenuItem } from '../../../interfaces/user.interface';
 
 @Component({
@@ -15,6 +16,7 @@ import { MenuItem } from '../../../interfaces/user.interface';
 export default class NavbarComponent {
   private userService = inject(UserService);
   private authService = inject(AuthService);
+  private roleService = inject(RoleService);
   private router = inject(Router);
 
   currentUser = this.userService.getCurrentUser();
@@ -22,13 +24,22 @@ export default class NavbarComponent {
   menuItems = () =>
     this.userService.getMenuItemsForUser(this.userRole()?.id || '');
 
-  // Método para obtener el color del rol del usuario
-  getUserRoleColor(): string {
+  // Método para obtener el gradiente del rol del usuario
+  getUserRoleGradient(): string {
     const roleId = this.currentUser()?.role?.id;
-    return (
-      this.userService.userRoles[roleId || 'admin']?.backgroundColor ||
-      '#4A148C'
-    );
+    if (!roleId) return 'linear-gradient(180deg, #4A148C 0%, #6A1B9A 100%)';
+    
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.gradient || 'linear-gradient(180deg, #4A148C 0%, #6A1B9A 100%)';
+  }
+
+  // Método para obtener el color primario del rol del usuario
+  getUserRolePrimaryColor(): string {
+    const roleId = this.currentUser()?.role?.id;
+    if (!roleId) return '#E8F5E8';
+    
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.primary || '#E8F5E8';
   }
 
   isCollapsed = true;
@@ -52,12 +63,12 @@ export default class NavbarComponent {
     }
   }
 
-  // Detectar si estamos en móvil
+  // Detecta si estamos en móvil
   private checkScreenSize(): void {
     this.isMobile = window.innerWidth <= 768;
   }
 
-  // Cerrar menú al hacer clic fuera (solo en móvil)
+  // Cierra el menú al hacer clic fuera (solo en móvil)
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (this.isMobile && !this.isCollapsed) {
@@ -109,14 +120,14 @@ export default class NavbarComponent {
     }
   }
 
-  // Cerrar menú al navegar (solo en móvil)
+  // Cierra el menú al navegar (solo en móvil)
   onNavigate(): void {
     if (this.isMobile) {
       this.isCollapsed = true;
     }
   }
 
-  // Agregar opción en el menú de admin
+  // Agrega opción en el menú de admin
   get adminMenuItem(): MenuItem {
     return {
       icon: 'fa-door-open',

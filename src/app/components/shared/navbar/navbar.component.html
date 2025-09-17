@@ -4,7 +4,7 @@
   [class.menu-open]="!isCollapsed"
   (click)="toggleNavbar()"
   *ngIf="isMobile"
-  [style.background-color]="getUserRoleColor()"
+  [style.background]="getUserRoleGradient()"
 >
   <i
     class="fas"
@@ -27,7 +27,7 @@
     <div class="user-info" *ngIf="currentUser()">
       <div
         class="user-avatar"
-        [style.background-color]="userRole()?.backgroundColor"
+        [style.background-color]="getUserRolePrimaryColor()"
       >
         <i class="fas fa-user"></i>
       </div>
@@ -70,11 +70,3 @@
     </div>
   </div>
 </nav>
-
-<!-- Overlay para móvil -->
-<div
-  class="mobile-overlay"
-  [class.show]="isMobile && !isCollapsed"
-  *ngIf="isMobile && !isCollapsed"
-  (click)="toggleNavbar()"
-></div>
