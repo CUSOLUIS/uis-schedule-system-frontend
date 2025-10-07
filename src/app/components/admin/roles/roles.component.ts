@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserRole } from '../../../interfaces/user.interface';
 import { MOCK_USERS, User } from '../../../mocks/mock-users';
+import { AdminSectionHeaderComponent, AdminSectionConfig } from '../../shared/admin-section-header/admin-section-header.component';
 
 @Component({
   selector: 'app-roles',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AdminSectionHeaderComponent],
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.css']
 })
@@ -15,6 +16,14 @@ export class RolesComponent implements OnInit {
   users = signal<User[]>([]);
   showCreateForm = signal(false);
   searchTerm = signal('');
+
+  headerConfig: AdminSectionConfig = {
+    title: 'Gestión de Roles y Usuarios',
+    description: 'Administra usuarios del sistema y asigna roles de acceso',
+    icon: 'fa-user-friends',
+    buttonText: 'Crear Usuario',
+    statistics: []
+  };
   
   // Form data
   newUser = signal({
@@ -23,6 +32,11 @@ export class RolesComponent implements OnInit {
     email: '',
     role: 'student'
   });
+
+  // Helper to update a field on the newUser signal from template bindings
+  setNewUserField(field: string, value: any): void {
+    this.newUser.update(prev => ({ ...prev, [field]: value }));
+  }
 
   availableRoles = [
     { id: 'student', name: 'Estudiante', color: '#388E3C', backgroundColor: '#4CAF50' },
@@ -34,15 +48,42 @@ export class RolesComponent implements OnInit {
 
   ngOnInit() {
     this.loadUsers();
+    this.updateHeaderStatistics();
   }
 
   private loadUsers() {
     // In a real application, this would be an API call
     this.users.set(MOCK_USERS);
+    // Ensure header statistics reflect the loaded users
+    this.updateHeaderStatistics();
+  }
+
+  private updateHeaderStatistics() {
+    const stats = this.getRoleStats();
+    this.headerConfig.statistics = [
+      {
+        icon: 'fa-user-graduate',
+        value: stats['student'] || 0,
+        label: 'Estudiantes',
+        color: '#4CAF50'
+      },
+      {
+        icon: 'fa-user-tie',
+        value: stats['teacher'] || 0,
+        label: 'Profesores',
+        color: '#2196F3'
+      },
+      {
+        icon: 'fa-user-shield',
+        value: stats['admin'] || 0,
+        label: 'Administradores',
+        color: '#9C27B0'
+      }
+    ];
   }
 
   toggleCreateForm(): void {
-    this.showCreateForm.update(show => !show);
+    this.showCreateForm.update((show: boolean) => !show);
   }
 
   createUser(): void {
@@ -59,7 +100,9 @@ export class RolesComponent implements OnInit {
           createdAt: new Date()
         };
 
-        this.users.update(users => [newUser, ...users]);
+  this.users.update((users: User[]) => [newUser, ...users]);
+  // Refresh statistics after adding a user
+  this.updateHeaderStatistics();
         
         // Reset form
         this.newUser.set({
@@ -78,13 +121,15 @@ export class RolesComponent implements OnInit {
     const selectedRole = this.availableRoles.find(r => r.id === newRoleId);
     
     if (selectedRole) {
-      this.users.update(users => 
-        users.map(user => 
+      this.users.update((users: User[]) => 
+        users.map((user: User) => 
           user.id === userId 
             ? { ...user, role: selectedRole }
             : user
         )
       );
+      // Refresh statistics after role change
+      this.updateHeaderStatistics();
     }
   }
 
@@ -96,12 +141,14 @@ export class RolesComponent implements OnInit {
   }
 
   deleteUser(userId: string): void {
-    this.users.update(users => users.filter(user => user.id !== userId));
+    this.users.update((users: User[]) => users.filter((user: User) => user.id !== userId));
+    // Refresh statistics after deleting a user
+    this.updateHeaderStatistics();
   }
 
   get filteredUsers(): User[] {
     const term = this.searchTerm().toLowerCase();
-    return this.users().filter(user => 
+    return this.users().filter((user: User) => 
       user.username.toLowerCase().includes(term) ||
       user.fullName.toLowerCase().includes(term) ||
       user.email.toLowerCase().includes(term) ||
@@ -111,7 +158,7 @@ export class RolesComponent implements OnInit {
 
   getRoleStats(): { [key: string]: number } {
     const stats: { [key: string]: number } = {};
-    this.users().forEach(user => {
+    this.users().forEach((user: User) => {
       stats[user.role.id] = (stats[user.role.id] || 0) + 1;
     });
     return stats;

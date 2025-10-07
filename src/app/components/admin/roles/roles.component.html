@@ -1,36 +1,8 @@
 <div class="roles-container">
-  <!-- Header -->
-  <div class="roles-header">
-    <div class="header-content">
-      <h1 class="page-title">
-        <i class="fas fa-user-friends"></i>
-        Gestión de Roles y Usuarios
-      </h1>
-      <p class="page-description">
-        Administra usuarios del sistema y asigna roles de acceso
-      </p>
-    </div>
-    
-    <button class="create-user-btn" (click)="toggleCreateForm()">
-      <i class="fas fa-plus"></i>
-      Crear Usuario
-    </button>
-  </div>
-
-  <!-- Statistics Cards -->
-  <div class="stats-container">
-    <div class="stat-card" *ngFor="let role of availableRoles">
-      <div class="stat-icon" [style.background-color]="role.backgroundColor">
-        <i class="fas" [class.fa-user-graduate]="role.id === 'student'" 
-           [class.fa-user-tie]="role.id === 'teacher'" 
-           [class.fa-user-shield]="role.id === 'admin'"></i>
-      </div>
-      <div class="stat-content">
-        <h3 class="stat-number">{{ getRoleStats()[role.id] || 0 }}</h3>
-        <p class="stat-label">{{ getRolePlural(role.name) }}</p>
-      </div>
-    </div>
-  </div>
+  <app-admin-section-header
+    [config]="headerConfig"
+    (createButtonClick)="toggleCreateForm()"
+  ></app-admin-section-header>
 
   <!-- Create User Form -->
   <div class="create-form-container" *ngIf="showCreateForm()">
@@ -49,7 +21,8 @@
             <input 
               type="text" 
               id="username" 
-              [(ngModel)]="newUser().username" 
+              [ngModel]="newUser().username"
+              (ngModelChange)="setNewUserField('username', $event)"
               name="username"
               placeholder="juan.perez"
               required
@@ -61,7 +34,8 @@
             <input 
               type="text" 
               id="fullName" 
-              [(ngModel)]="newUser().fullName" 
+              [ngModel]="newUser().fullName"
+              (ngModelChange)="setNewUserField('fullName', $event)"
               name="fullName"
               placeholder="Juan Pérez"
               required
@@ -75,7 +49,8 @@
             <input 
               type="email" 
               id="email" 
-              [(ngModel)]="newUser().email" 
+              [ngModel]="newUser().email"
+              (ngModelChange)="setNewUserField('email', $event)"
               name="email"
               placeholder="juan.perez@uis.edu.co"
               required
@@ -84,7 +59,7 @@
           
           <div class="form-group">
             <label for="role">Rol</label>
-            <select id="role" [(ngModel)]="newUser().role" name="role">
+            <select id="role" [ngModel]="newUser().role" (ngModelChange)="setNewUserField('role', $event)" name="role">
               <option value="student">Estudiante</option>
               <option value="teacher">Profesor</option>
               <option value="admin">Administrador</option>
