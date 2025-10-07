@@ -18,5 +18,6 @@ describe('SubjectDetailComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    
   });
 });
