@@ -1,8 +1,8 @@
 <div class="roles-container">
-  <app-admin-section-header
+  <app-section-header
     [config]="headerConfig"
     (createButtonClick)="toggleCreateForm()"
-  ></app-admin-section-header>
+  ></app-section-header>
 
   <!-- Create User Form -->
   <div class="create-form-container" *ngIf="showCreateForm()">
@@ -13,60 +13,65 @@
           <i class="fas fa-times"></i>
         </button>
       </div>
-      
+
       <form class="create-form" (ngSubmit)="createUser()">
         <div class="form-row">
           <div class="form-group">
             <label for="username">Nombre de Usuario</label>
-            <input 
-              type="text" 
-              id="username" 
+            <input
+              type="text"
+              id="username"
               [ngModel]="newUser().username"
               (ngModelChange)="setNewUserField('username', $event)"
               name="username"
               placeholder="juan.perez"
               required
-            >
+            />
           </div>
-          
+
           <div class="form-group">
             <label for="fullName">Nombre Completo</label>
-            <input 
-              type="text" 
-              id="fullName" 
+            <input
+              type="text"
+              id="fullName"
               [ngModel]="newUser().fullName"
               (ngModelChange)="setNewUserField('fullName', $event)"
               name="fullName"
               placeholder="Juan Pérez"
               required
-            >
+            />
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group">
             <label for="email">Correo Electrónico</label>
-            <input 
-              type="email" 
-              id="email" 
+            <input
+              type="email"
+              id="email"
               [ngModel]="newUser().email"
               (ngModelChange)="setNewUserField('email', $event)"
               name="email"
               placeholder="juan.perez@uis.edu.co"
               required
-            >
+            />
           </div>
-          
+
           <div class="form-group">
             <label for="role">Rol</label>
-            <select id="role" [ngModel]="newUser().role" (ngModelChange)="setNewUserField('role', $event)" name="role">
+            <select
+              id="role"
+              [ngModel]="newUser().role"
+              (ngModelChange)="setNewUserField('role', $event)"
+              name="role"
+            >
               <option value="student">Estudiante</option>
               <option value="teacher">Profesor</option>
               <option value="admin">Administrador</option>
             </select>
           </div>
         </div>
-        
+
         <div class="form-actions">
           <button type="button" class="cancel-btn" (click)="toggleCreateForm()">
             Cancelar
@@ -84,13 +89,13 @@
   <div class="search-container">
     <div class="search-box">
       <i class="fas fa-search search-icon"></i>
-      <input 
-        type="text" 
+      <input
+        type="text"
         placeholder="Buscar usuarios por nombre, email o rol..."
         [ngModel]="searchTerm()"
         (ngModelChange)="searchTerm.set($event)"
         class="search-input"
-      >
+      />
     </div>
   </div>
 
@@ -101,7 +106,7 @@
         <h3><i class="fas fa-users"></i> Lista de Usuarios</h3>
         <span class="user-count">{{ filteredUsers.length }} usuarios</span>
       </div>
-      
+
       <div class="table-responsive">
         <table class="users-table">
           <thead>
@@ -117,19 +122,24 @@
           <tbody>
             <tr *ngFor="let user of filteredUsers" class="user-row">
               <td class="user-info" data-label="Usuario">
-                <div class="user-avatar" [style.background-color]="user.role.backgroundColor">
+                <div
+                  class="user-avatar"
+                  [style.background-color]="user.role.backgroundColor"
+                >
                   <i class="fas fa-user"></i>
                 </div>
                 <span class="username">{{ user.username }}</span>
               </td>
-              
-              <td class="full-name" data-label="Nombre Completo">{{ user.fullName }}</td>
-              
+
+              <td class="full-name" data-label="Nombre Completo">
+                {{ user.fullName }}
+              </td>
+
               <td class="email" data-label="Email">{{ user.email }}</td>
-              
+
               <td class="role-cell" data-label="Rol">
-                <select 
-                  class="role-select" 
+                <select
+                  class="role-select"
                   [value]="user.role.id"
                   (change)="onRoleChange(user.id, $event)"
                 >
@@ -138,16 +148,20 @@
                   <option value="admin">Administrador</option>
                 </select>
               </td>
-              
+
               <td class="created-date" data-label="Fecha Creación">
-                {{ user.createdAt | date:'dd/MM/yyyy' }}
+                {{ user.createdAt | date : "dd/MM/yyyy" }}
               </td>
-              
+
               <td class="actions" data-label="Acciones">
                 <button class="action-btn edit-btn" title="Editar Usuario">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn delete-btn" title="Eliminar Usuario" (click)="deleteUser(user.id)">
+                <button
+                  class="action-btn delete-btn"
+                  title="Eliminar Usuario"
+                  (click)="deleteUser(user.id)"
+                >
                   <i class="fas fa-trash"></i>
                 </button>
               </td>
@@ -155,7 +169,7 @@
           </tbody>
         </table>
       </div>
-      
+
       <div class="table-footer" *ngIf="filteredUsers.length === 0">
         <div class="empty-state">
           <i class="fas fa-search"></i>
@@ -164,4 +178,4 @@
       </div>
     </div>
   </div>
-</div> 
+</div>
