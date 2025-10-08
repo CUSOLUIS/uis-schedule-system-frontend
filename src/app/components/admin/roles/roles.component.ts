@@ -3,45 +3,63 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserRole } from '../../../interfaces/user.interface';
 import { MOCK_USERS, User } from '../../../mocks/mock-users';
-import { AdminSectionHeaderComponent, AdminSectionConfig } from '../../shared/admin-section-header/admin-section-header.component';
+import {
+  SectionHeaderComponent,
+  SectionHeaderConfig,
+} from '../../shared/section-header/section-header.component';
 
 @Component({
   selector: 'app-roles',
   standalone: true,
-  imports: [CommonModule, FormsModule, AdminSectionHeaderComponent],
+  imports: [CommonModule, FormsModule, SectionHeaderComponent],
   templateUrl: './roles.component.html',
-  styleUrls: ['./roles.component.css']
+  styleUrls: ['./roles.component.css'],
 })
 export class RolesComponent implements OnInit {
   users = signal<User[]>([]);
   showCreateForm = signal(false);
   searchTerm = signal('');
 
-  headerConfig: AdminSectionConfig = {
+  headerConfig: SectionHeaderConfig = {
     title: 'Gestión de Roles y Usuarios',
     description: 'Administra usuarios del sistema y asigna roles de acceso',
     icon: 'fa-user-friends',
     buttonText: 'Crear Usuario',
-    statistics: []
+    statistics: [],
   };
-  
+
   // Form data
   newUser = signal({
     username: '',
     fullName: '',
     email: '',
-    role: 'student'
+    role: 'student',
   });
 
   // Helper to update a field on the newUser signal from template bindings
   setNewUserField(field: string, value: any): void {
-    this.newUser.update(prev => ({ ...prev, [field]: value }));
+    this.newUser.update((prev) => ({ ...prev, [field]: value }));
   }
 
   availableRoles = [
-    { id: 'student', name: 'Estudiante', color: '#388E3C', backgroundColor: '#4CAF50' },
-    { id: 'teacher', name: 'Profesor', color: '#1976D2', backgroundColor: '#2196F3' },
-    { id: 'admin', name: 'Administrador', color: '#4A148C', backgroundColor: '#9C27B0' }
+    {
+      id: 'student',
+      name: 'Estudiante',
+      color: '#388E3C',
+      backgroundColor: '#4CAF50',
+    },
+    {
+      id: 'teacher',
+      name: 'Profesor',
+      color: '#1976D2',
+      backgroundColor: '#2196F3',
+    },
+    {
+      id: 'admin',
+      name: 'Administrador',
+      color: '#4A148C',
+      backgroundColor: '#9C27B0',
+    },
   ];
 
   constructor() {}
@@ -65,20 +83,20 @@ export class RolesComponent implements OnInit {
         icon: 'fa-user-graduate',
         value: stats['student'] || 0,
         label: 'Estudiantes',
-        color: '#4CAF50'
+        color: '#4CAF50',
       },
       {
         icon: 'fa-user-tie',
         value: stats['teacher'] || 0,
         label: 'Profesores',
-        color: '#2196F3'
+        color: '#2196F3',
       },
       {
         icon: 'fa-user-shield',
         value: stats['admin'] || 0,
         label: 'Administradores',
-        color: '#9C27B0'
-      }
+        color: '#9C27B0',
+      },
     ];
   }
 
@@ -87,9 +105,15 @@ export class RolesComponent implements OnInit {
   }
 
   createUser(): void {
-    if (this.newUser().username && this.newUser().fullName && this.newUser().email) {
-      const selectedRole = this.availableRoles.find(r => r.id === this.newUser().role);
-      
+    if (
+      this.newUser().username &&
+      this.newUser().fullName &&
+      this.newUser().email
+    ) {
+      const selectedRole = this.availableRoles.find(
+        (r) => r.id === this.newUser().role
+      );
+
       if (selectedRole) {
         const newUser: User = {
           id: Date.now().toString(),
@@ -97,35 +121,33 @@ export class RolesComponent implements OnInit {
           fullName: this.newUser().fullName,
           email: this.newUser().email,
           role: selectedRole,
-          createdAt: new Date()
+          createdAt: new Date(),
         };
 
-  this.users.update((users: User[]) => [newUser, ...users]);
-  // Refresh statistics after adding a user
-  this.updateHeaderStatistics();
-        
+        this.users.update((users: User[]) => [newUser, ...users]);
+        // Refresh statistics after adding a user
+        this.updateHeaderStatistics();
+
         // Reset form
         this.newUser.set({
           username: '',
           fullName: '',
           email: '',
-          role: 'student'
+          role: 'student',
         });
-        
+
         this.showCreateForm.set(false);
       }
     }
   }
 
   updateUserRole(userId: string, newRoleId: string): void {
-    const selectedRole = this.availableRoles.find(r => r.id === newRoleId);
-    
+    const selectedRole = this.availableRoles.find((r) => r.id === newRoleId);
+
     if (selectedRole) {
-      this.users.update((users: User[]) => 
-        users.map((user: User) => 
-          user.id === userId 
-            ? { ...user, role: selectedRole }
-            : user
+      this.users.update((users: User[]) =>
+        users.map((user: User) =>
+          user.id === userId ? { ...user, role: selectedRole } : user
         )
       );
       // Refresh statistics after role change
@@ -141,18 +163,21 @@ export class RolesComponent implements OnInit {
   }
 
   deleteUser(userId: string): void {
-    this.users.update((users: User[]) => users.filter((user: User) => user.id !== userId));
+    this.users.update((users: User[]) =>
+      users.filter((user: User) => user.id !== userId)
+    );
     // Refresh statistics after deleting a user
     this.updateHeaderStatistics();
   }
 
   get filteredUsers(): User[] {
     const term = this.searchTerm().toLowerCase();
-    return this.users().filter((user: User) => 
-      user.username.toLowerCase().includes(term) ||
-      user.fullName.toLowerCase().includes(term) ||
-      user.email.toLowerCase().includes(term) ||
-      user.role.name.toLowerCase().includes(term)
+    return this.users().filter(
+      (user: User) =>
+        user.username.toLowerCase().includes(term) ||
+        user.fullName.toLowerCase().includes(term) ||
+        user.email.toLowerCase().includes(term) ||
+        user.role.name.toLowerCase().includes(term)
     );
   }
 
@@ -176,4 +201,4 @@ export class RolesComponent implements OnInit {
         return roleName + 's';
     }
   }
-} 
+}
