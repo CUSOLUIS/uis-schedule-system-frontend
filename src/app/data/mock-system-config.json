@@ -10,7 +10,7 @@
           "order": 1
         },
         {
-          "id": "tuesday", 
+          "id": "tuesday",
           "name": "Martes",
           "shortName": "Mar",
           "active": true,
@@ -18,7 +18,7 @@
         },
         {
           "id": "wednesday",
-          "name": "Miércoles", 
+          "name": "Miércoles",
           "shortName": "Mié",
           "active": true,
           "order": 3
@@ -26,7 +26,7 @@
         {
           "id": "thursday",
           "name": "Jueves",
-          "shortName": "Jue", 
+          "shortName": "Jue",
           "active": true,
           "order": 4
         },
@@ -56,7 +56,7 @@
         },
         {
           "id": "slot_08",
-          "startTime": "08:00", 
+          "startTime": "08:00",
           "endTime": "09:00",
           "displayTime": "08:00",
           "active": true,
@@ -65,7 +65,7 @@
         {
           "id": "slot_09",
           "startTime": "09:00",
-          "endTime": "10:00", 
+          "endTime": "10:00",
           "displayTime": "09:00",
           "active": true,
           "order": 3
@@ -74,7 +74,7 @@
           "id": "slot_10",
           "startTime": "10:00",
           "endTime": "11:00",
-          "displayTime": "10:00", 
+          "displayTime": "10:00",
           "active": true,
           "order": 4
         },
@@ -97,7 +97,7 @@
         {
           "id": "slot_13",
           "startTime": "13:00",
-          "endTime": "14:00", 
+          "endTime": "14:00",
           "displayTime": "13:00",
           "active": true,
           "order": 7

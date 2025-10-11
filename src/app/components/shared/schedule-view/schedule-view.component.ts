@@ -212,4 +212,65 @@ export class ScheduleViewComponent implements OnInit {
     const role = this.roleService.getRoleById(roleId);
     return role?.colorScheme.accent || '#6C757D';
   }
+
+  getUserRoleBackground(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+    if (!roleId) return '#FAFAFA';
+
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.background || '#FAFAFA';
+  }
+
+  /**
+   * Genera un color pastel suave para la hora actual basado en el rol
+   * Utiliza el color primary del rol y lo hace más claro y translúcido
+   */
+  getCurrentTimePastelColor(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+
+    if (!roleId) return 'rgba(230, 240, 255, 0.6)'; // Azul pastel por defecto
+
+    const role = this.roleService.getRoleById(roleId);
+    if (!role) return 'rgba(230, 240, 255, 0.6)';
+
+    // Convierte el color primario del rol a RGB y crea una versión pastel
+    const primaryColor = role.colorScheme.primary;
+
+  // Color en formato hex: conversión a RGB para versión pastel
+  if (primaryColor.startsWith('#')) {
+      const hex = primaryColor.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+
+  // Aplicación de un tono más claro en porcentaje reducido para un resultado suave
+      const mixFactor = 0.15; // 0 = color original, 1 = blanco
+      const pastelR = Math.min(255, r + (255 - r) * mixFactor);
+      const pastelG = Math.min(255, g + (255 - g) * mixFactor);
+      const pastelB = Math.min(255, b + (255 - b) * mixFactor);
+
+      // Usar opacidad más alta para un color más sólido
+      return `rgba(${Math.round(pastelR)}, ${Math.round(pastelG)}, ${Math.round(
+        pastelB
+      )}, 0.95)`;
+    }
+
+    // Si ya está en formato RGB o similar, usarlo directamente con opacidad más alta
+    return primaryColor.replace('rgb', 'rgba').replace(')', ', 0.95)');
+  }
+
+  /**
+   * Genera un color de borde más intenso para la hora actual
+   */
+  getCurrentTimeBorderColor(): string {
+    const currentUser = this.userService.getCurrentUser()();
+    const roleId = currentUser?.role?.id;
+
+    if (!roleId) return 'rgba(100, 150, 255, 0.4)';
+
+    const role = this.roleService.getRoleById(roleId);
+    return role?.colorScheme.accent || '#6C757D';
+  }
 }

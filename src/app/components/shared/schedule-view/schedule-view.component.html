@@ -94,12 +94,12 @@
             "
             [style.background]="
               config.highlightCurrentTime && isCurrentTimeSlot(day, time)
-                ? getUserRoleGradient()
+                ? getCurrentTimePastelColor()
                 : ''
             "
             [style.border-color]="
               config.highlightCurrentTime && isCurrentTimeSlot(day, time)
-                ? getUserRoleAccent()
+                ? getCurrentTimeBorderColor()
                 : ''
             "
             [style.box-shadow]="
@@ -119,13 +119,12 @@
               <div class="group-info">Grupo {{ schedule.groupNumber }}</div>
               }
               <div class="location-info">
-                <div class="classroom-info">{{ schedule.classroom }}</div>
-                @if (schedule.building) {
-                <div class="building-info">
-                  {{ schedule.building }}@if (schedule.floor) { - Piso
-                  {{ schedule.floor }} }
+                <div class="classroom-info">
+                  {{ schedule.classroom }}
+                  @if (schedule.building) {
+                  <span class="building-inline"> - {{ schedule.building }}@if (schedule.floor) { - Piso {{ schedule.floor }} }</span>
+                  }
                 </div>
-                }
               </div>
               <div class="time-info">
                 {{ schedule.startTime }} - {{ schedule.endTime }}
@@ -153,6 +152,13 @@
       <span class="date-info">{{ getCurrentDate() }}</span>
     </div>
 
+    <!-- Vista estudiante sin clases: leyenda informativa -->
+    @if (config.isStudentView && getFilteredTimeSlots().length === 0) {
+    <div class="no-classes-legend" [style.border-color]="getUserRoleAccent()">
+      <p>No tienes clases este día</p>
+    </div>
+    }
+
     <div class="daily-slots">
       @for (time of getFilteredTimeSlots(); track time) {
       <div
@@ -168,7 +174,7 @@
             ? getUserRoleAccent()
             : config.highlightCurrentTime &&
               isCurrentTimeSlot(getSelectedDay(), time)
-            ? getUserRoleAccent()
+            ? getCurrentTimeBorderColor()
             : ''
         "
         [style.background]="
@@ -180,7 +186,7 @@
               ' 100%)'
             : config.highlightCurrentTime &&
               isCurrentTimeSlot(getSelectedDay(), time)
-            ? getUserRoleGradient()
+            ? getCurrentTimePastelColor()
             : ''
         "
         [style.box-shadow]="
@@ -204,13 +210,11 @@
             }
             <div class="location-time">
               <div class="location-details">
-                <span class="classroom">{{ schedule.classroom }}</span>
-                @if (schedule.building) {
-                <span class="building"
-                  >{{ schedule.building }}@if (schedule.floor) { - Piso
-                  {{ schedule.floor }} }</span
-                >
-                }
+                <span class="classroom">{{ schedule.classroom }}
+                  @if (schedule.building) {
+                  <span class="building-inline"> - {{ schedule.building }}@if (schedule.floor) { - Piso {{ schedule.floor }} }</span>
+                  }
+                </span>
               </div>
               <span class="duration"
                 >{{ schedule.startTime }} - {{ schedule.endTime }}</span
