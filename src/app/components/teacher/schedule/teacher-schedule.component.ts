@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../../../services/user.service';
 import { RoleService } from '../../../services/role.service';
 import { SubjectService } from '../../../services/subject.service';
+import { ClassroomService } from '../../../services/classroom.service';
 import { SystemConfigService } from '../../../services/system-config.service';
 import { User } from '../../../interfaces/user.interface';
 import { Subject, Group } from '../../../interfaces/subject.interface';
@@ -34,6 +35,7 @@ export class TeacherScheduleComponent implements OnInit {
   private userService = inject(UserService);
   private roleService = inject(RoleService);
   private subjectService = inject(SubjectService);
+  private classroomService = inject(ClassroomService);
   private systemConfigService = inject(SystemConfigService);
 
   currentUser: User | null = null;
@@ -68,7 +70,7 @@ export class TeacherScheduleComponent implements OnInit {
   private loadTeacherSchedule() {
     if (!this.currentUser) return;
 
-    // Obtiene todas las materias
+  // Listado de materias
     const subjects = this.subjectService.getAllSubjects()();
     this.teachingSubjects = [];
     this.scheduleSlots = [];
@@ -93,9 +95,14 @@ export class TeacherScheduleComponent implements OnInit {
           totalHours,
         });
 
-        // Convierte horarios a ScheduleSlots
+        // Horarios en formato `ScheduleSlot`
         teacherGroups.forEach((group: Group) => {
           group.schedule.forEach((scheduleItem) => {
+            // Información de aula (edificio y piso) desde el servicio, si existe
+            const classroomInfo = scheduleItem.classroomId
+              ? this.classroomService.getClassroomByIdSync(scheduleItem.classroomId)
+              : undefined;
+
             this.scheduleSlots.push({
               day: scheduleItem.day,
               startTime: scheduleItem.startTime,
@@ -106,6 +113,11 @@ export class TeacherScheduleComponent implements OnInit {
               subjectCode: subject.code,
               teacherName: group.teacherName,
               groupNumber: group.groupNumber,
+              building: classroomInfo?.building,
+              floor:
+                classroomInfo && classroomInfo.floor != null
+                  ? String(classroomInfo.floor)
+                  : undefined,
             });
           });
         });
@@ -115,6 +127,7 @@ export class TeacherScheduleComponent implements OnInit {
     this.setupStatistics();
   }
 
+  // Cálculo de horas totales por materia
   private calculateSubjectTotalHours(groups: Group[]): number {
     let totalMinutes = 0;
 
@@ -129,11 +142,13 @@ export class TeacherScheduleComponent implements OnInit {
     return Math.round(totalMinutes / 60);
   }
 
+  // Conversión de hora a minutos
   private timeToMinutes(time: string): number {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   }
 
+  // Construcción de estadísticas para la cabecera
   private setupStatistics() {
     this.sectionConfig.statistics = [
       {

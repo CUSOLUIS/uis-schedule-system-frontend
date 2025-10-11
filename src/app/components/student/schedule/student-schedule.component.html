@@ -64,13 +64,18 @@
         </div>
         <div class="subject-schedule">
           <h5>Horarios:</h5>
-          @for (schedule of subjectInfo.group.schedule; track $index) {
+          @for (schedule of (subjectInfo.scheduleWithLocation || subjectInfo.group.schedule); track $index) {
           <div class="schedule-item">
             <span class="day">{{ schedule.day }}</span>
             <span class="time"
               >{{ schedule.startTime }} - {{ schedule.endTime }}</span
             >
-            <span class="classroom">{{ schedule.classroom }}</span>
+            <span class="classroom">
+              {{ schedule.classroom }}
+              @if (schedule.building) {
+              <span class="building-inline"> - {{ schedule.building }}@if (schedule.floor) { - Piso {{ schedule.floor }} }</span>
+              }
+            </span>
           </div>
           }
         </div>

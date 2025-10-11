@@ -140,7 +140,7 @@
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, #007bff, #28a745, #ffc107, #dc3545);
+  background: #1976d2;
 }
 
 .subject-card:hover {

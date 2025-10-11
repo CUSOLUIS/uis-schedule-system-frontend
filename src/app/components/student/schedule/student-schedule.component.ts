@@ -30,7 +30,8 @@ export class StudentScheduleComponent implements OnInit {
   private classroomService = inject(ClassroomService);
 
   currentUser: User | null = null;
-  enrolledSubjects: { subject: Subject; group: Group }[] = [];
+  // Campo `scheduleWithLocation` por materia matriculada (horarios con ubicación)
+  enrolledSubjects: { subject: Subject; group: Group; scheduleWithLocation?: any[] }[] = [];
   scheduleSlots: ScheduleSlot[] = [];
 
   sectionConfig: SectionHeaderConfig = {
@@ -62,27 +63,25 @@ export class StudentScheduleComponent implements OnInit {
   private loadStudentSchedule() {
     if (!this.currentUser) return;
 
-    // Obtiene todas las materias
+  // Listado de materias
     const subjects = this.subjectService.getAllSubjects()();
 
-    // Filtra solo las materias en las que está matriculado el estudiante
+  // Materias con matrícula del estudiante
     this.enrolledSubjects = [];
     this.scheduleSlots = [];
 
     subjects.forEach((subject: Subject) => {
       subject.groups.forEach((group: Group) => {
         if (group.studentIds.includes(this.currentUser!.id)) {
-          this.enrolledSubjects.push({ subject, group });
-
-          // Convierte horarios del grupo a ScheduleSlots
-          group.schedule.forEach((scheduleItem) => {
-            // Obtiene información del aula para incluir edificio y piso
+          // Schedule del grupo enriquecido con la ubicación del aula
+          const scheduleWithLocation = group.schedule.map((scheduleItem) => {
             const classroom = scheduleItem.classroomId
               ? this.classroomService.getClassroomByIdSync(
                   scheduleItem.classroomId
                 )
               : undefined;
 
+            // Array global `scheduleSlots` usado por el visor (con ubicación)
             this.scheduleSlots.push({
               day: scheduleItem.day,
               startTime: scheduleItem.startTime,
@@ -96,7 +95,15 @@ export class StudentScheduleComponent implements OnInit {
               building: classroom?.building,
               floor: classroom?.floor?.toString(),
             });
+
+            return {
+              ...scheduleItem,
+              building: classroom?.building,
+              floor: classroom?.floor != null ? String(classroom?.floor) : undefined,
+            };
           });
+
+          this.enrolledSubjects.push({ subject, group, scheduleWithLocation });
         }
       });
     });
@@ -104,6 +111,7 @@ export class StudentScheduleComponent implements OnInit {
     this.setupStatistics();
   }
 
+  // Estadísticas de la sección
   private setupStatistics() {
     this.sectionConfig.statistics = [
       {
@@ -136,7 +144,7 @@ export class StudentScheduleComponent implements OnInit {
   getCurrentSemester(): number {
     if (this.enrolledSubjects.length === 0) return 0;
 
-    // Obtiene el semestre más alto de las materias matriculadas
+    // Semestre máximo entre las materias matriculadas
     return Math.max(
       ...this.enrolledSubjects.map((sub) => sub.subject.semester)
     );
@@ -192,7 +200,7 @@ export class StudentScheduleComponent implements OnInit {
   }
 
   onExportSchedule() {
-    // Implementa funcionalidad de exportación
+    // Exportación del horario (generación de datos)
     const scheduleData = {
       student: this.currentUser?.fullName,
       email: this.currentUser?.email,
@@ -209,7 +217,7 @@ export class StudentScheduleComponent implements OnInit {
       generatedAt: new Date().toLocaleString('es-ES'),
     };
 
-    // Crea y descarga archivo JSON
+  // Generación y descarga del archivo JSON
     const dataStr = JSON.stringify(scheduleData, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
