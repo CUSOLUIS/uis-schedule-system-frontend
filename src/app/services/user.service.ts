@@ -1,15 +1,19 @@
 import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 import { User, MenuItem, LoginUser } from '../interfaces/user.interface';
 import { RoleService } from './role.service';
-import mockUsersData from '../data/mock-user.json';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private roleService = inject(RoleService);
+  private http = inject(HttpClient);
   private users = signal<User[]>([]);
   private currentUser = signal<User | null>(null);
+  private apiUrl = `${environment.apiUrl}/api/users`;
 
   readonly menuItems: Record<string, MenuItem[]> = {
     admin: [
@@ -142,8 +146,14 @@ export class UserService {
     return this.users();
   }
 
-  // Método adicional para obtener usuarios mock en formato LoginUser
+  // Método para obtener usuarios del backend
+  getUsersFromBackend(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
+  }
+
+  // Método adicional para obtener usuarios mock (para compatibilidad)
   getMockUsers(): LoginUser[] {
-    return mockUsersData.users as LoginUser[];
+    // Placeholder, ya que ahora usamos backend
+    return [];
   }
 }

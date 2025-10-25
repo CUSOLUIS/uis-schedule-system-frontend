@@ -27,7 +27,7 @@ export default class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
-  async onSubmit(): Promise<void> {
+  onSubmit(): void {
     if (!this.username || !this.password) {
       this.errorMessage = 'Por favor ingrese usuario y contraseña';
       return;
@@ -35,31 +35,30 @@ export default class LoginComponent {
 
     this.isLoading = true;
     this.errorMessage = '';
-    this.cdr.detectChanges();
 
     const credentials: LoginRequest = {
       username: this.username,
       password: this.password,
     };
 
-    try {
-      const response = await this.authService.login(credentials);
-
-      if (response.success && response.user) {
-        this.redirectToRolePage(response.user.role.id);
-      } else {
-        this.errorMessage = response.message || 'Error en el inicio de sesión';
-
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        if (response.success && response.user) {
+          this.redirectToRolePage(response.user.role.id);
+        } else {
+          this.errorMessage =
+            response.message || 'Error en el inicio de sesión';
+        }
         this.isLoading = false;
         this.cdr.detectChanges();
-      }
-    } catch (error) {
-      this.errorMessage = 'Error de conexión. Intente nuevamente.';
-      console.error('Error en login:', error);
-      this.cdr.detectChanges();
-    } finally {
-      this.isLoading = false;
-    }
+      },
+      error: (error) => {
+        this.errorMessage = 'Error de conexión. Intente nuevamente.';
+        console.error('Error en login:', error);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   private redirectToRolePage(roleId: string): void {
@@ -76,10 +75,5 @@ export default class LoginComponent {
       default:
         this.router.navigate(['dashboard']);
     }
-  }
-
-  // method for testing purposes
-  showTestCredentials(): void {
-    console.log('Usuarios de prueba:', this.authService.getAllMockUsers());
   }
 }

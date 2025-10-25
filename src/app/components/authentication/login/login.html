@@ -2,9 +2,8 @@
   <div class="login-card">
     <!-- Logo UIS -->
     <div class="logo-section">
-
       <div class="logo-image">
-        <img src="assets/images/logoUIS.png" alt="Logo UIS" class="uis-logo">
+        <img src="assets/images/logoUIS.png" alt="Logo UIS" class="uis-logo" />
       </div>
     </div>
 
@@ -19,7 +18,7 @@
       </div>
 
       <div class="form-group">
-        <label for="username">Código</label>
+        <label for="username">Usuario</label>
         <input
           type="text"
           id="username"
@@ -27,7 +26,7 @@
           [(ngModel)]="username"
           [disabled]="isLoading"
           required
-          placeholder="Enter your Code"
+          placeholder="Ingrese su usuario"
         />
       </div>
 
@@ -70,8 +69,6 @@
         </button>
       </div>
 
-      
-
       <!-- Footer con Create Account -->
       <div class="login-footer">
         <span class="footer-text">New to UIS?</span>
@@ -79,11 +76,7 @@
       </div>
 
       <!-- Botón para mostrar credenciales de prueba (solo para desarrollo) -->
-      <div class="test-credentials" *ngIf="!isLoading">
-        <button type="button" class="btn-test" (click)="showTestCredentials()">
-          Ver credenciales de prueba
-        </button>
-      </div>
+      <div class="test-credentials" *ngIf="!isLoading"></div>
     </form>
   </div>
 </div>
