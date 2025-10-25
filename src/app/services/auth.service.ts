@@ -1,4 +1,6 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, catchError, of } from 'rxjs';
 import {
   LoginUser,
   LoginRequest,
@@ -7,76 +9,73 @@ import {
 } from '../interfaces/user.interface';
 import { UserService } from './user.service';
 import { RoleService } from './role.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private isAuthenticated = signal<boolean>(false);
-  private mockUsers: LoginUser[] = [];
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   constructor(
+    private http: HttpClient,
     private userService: UserService,
     private roleService: RoleService
   ) {
-    // Inicializa después de que UserService esté completamente cargado
-    this.initializeAuthService();
-  }
-
-  private initializeAuthService(): void {
-    // Obtener usuarios mock del UserService
-    this.mockUsers = this.userService.getMockUsers();
     // Verificar si hay una sesión guardada al inicializar
     this.checkStoredSession();
   }
 
-  async login(credentials: LoginRequest): Promise<LoginResponse> {
-    try {
-      // Simular delay de red
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+  login(credentials: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<any>(`${this.apiUrl}/log-in`, credentials).pipe(
+      map((response) => {
+        if (response.status) {
+          // Asumiendo que el backend devuelve el usuario completo o necesitamos obtenerlo
+          // Por ahora, crear un usuario básico
+          const roleData = this.roleService.getRoleById('admin'); // Placeholder, ajustar según lógica
 
-      const foundUser = this.mockUsers.find(
-        (user) =>
-          user.username === credentials.username &&
-          user.password === credentials.password
-      );
+          if (roleData) {
+            const authenticatedUser: User = {
+              id: '1', // Placeholder
+              username: response.username,
+              role: roleData,
+              fullName: 'Usuario', // Placeholder
+              email: response.username,
+            };
 
-      if (foundUser) {
-        const roleData = this.roleService.getRoleById(foundUser.role);
+            // Guarda usuario en el servicio
+            this.userService.setCurrentUser(authenticatedUser);
+            this.isAuthenticated.set(true);
 
-        if (roleData) {
-          const authenticatedUser: User = {
-            id: foundUser.id,
-            username: foundUser.username,
-            role: roleData,
-            fullName: foundUser.fullName,
-            email: foundUser.email,
-          };
+            // Guarda token y usuario en localStorage
+            this.saveSession(authenticatedUser, response.jwt);
 
-          // Guarda usuario en el servicio
-          this.userService.setCurrentUser(authenticatedUser);
-          this.isAuthenticated.set(true);
-
-          // Guarda en localStorage para persistencia
-          this.saveSession(authenticatedUser);
-
+            return {
+              success: true,
+              user: authenticatedUser,
+              token: response.jwt,
+            };
+          } else {
+            return {
+              success: false,
+              message: 'Rol no encontrado',
+            };
+          }
+        } else {
           return {
-            success: true,
-            user: authenticatedUser,
+            success: false,
+            message: response.message || 'Credenciales incorrectas',
           };
         }
-      }
-
-      return {
-        success: false,
-        message: 'Credenciales incorrectas',
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: 'Error en el servidor',
-      };
-    }
+      }),
+      catchError((error) => {
+        return of({
+          success: false,
+          message: error.error?.message || 'Error en el servidor',
+        });
+      })
+    );
   }
 
   logout(): void {
@@ -89,16 +88,18 @@ export class AuthService {
     return this.isAuthenticated.asReadonly();
   }
 
-  private saveSession(user: User): void {
+  private saveSession(user: User, token: string): void {
     localStorage.setItem('currentUser', JSON.stringify(user));
     localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('token', token);
   }
 
   private checkStoredSession(): void {
     const storedUser = localStorage.getItem('currentUser');
     const isAuth = localStorage.getItem('isAuthenticated');
+    const token = localStorage.getItem('token');
 
-    if (storedUser && isAuth === 'true') {
+    if (storedUser && isAuth === 'true' && token) {
       try {
         const user: User = JSON.parse(storedUser);
         this.userService.setCurrentUser(user);
@@ -112,10 +113,10 @@ export class AuthService {
   private clearSession(): void {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('token');
   }
 
-  // Método para obtener todos los usuarios (solo para desarrollo)
-  getAllMockUsers(): LoginUser[] {
-    return this.mockUsers;
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 }
