@@ -1,40 +1,44 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import mockClassrooms from '../data/mock-classrooms.json';
+import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, catchError, of } from 'rxjs';
 import {
   Classroom,
   ClassroomSchedule,
 } from '../interfaces/classroom.interface';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClassroomService {
-  private classrooms = signal<Classroom[]>(mockClassrooms.classrooms);
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.apiUrl}/api/classrooms`;
+  private classrooms = signal<Classroom[]>([]);
 
   constructor() {
     this.loadInitialData();
   }
 
   private loadInitialData() {
-    // Importa los datos mock directamente
-    import('../data/mock-classrooms.json')
-      .then((data) => {
-        this.classrooms.set(data.classrooms);
-      })
-      .catch((error) => {
-        console.error('Error loading mock data:', error);
+    this.getAllClassrooms().subscribe({
+      next: (classrooms) => this.classrooms.set(classrooms),
+      error: (error) => {
+        console.error('Error loading classrooms:', error);
         this.classrooms.set([]);
-      });
+      },
+    });
   }
 
   getAllClassrooms(): Observable<Classroom[]> {
-    return of(this.classrooms());
+    return this.http
+      .get<Classroom[]>(this.apiUrl)
+      .pipe(catchError(() => of([])));
   }
 
   getClassroomById(id: string): Observable<Classroom | undefined> {
-    const classroom = this.classrooms().find((c) => c.id === id);
-    return of(classroom);
+    return this.http
+      .get<Classroom>(`${this.apiUrl}/${id}`)
+      .pipe(catchError(() => of(undefined)));
   }
 
   getClassroomByIdSync(id: string): Classroom | undefined {
@@ -42,58 +46,58 @@ export class ClassroomService {
   }
 
   createClassroom(classroom: Omit<Classroom, 'id'>): Observable<Classroom> {
-    const newClassroom: Classroom = {
-      ...classroom,
-      id: Date.now().toString(),
-    };
-    this.classrooms.update((rooms) => [...rooms, newClassroom]);
-    return of(newClassroom);
+    return this.http.post<Classroom>(this.apiUrl, classroom).pipe(
+      map((newClassroom) => {
+        this.classrooms.update((rooms) => [...rooms, newClassroom]);
+        return newClassroom;
+      }),
+      catchError(() => of({} as Classroom))
+    );
   }
 
   updateClassroom(
     id: string,
     updates: Partial<Classroom>
   ): Observable<Classroom | undefined> {
-    let updatedClassroom: Classroom | undefined;
-
-    this.classrooms.update((rooms) =>
-      rooms.map((room) => {
-        if (room.id === id) {
-          updatedClassroom = { ...room, ...updates };
-          return updatedClassroom;
-        }
-        return room;
-      })
+    return this.http.put<Classroom>(`${this.apiUrl}/${id}`, updates).pipe(
+      map((updatedClassroom) => {
+        this.classrooms.update((rooms) =>
+          rooms.map((room) => (room.id === id ? updatedClassroom : room))
+        );
+        return updatedClassroom;
+      }),
+      catchError(() => of(undefined))
     );
-
-    return of(updatedClassroom);
   }
 
   deleteClassroom(id: string): Observable<void> {
-    this.classrooms.update((rooms) => rooms.filter((room) => room.id !== id));
-    return of(void 0);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      map(() => {
+        this.classrooms.update((rooms) =>
+          rooms.filter((room) => room.id !== id)
+        );
+      }),
+      catchError(() => of(void 0))
+    );
   }
 
   assignSchedule(
     classroomId: string,
     schedule: ClassroomSchedule
   ): Observable<Classroom | undefined> {
-    let updatedClassroom: Classroom | undefined;
-
-    this.classrooms.update((rooms) =>
-      rooms.map((room) => {
-        if (room.id === classroomId) {
-          updatedClassroom = {
-            ...room,
-            schedule: [...room.schedule, schedule],
-          };
+    return this.http
+      .post<Classroom>(`${this.apiUrl}/${classroomId}/schedule`, schedule)
+      .pipe(
+        map((updatedClassroom) => {
+          this.classrooms.update((rooms) =>
+            rooms.map((room) =>
+              room.id === classroomId ? updatedClassroom : room
+            )
+          );
           return updatedClassroom;
-        }
-        return room;
-      })
-    );
-
-    return of(updatedClassroom);
+        }),
+        catchError(() => of(undefined))
+      );
   }
 
   removeSchedule(
