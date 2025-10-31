@@ -45,3 +45,8 @@ Thumbs.db
 .scannerwork/
 .sonar/
 sonar-project.properties
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
