@@ -1,9 +1,10 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { User, MenuItem, LoginUser } from '../interfaces/user.interface';
+import { Observable, catchError, map, of, tap } from 'rxjs';
+import { User, MenuItem, LoginUser, UserRole } from '../interfaces/user.interface';
 import { RoleService } from './role.service';
 import { environment } from '../../environments/environment';
+import { MOCK_USERS } from '../mocks/mock-users';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,7 @@ export class UserService {
   private users = signal<User[]>([]);
   private currentUser = signal<User | null>(null);
   private apiUrl = `${environment.apiUrl}/api/users`;
+  private useMock = !environment.production; // Usar mocks solo en desarrollo
 
   readonly menuItems: Record<string, MenuItem[]> = {
     admin: [
@@ -108,7 +110,12 @@ export class UserService {
     ],
   };
 
-  constructor() {}
+  constructor() {
+    // Si estamos en desarrollo y no hay usuarios, cargar los mocks
+    if (this.useMock && this.users().length === 0) {
+      this.users.set(MOCK_USERS);
+    }
+  }
 
   getCurrentUser() {
     return this.currentUser.asReadonly();
