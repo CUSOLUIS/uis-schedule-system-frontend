@@ -119,6 +119,57 @@ The application uses a proxy to forward API requests:
 
 ## Troubleshooting
 
+### Issue: Nothing appears at http://localhost:4200/
+
+**Possible Causes and Solutions:**
+
+1. **Dependencies not installed**
+   ```bash
+   # Solution: Install dependencies first
+   npm install
+   npm start
+   ```
+
+2. **Browser cache issues**
+   - **Solution 1**: Hard refresh the page
+     - Windows/Linux: `Ctrl + Shift + R` or `Ctrl + F5`
+     - Mac: `Cmd + Shift + R`
+   
+   - **Solution 2**: Clear browser cache
+     - Open DevTools (F12)
+     - Right-click the refresh button and select "Empty Cache and Hard Reload"
+   
+   - **Solution 3**: Try in incognito/private mode
+
+3. **Build errors preventing startup**
+   ```bash
+   # Check for errors in the terminal where you ran npm start
+   # Look for any ERROR messages
+   ```
+
+4. **Server not starting properly**
+   ```bash
+   # Stop the server (Ctrl+C) and restart with verbose output
+   npm start
+   # Wait for the message: "✓ Compiled successfully."
+   # Look for: "➜  Local:   http://localhost:4200/"
+   ```
+
+5. **JavaScript disabled in browser**
+   - Angular requires JavaScript to be enabled
+   - Check your browser settings and enable JavaScript
+
+6. **Ad blockers or extensions interfering**
+   - Try disabling ad blockers or browser extensions
+   - The app loads resources from CDN (Font Awesome) that might be blocked
+
+7. **Check browser console for errors**
+   ```
+   Press F12 to open DevTools
+   Go to Console tab
+   Look for any red error messages
+   ```
+
 ### Port Already in Use
 
 If port 4200 is already in use:
@@ -154,6 +205,26 @@ Ensure all dependencies are installed:
 ```bash
 npm install
 ```
+
+### Verifying the Application is Running
+
+After running `npm start`, you should see:
+
+```
+✔ Building...
+Application bundle generation complete. [X.XXX seconds]
+
+Watch mode enabled. Watching for file changes...
+  ➜  Local:   http://localhost:4200/
+```
+
+**What you should see in the browser:**
+- The UIS (Universidad Industrial de Santander) logo
+- "Sign in to UIS Schedule" heading
+- Username and Password input fields
+- A green "Sign in" button
+
+If you see this, the application is working correctly!
 
 ## Login Credentials (Mock Data)
 
