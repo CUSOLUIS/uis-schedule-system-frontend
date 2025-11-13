@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserRole } from '../../../interfaces/user.interface';
@@ -7,6 +7,7 @@ import {
   SectionHeaderComponent,
   SectionHeaderConfig,
 } from '../../shared/section-header/section-header.component';
+import { RoleService, Role } from '../../../services/role.service';
 
 @Component({
   selector: 'app-roles',
@@ -41,30 +42,13 @@ export class RolesComponent implements OnInit {
     this.newUser.update((prev) => ({ ...prev, [field]: value }));
   }
 
-  availableRoles = [
-    {
-      id: 'student',
-      name: 'Estudiante',
-      color: '#388E3C',
-      backgroundColor: '#4CAF50',
-    },
-    {
-      id: 'teacher',
-      name: 'Profesor',
-      color: '#1976D2',
-      backgroundColor: '#2196F3',
-    },
-    {
-      id: 'admin',
-      name: 'Administrador',
-      color: '#4A148C',
-      backgroundColor: '#9C27B0',
-    },
-  ];
+  private roleService = inject(RoleService);
+  availableRoles: Role[] = [];
 
   constructor() {}
 
   ngOnInit() {
+    this.availableRoles = this.roleService.getAllRoles();
     this.loadUsers();
     this.updateHeaderStatistics();
   }
@@ -78,24 +62,28 @@ export class RolesComponent implements OnInit {
 
   private updateHeaderStatistics() {
     const stats = this.getRoleStats();
+    const studentRole = this.roleService.getRoleById('student');
+    const teacherRole = this.roleService.getRoleById('teacher');
+    const adminRole = this.roleService.getRoleById('admin');
+    
     this.headerConfig.statistics = [
       {
         icon: 'fa-user-graduate',
         value: stats['student'] || 0,
         label: 'Estudiantes',
-        color: '#4CAF50',
+        color: studentRole?.colorScheme.secondary || '#4CAF50',
       },
       {
         icon: 'fa-user-tie',
         value: stats['teacher'] || 0,
         label: 'Profesores',
-        color: '#2196F3',
+        color: teacherRole?.colorScheme.secondary || '#2196F3',
       },
       {
         icon: 'fa-user-shield',
         value: stats['admin'] || 0,
         label: 'Administradores',
-        color: '#9C27B0',
+        color: adminRole?.colorScheme.secondary || '#9C27B0',
       },
     ];
   }
