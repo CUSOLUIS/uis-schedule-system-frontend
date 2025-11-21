@@ -54,7 +54,12 @@
               name="email"
               placeholder="juan.perez@uis.edu.co"
               required
+              [class.error]="newUserEmailError()"
             />
+            <div class="error-message" *ngIf="newUserEmailError()">
+              <i class="fas fa-exclamation-triangle"></i>
+              {{ newUserEmailError() }}
+            </div>
           </div>
 
           <div class="form-group">
@@ -76,9 +81,103 @@
           <button type="button" class="cancel-btn" (click)="toggleCreateForm()">
             Cancelar
           </button>
-          <button type="submit" class="submit-btn">
+          <button 
+            type="submit" 
+            class="submit-btn"
+            [disabled]="newUserEmailError() || !newUser().username || !newUser().fullName || !newUser().email"
+          >
             <i class="fas fa-save"></i>
             Crear Usuario
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit User Form -->
+  <div class="create-form-container" *ngIf="showEditForm()">
+    <div class="form-card">
+      <div class="form-header">
+        <h3><i class="fas fa-user-edit"></i> Editar Usuario</h3>
+        <button class="close-btn" (click)="closeEditForm()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form class="create-form" (ngSubmit)="updateUser()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-username">Nombre de Usuario</label>
+            <input
+              type="text"
+              id="edit-username"
+              [ngModel]="editUser().username"
+              (ngModelChange)="setEditUserField('username', $event)"
+              name="edit-username"
+              placeholder="juan.perez"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="edit-fullName">Nombre Completo</label>
+            <input
+              type="text"
+              id="edit-fullName"
+              [ngModel]="editUser().fullName"
+              (ngModelChange)="setEditUserField('fullName', $event)"
+              name="edit-fullName"
+              placeholder="Juan Pérez"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-email">Correo Electrónico</label>
+            <input
+              type="email"
+              id="edit-email"
+              [ngModel]="editUser().email"
+              (ngModelChange)="setEditUserField('email', $event)"
+              name="edit-email"
+              placeholder="juan.perez@uis.edu.co"
+              required
+              [class.error]="editUserEmailError()"
+            />
+            <div class="error-message" *ngIf="editUserEmailError()">
+              <i class="fas fa-exclamation-triangle"></i>
+              {{ editUserEmailError() }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-role">Rol</label>
+            <select
+              id="edit-role"
+              [ngModel]="editUser().role"
+              (ngModelChange)="setEditUserField('role', $event)"
+              name="edit-role"
+            >
+              <option value="student">Estudiante</option>
+              <option value="teacher">Profesor</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" (click)="closeEditForm()">
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            class="submit-btn"
+            [disabled]="editUserEmailError() || !editUser().username || !editUser().fullName || !editUser().email"
+          >
+            <i class="fas fa-save"></i>
+            Actualizar Usuario
           </button>
         </div>
       </form>
@@ -115,7 +214,6 @@
               <th>Nombre Completo</th>
               <th>Email</th>
               <th>Rol</th>
-              <th>Fecha Creación</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -124,7 +222,7 @@
               <td class="user-info" data-label="Usuario">
                 <div
                   class="user-avatar"
-                  [style.background-color]="user.role.backgroundColor"
+                  [style.background-color]="user.role.colorScheme.primary"
                 >
                   <i class="fas fa-user"></i>
                 </div>
@@ -149,12 +247,12 @@
                 </select>
               </td>
 
-              <td class="created-date" data-label="Fecha Creación">
-                {{ user.createdAt | date : "dd/MM/yyyy" }}
-              </td>
-
               <td class="actions" data-label="Acciones">
-                <button class="action-btn edit-btn" title="Editar Usuario">
+                <button 
+                  class="action-btn edit-btn" 
+                  title="Editar Usuario"
+                  (click)="editUserById(user.id)"
+                >
                   <i class="fas fa-edit"></i>
                 </button>
                 <button

@@ -1,1 +1,1 @@
-export { RolesComponent } from './roles.component'; 
+export { default as RolesComponent } from './roles.component'; 

@@ -29,13 +29,10 @@
           <i class="fas fa-user"></i>
         </div>
         <div class="teacher-info">
-          <h3>{{ teacher.fullName }}</h3>
-          <p class="career">{{ teacher.universityCareer }}</p>
-          <p class="office">
+          <h3 [title]="teacher.fullName">{{ teacher.fullName }}</h3>
+          <p class="career" [title]="teacher.universityCareer">{{ teacher.universityCareer }}</p>
+          <p class="office" [title]="teacher.office">
             <i class="fas fa-map-marker-alt"></i> {{ teacher.office }}
-          </p>
-          <p class="email">
-            <i class="fas fa-envelope"></i> {{ teacher.email }}
           </p>
         </div>
         <div class="teacher-stats">

@@ -32,7 +32,8 @@
         "/admin/teachers",
         "/admin/students",
         "/admin/schedules",
-        "/admin/reports"
+        "/admin/reports",
+        "/admin/roles"
       ],
       "menuItems": [
         {
