@@ -57,7 +57,7 @@ export const routes: Routes = [
       {
         path: 'roles',
         loadComponent: () =>
-          import('./components/admin/roles').then((m) => m.RolesComponent),
+          import('./components/admin/roles/roles.component'),
         title: 'Gestión de Roles - Admin',
       },
       // { path: 'settings', loadComponent: () => import('./components/admin/settings/settings.component') }

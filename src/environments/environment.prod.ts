@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8080', // URL del backend en producción
+  useMocks: false, // En producción siempre usar backend real
+  apiUrl: 'http://localhost:8080/api' // URL completa del backend en producción
 };

@@ -2,7 +2,6 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 import {
-  LoginUser,
   LoginRequest,
   LoginResponse,
   User,
@@ -30,18 +29,18 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<any>(`${this.apiUrl}/log-in`, credentials).pipe(
       map((response) => {
-        if (response.status) {
-          // Asumiendo que el backend devuelve el usuario completo o necesitamos obtenerlo
-          // Por ahora, crear un usuario básico
-          const roleData = this.roleService.getRoleById('admin'); // Placeholder, ajustar según lógica
-
-          if (roleData) {
+        if (response && response.success) {
+          // El backend debe devolver el usuario completo con rol
+          const user = response.user;
+          
+          if (user && user.role) {
+            // Crear el usuario con los datos del backend
             const authenticatedUser: User = {
-              id: '1', // Placeholder
-              username: response.username,
-              role: roleData,
-              fullName: 'Usuario', // Placeholder
-              email: response.username,
+              id: user.id,
+              username: user.username,
+              fullName: user.fullName,
+              email: user.email,
+              role: user.role
             };
 
             // Guarda usuario en el servicio
@@ -49,27 +48,28 @@ export class AuthService {
             this.isAuthenticated.set(true);
 
             // Guarda token y usuario en localStorage
-            this.saveSession(authenticatedUser, response.jwt);
+            this.saveSession(authenticatedUser, response.token);
 
             return {
               success: true,
               user: authenticatedUser,
-              token: response.jwt,
+              token: response.token,
             };
           } else {
             return {
               success: false,
-              message: 'Rol no encontrado',
+              message: 'Datos de usuario incompletos',
             };
           }
         } else {
           return {
             success: false,
-            message: response.message || 'Credenciales incorrectas',
+            message: response?.message || 'Credenciales incorrectas',
           };
         }
       }),
       catchError((error) => {
+        console.error('Error en login:', error);
         return of({
           success: false,
           message: error.error?.message || 'Error en el servidor',
