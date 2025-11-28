@@ -1,13 +1,7 @@
 import { Role } from '../services/role.service';
+import { User } from '../interfaces/user.interface'; // Usar la interfaz principal
 
-export interface User {
-  id: string;
-  username: string;
-  fullName: string;
-  email: string;
-  role: Role;
-  createdAt: Date;
-}
+// User ya está definida en user.interface.ts, no redefinir aquí
 
 // Datos de roles de ejemplo que coinciden con la interfaz Role
 const MOCK_ROLES: Record<string, Role> = {
@@ -92,23 +86,20 @@ export const MOCK_USERS: User[] = [
     username: 'juan.perez',
     fullName: 'Juan Pérez',
     email: 'juan.perez@uis.edu.co',
-    role: MOCK_ROLES['student'],
-    createdAt: new Date('2024-01-15')
+    role: MOCK_ROLES['student']
   },
   {
     id: '2',
     username: 'maria.gomez',
     fullName: 'María Gómez',
     email: 'maria.gomez@uis.edu.co',
-    role: MOCK_ROLES['teacher'],
-    createdAt: new Date('2024-02-20')
+    role: MOCK_ROLES['teacher']
   },
   {
     id: '3',
     username: 'admin',
     fullName: 'Administrador del Sistema',
     email: 'admin@uis.edu.co',
-    role: MOCK_ROLES['admin'],
-    createdAt: new Date('2023-12-01')
+    role: MOCK_ROLES['admin']
   }
 ];
