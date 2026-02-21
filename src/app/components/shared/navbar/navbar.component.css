@@ -18,15 +18,15 @@
 }
 
 /* Estilos específicos por rol */
-.navbar-admin {
+.navbar-ADMINISTRADOR {
   background: linear-gradient(180deg, #4a148c 0%, #6a1b9a 100%);
 }
 
-.navbar-teacher {
+.navbar-DOCENTE {
   background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
 }
 
-.navbar-student {
+.navbar-ESTUDIANTE {
   background: linear-gradient(180deg, #2e7d32 0%, #1b5e20 100%);
 }
 
@@ -380,29 +380,29 @@
 }
 
 /* Estilos específicos para hover y active por rol */
-.navbar-admin .nav-link:hover {
+.navbar-ADMINISTRADOR .nav-link:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.navbar-admin .nav-link.active {
+.navbar-ADMINISTRADOR .nav-link.active {
   background: rgba(255, 255, 255, 0.2);
   border-left: 4px solid #ffffff;
 }
 
-.navbar-teacher .nav-link:hover {
+.navbar-DOCENTE .nav-link:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.navbar-teacher .nav-link.active {
+.navbar-DOCENTE .nav-link.active {
   background: rgba(255, 255, 255, 0.2);
   border-left: 4px solid #ffffff;
 }
 
-.navbar-student .nav-link:hover {
+.navbar-ESTUDIANTE .nav-link:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.navbar-student .nav-link.active {
+.navbar-ESTUDIANTE .nav-link.active {
   background: rgba(255, 255, 255, 0.2);
   border-left: 4px solid #ffffff;
 }
@@ -458,15 +458,15 @@
 }
 
 /* Estilos específicos para logout por rol */
-.navbar-admin .logout-btn:hover {
+.navbar-ADMINISTRADOR .logout-btn:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.navbar-teacher .logout-btn:hover {
+.navbar-DOCENTE .logout-btn:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.navbar-student .logout-btn:hover {
+.navbar-ESTUDIANTE .logout-btn:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
@@ -477,19 +477,19 @@
   min-width: 20px;
 }
 
-.navbar-student {
+.navbar-ESTUDIANTE {
   background: linear-gradient(135deg, #388e3c, #4caf50);
 }
 
-.nav-link-admin.active {
+.nav-link-ADMINISTRADOR.active {
   border-left-color: #e1bee7;
 }
 
-.nav-link-teacher.active {
+.nav-link-DOCENTE.active {
   border-left-color: #bbdefb;
 }
 
-.nav-link-student.active {
+.nav-link-ESTUDIANTE.active {
   border-left-color: #c8e6c9;
 }
 

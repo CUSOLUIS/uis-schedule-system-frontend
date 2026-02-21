@@ -1,7 +1,7 @@
 {
   "roles": [
     {
-      "id": "admin",
+      "id": "ADMINISTRADOR",
       "name": "Administrador",
       "displayName": "Administrador",
       "description": "Gestiona el sistema completo, usuarios, materias y horarios",
@@ -74,7 +74,7 @@
       ]
     },
     {
-      "id": "teacher",
+      "id": "DOCENTE",
       "name": "Profesor",
       "displayName": "Profesor",
       "description": "Gestiona sus materias, grupos y horarios de clases",
@@ -135,7 +135,7 @@
       ]
     },
     {
-      "id": "student",
+      "id": "ESTUDIANTE",
       "name": "Estudiante",
       "displayName": "Estudiante",
       "description": "Consulta su horario, materias y información académica",
