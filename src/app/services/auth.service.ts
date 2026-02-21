@@ -22,45 +22,55 @@ export class AuthService {
     private userService: UserService,
     private roleService: RoleService
   ) {
-    // Verificar si hay una sesión guardada al inicializar
     this.checkStoredSession();
   }
 
+  /** Decode JWT payload without external library */
+  private decodeJwt(token: string): any {
+    try {
+      const payload = token.split('.')[1];
+      const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(decoded);
+    } catch {
+      return null;
+    }
+  }
+
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<any>(`${this.apiUrl}/login`, {usernameOrEmail: credentials.username, password: credentials.password}).pipe(
+    return this.http.post<any>(`${this.apiUrl}/login`, {
+      usernameOrEmail: credentials.username,
+      password: credentials.password,
+    }).pipe(
       map((response) => {
-        if (response && response.success) {
-          // El backend debe devolver el usuario completo con rol
-          const user = response.user;
-          
-          if (user && user.role) {
-            // Crear el usuario con los datos del backend
-            const authenticatedUser: User = {
-              id: user.id,
-              username: user.username,
-              fullName: user.fullName,
-              email: user.email,
-              role: user.role
-            };
+        // Backend returns: { username, message, jwt, status }
+        if (response && response.status === true && response.jwt) {
+          const claims = this.decodeJwt(response.jwt);
 
-            // Guarda usuario en el servicio
-            this.userService.setCurrentUser(authenticatedUser);
-            this.isAuthenticated.set(true);
+          // El backend almacena el rol como un string en el campo 'role'
+          // Ej. "ADMINISTRADOR", lo comparamos de forma segura
+          const roleAuthority = claims?.role || 'guest';
 
-            // Guarda token y usuario en localStorage
-            this.saveSession(authenticatedUser, response.token);
+          // Como los IDs en mock-roles.json ahora hacen match con el BAC (ADMINISTRADOR, DOCENTE, etc)
+          // en caso contrario retorna el default
+          const role = this.roleService.getRoleById(roleAuthority) || this.roleService.getDefaultRole();
 
-            return {
-              success: true,
-              user: authenticatedUser,
-              token: response.token,
-            };
-          } else {
-            return {
-              success: false,
-              message: 'Datos de usuario incompletos',
-            };
-          }
+          const authenticatedUser: User = {
+            id: claims?.sub || response.username,
+            username: response.username,
+            fullName: response.username,
+            email: claims?.sub || response.username,
+            role,
+          };
+
+          this.userService.setCurrentUser(authenticatedUser);
+          this.isAuthenticated.set(true);
+          this.saveSession(authenticatedUser, response.jwt);
+
+          return {
+            success: true,
+            user: authenticatedUser,
+            token: response.jwt,
+          };
         } else {
           return {
             success: false,
@@ -101,9 +111,17 @@ export class AuthService {
 
     if (storedUser && isAuth === 'true' && token) {
       try {
-        const user: User = JSON.parse(storedUser);
-        this.userService.setCurrentUser(user);
-        this.isAuthenticated.set(true);
+        const payload = this.decodeJwt(token);
+        // Validar que el token decodificado exista y no haya expirado
+        // payload.exp viene en segundos, Date.now() en milisegundos
+        if (payload && payload.exp && (payload.exp * 1000 > Date.now())) {
+          const user: User = JSON.parse(storedUser);
+          this.userService.setCurrentUser(user);
+          this.isAuthenticated.set(true);
+        } else {
+          console.warn('Sesión expirada o token inválido.');
+          this.clearSession();
+        }
       } catch (error) {
         this.clearSession();
       }
