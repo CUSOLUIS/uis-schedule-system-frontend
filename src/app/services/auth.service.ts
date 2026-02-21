@@ -27,7 +27,7 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<any>(`${this.apiUrl}/log-in`, credentials).pipe(
+    return this.http.post<any>(`${this.apiUrl}/login`, {usernameOrEmail: credentials.username, password: credentials.password}).pipe(
       map((response) => {
         if (response && response.success) {
           // El backend debe devolver el usuario completo con rol
