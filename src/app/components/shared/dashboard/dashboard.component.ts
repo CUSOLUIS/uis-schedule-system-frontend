@@ -72,8 +72,9 @@ export default class DashboardComponent {
 
   // Devuelve las opciones del menú según el rol del usuario
   getMenuItems() {
-    const roleId = this.currentUser()?.role?.id || 'student';
-    return this.userService.menuItems[roleId] || [];
+    const roleId = this.currentUser()?.role?.id || 'ESTUDIANTE';
+    // Usar la función del UserService que prioriza menuItems del RoleService
+    return this.userService.getMenuItemsForUser(roleId);
   }
 
   // Navega a la ruta indicada

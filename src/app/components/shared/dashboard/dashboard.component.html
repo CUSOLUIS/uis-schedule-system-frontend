@@ -26,8 +26,11 @@
     <h2 class="section-title">Accesos Rápidos</h2>
 
     <div class="actions-grid">
-      @for (item of getMenuItems(); track item.label) {
-      <div class="action-card" [attr.data-role]="currentUser()?.role?.id">
+      <div
+        class="action-card"
+        *ngFor="let item of getMenuItems()"
+        [attr.data-role]="currentUser()?.role?.id"
+      >
         <div class="card-icon" [style.color]="getUserRoleColor()">
           <i class="fas" [ngClass]="item.icon"></i>
         </div>
@@ -44,7 +47,6 @@
           Ver
         </button>
       </div>
-      }
     </div>
   </div>
 
