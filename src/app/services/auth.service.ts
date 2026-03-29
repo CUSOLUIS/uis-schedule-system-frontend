@@ -1,14 +1,14 @@
-import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, catchError, of } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { Observable, catchError, map, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   LoginRequest,
   LoginResponse,
   User,
 } from '../interfaces/user.interface';
-import { UserService } from './user.service';
 import { RoleService } from './role.service';
-import { environment } from '../../environments/environment';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private userService: UserService,
-    private roleService: RoleService
+    private roleService: RoleService,
   ) {
     this.checkStoredSession();
   }
@@ -37,55 +37,80 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<any>(`${this.apiUrl}/login`, {
-      usernameOrEmail: credentials.username,
-      password: credentials.password,
-    }).pipe(
-      map((response) => {
-        // Backend returns: { username, message, jwt, status }
-        if (response && response.status === true && response.jwt) {
-          const claims = this.decodeJwt(response.jwt);
+    return this.http
+      .post<any>(`${this.apiUrl}/login`, {
+        usernameOrEmail: credentials.username,
+        password: credentials.password,
+      })
+      .pipe(
+        map((response) => {
+          // Backend retorna ApiResponse<AuthResponse> -> Data.token
+          const data = response?.Data ?? response?.data ?? null;
+          const token = data?.token ?? response?.token ?? response?.jwt ?? null;
 
-          // El backend almacena el rol como un string en el campo 'role'
-          // Ej. "ADMINISTRADOR", lo comparamos de forma segura
-          const roleAuthority = claims?.role || 'guest';
+          if (token) {
+            const claims = this.decodeJwt(token);
 
-          // Como los IDs en mock-roles.json ahora hacen match con el BAC (ADMINISTRADOR, DOCENTE, etc)
-          // en caso contrario retorna el default
-          const role = this.roleService.getRoleById(roleAuthority) || this.roleService.getDefaultRole();
+            // 'roles' claim puede ser un array o un string. Preferimos el primer role.
+            let roleAuthority: string = 'guest';
+            if (
+              claims?.roles &&
+              Array.isArray(claims.roles) &&
+              claims.roles.length > 0
+            ) {
+              roleAuthority = String(claims.roles[0]);
+            } else if (claims?.roles) {
+              roleAuthority = String(claims.roles);
+            } else if (claims?.role) {
+              roleAuthority = String(claims.role);
+            }
 
-          const authenticatedUser: User = {
-            id: claims?.sub || response.username,
-            username: response.username,
-            fullName: response.username,
-            email: claims?.sub || response.username,
-            role,
-          };
+            const role =
+              this.roleService.getRoleById(roleAuthority) ||
+              this.roleService.getDefaultRole();
 
-          this.userService.setCurrentUser(authenticatedUser);
-          this.isAuthenticated.set(true);
-          this.saveSession(authenticatedUser, response.jwt);
+            const rawId = claims?.id ?? null;
+            const username =
+              claims?.username ?? claims?.sub ?? claims?.email ?? 'unknown';
+            const authenticatedUser: User = {
+              id: rawId !== null ? String(rawId) : String(username),
+              username: username,
+              fullName: username,
+              email: claims?.email ?? claims?.sub ?? username,
+              role,
+            };
 
-          return {
-            success: true,
-            user: authenticatedUser,
-            token: response.jwt,
-          };
-        } else {
+            this.userService.setCurrentUser(authenticatedUser);
+            this.isAuthenticated.set(true);
+            this.saveSession(authenticatedUser, token);
+
+            return {
+              success: true,
+              user: authenticatedUser,
+              token,
+            };
+          }
+
           return {
             success: false,
-            message: response?.message || 'Credenciales incorrectas',
+            message:
+              data?.message ??
+              response?.Message ??
+              response?.message ??
+              'Credenciales incorrectas',
           };
-        }
-      }),
-      catchError((error) => {
-        console.error('Error en login:', error);
-        return of({
-          success: false,
-          message: error.error?.message || 'Error en el servidor',
-        });
-      })
-    );
+        }),
+        catchError((error) => {
+          console.error('Error en login:', error);
+          return of({
+            success: false,
+            message:
+              error.error?.Message ??
+              error.error?.message ??
+              'Error en el servidor',
+          });
+        }),
+      );
   }
 
   logout(): void {
@@ -114,7 +139,7 @@ export class AuthService {
         const payload = this.decodeJwt(token);
         // Validar que el token decodificado exista y no haya expirado
         // payload.exp viene en segundos, Date.now() en milisegundos
-        if (payload && payload.exp && (payload.exp * 1000 > Date.now())) {
+        if (payload && payload.exp && payload.exp * 1000 > Date.now()) {
           const user: User = JSON.parse(storedUser);
           this.userService.setCurrentUser(user);
           this.isAuthenticated.set(true);
