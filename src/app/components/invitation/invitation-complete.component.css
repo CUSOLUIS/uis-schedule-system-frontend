@@ -1,0 +1,176 @@
+.invitation-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #2a0a42 0%, #4a1260 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.invitation-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  padding: 2rem;
+  text-align: center;
+  color: white;
+}
+
+.card-header i {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.card-header h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.card-header p {
+  margin: 0;
+  opacity: 0.85;
+  font-size: 0.9rem;
+}
+
+.state-box {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #666;
+}
+
+.state-box i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.state-box h2 {
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.state-box.error i { color: #c62828; }
+.state-box.success i { color: #2e7d32; }
+.state-box.success h2 { color: #2e7d32; }
+
+.form-section {
+  padding: 2rem;
+}
+
+.form-section h2 {
+  color: #4a148c;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+}
+
+.email-info {
+  background: #f3e5f5;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  color: #4a148c;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+.form-input:focus { border-color: #6a1b9a; }
+.form-input.input-error { border-color: #c33; }
+
+.error-text {
+  color: #c33;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.alert-error {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4a148c, #6a1b9a);
+  color: white;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(74,20,140,0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-full {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .form-row { grid-template-columns: 1fr; }
+  .invitation-wrapper { padding: 1rem; }
+}
