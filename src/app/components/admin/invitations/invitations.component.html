@@ -1,0 +1,134 @@
+<div class="invitations-container">
+
+  <!-- Header -->
+  <div class="invitations-header">
+    <div class="header-content">
+      <h1><i class="fas fa-envelope-open-text"></i> Gestión de Invitaciones</h1>
+      <p>Invita usuarios al sistema y gestiona sus solicitudes de acceso</p>
+    </div>
+  </div>
+
+  <!-- Formulario de invitación -->
+  <div class="invite-card">
+    <h2><i class="fas fa-paper-plane"></i> Enviar Invitación</h2>
+    <form [formGroup]="inviteForm" (ngSubmit)="sendInvitation()" class="invite-form">
+      <div class="form-group">
+        <label for="email"><i class="fas fa-envelope"></i> Correo electrónico</label>
+        <div class="input-row">
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="ejemplo@correo.com"
+            class="form-input"
+            [class.input-error]="inviteForm.get('email')?.invalid && inviteForm.get('email')?.touched"
+          />
+          <button type="submit" class="btn-send" [disabled]="sendingInvite()">
+            @if (sendingInvite()) {
+              <i class="fas fa-spinner fa-spin"></i> Enviando...
+            } @else {
+              <i class="fas fa-paper-plane"></i> Enviar
+            }
+          </button>
+        </div>
+        @if (inviteForm.get('email')?.invalid && inviteForm.get('email')?.touched) {
+          <span class="error-text">Ingresa un correo válido</span>
+        }
+      </div>
+    </form>
+
+    @if (successMessage()) {
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> {{ successMessage() }}
+      </div>
+    }
+    @if (errorMessage()) {
+      <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage() }}
+      </div>
+    }
+  </div>
+
+  <!-- Lista de espera -->
+  <div class="pending-card">
+    <div class="pending-header">
+      <h2><i class="fas fa-clock"></i> Lista de Espera</h2>
+      <button class="btn-refresh" (click)="loadPending()" [disabled]="loading()">
+        <i class="fas fa-sync-alt" [class.fa-spin]="loading()"></i> Actualizar
+      </button>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i> Cargando solicitudes...
+      </div>
+    } @else if (pendingList().length === 0) {
+      <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <p>No hay solicitudes pendientes de aprobación</p>
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table class="pending-table">
+          <thead>
+            <tr>
+              <th>Correo</th>
+              <th>Completado</th>
+              <th>Creado por</th>
+              <th>Expira</th>
+              <th>Rol a asignar</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (inv of pendingList(); track inv.invitationId) {
+              <tr>
+                <td>
+                  <div class="email-cell">
+                    <i class="fas fa-user-circle"></i>
+                    {{ inv.email }}
+                  </div>
+                </td>
+                <td>{{ formatDate(inv.completedAt ?? '') }}</td>
+                <td>{{ inv.createdByName }}</td>
+                <td>{{ formatDate(inv.expiresAt) }}</td>
+                <td>
+                  <select
+                    class="role-select"
+                    [(ngModel)]="selectedRoles[inv.invitationId]"
+                  >
+                    @for (role of availableRoles; track role) {
+                      <option [value]="role">{{ role }}</option>
+                    }
+                  </select>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button
+                      class="btn-approve"
+                      (click)="approve(inv.invitationId)"
+                      [disabled]="processingId() === inv.invitationId"
+                    >
+                      @if (processingId() === inv.invitationId) {
+                        <i class="fas fa-spinner fa-spin"></i>
+                      } @else {
+                        <i class="fas fa-check"></i> Aprobar
+                      }
+                    </button>
+                    <button
+                      class="btn-reject"
+                      (click)="reject(inv.invitationId)"
+                      [disabled]="processingId() === inv.invitationId"
+                    >
+                      <i class="fas fa-times"></i> Rechazar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
