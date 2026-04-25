@@ -1,0 +1,128 @@
+<div class="invitation-wrapper">
+  <div class="invitation-card">
+
+    <!-- Logo/Header -->
+    <div class="card-header">
+      <i class="fas fa-university"></i>
+      <h1>UIS Schedule System</h1>
+      <p>Sistema de Gestión de Horarios</p>
+    </div>
+
+    <!-- Validando token -->
+    @if (validating()) {
+      <div class="state-box">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Validando enlace...</p>
+      </div>
+    }
+
+    <!-- Token inválido -->
+    @if (!validating() && !tokenValid()) {
+      <div class="state-box error">
+        <i class="fas fa-times-circle"></i>
+        <h2>Enlace inválido</h2>
+        <p>{{ errorMessage() }}</p>
+        <button class="btn-primary" (click)="goToLogin()">
+          Ir al inicio de sesión
+        </button>
+      </div>
+    }
+
+    <!-- Formulario -->
+    @if (!validating() && tokenValid() && !submitted()) {
+      <div class="form-section">
+        <h2>Completa tu registro</h2>
+        <p class="email-info">
+          <i class="fas fa-envelope"></i>
+          Registrándose como: <strong>{{ invitationEmail() }}</strong>
+        </p>
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input
+                type="text"
+                formControlName="firstName"
+                placeholder="Tu nombre"
+                class="form-input"
+                [class.input-error]="form.get('firstName')?.invalid && form.get('firstName')?.touched"
+              />
+              @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {
+                <span class="error-text">Nombre requerido, sin números</span>
+              }
+            </div>
+            <div class="form-group">
+              <label>Apellido</label>
+              <input
+                type="text"
+                formControlName="lastName"
+                placeholder="Tu apellido"
+                class="form-input"
+                [class.input-error]="form.get('lastName')?.invalid && form.get('lastName')?.touched"
+              />
+              @if (form.get('lastName')?.invalid && form.get('lastName')?.touched) {
+                <span class="error-text">Apellido requerido, sin números</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Nombre de usuario</label>
+            <input
+              type="text"
+              formControlName="username"
+              placeholder="usuario123"
+              class="form-input"
+              [class.input-error]="form.get('username')?.invalid && form.get('username')?.touched"
+            />
+            @if (form.get('username')?.invalid && form.get('username')?.touched) {
+              <span class="error-text">Usuario requerido</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Contraseña</label>
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="Mínimo 8 caracteres"
+              class="form-input"
+              [class.input-error]="form.get('password')?.invalid && form.get('password')?.touched"
+            />
+            @if (form.get('password')?.invalid && form.get('password')?.touched) {
+              <span class="error-text">Mínimo 8 caracteres</span>
+            }
+          </div>
+
+          @if (errorMessage()) {
+            <div class="alert alert-error">
+              <i class="fas fa-exclamation-circle"></i> {{ errorMessage() }}
+            </div>
+          }
+
+          <button type="submit" class="btn-primary btn-full" [disabled]="submitting()">
+            @if (submitting()) {
+              <i class="fas fa-spinner fa-spin"></i> Registrando...
+            } @else {
+              <i class="fas fa-check"></i> Completar registro
+            }
+          </button>
+        </form>
+      </div>
+    }
+
+    <!-- Éxito -->
+    @if (submitted()) {
+      <div class="state-box success">
+        <i class="fas fa-check-circle"></i>
+        <h2>¡Registro completado!</h2>
+        <p>Tu solicitud fue enviada. Un administrador revisará tu información y te asignará un rol pronto.</p>
+        <button class="btn-primary" (click)="goToLogin()">
+          Ir al inicio de sesión
+        </button>
+      </div>
+    }
+
+  </div>
+</div>

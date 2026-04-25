@@ -60,6 +60,12 @@ export const routes: Routes = [
           import('./components/admin/roles/roles.component'),
         title: 'Gestión de Roles - Admin',
       },
+      {
+          path: 'invitations',
+          loadComponent: () =>
+            import('./components/admin/invitations/invitations.component'),
+          title: 'Invitaciones - Admin',
+        },
       // { path: 'settings', loadComponent: () => import('./components/admin/settings/settings.component') }
     ],
   },
@@ -122,6 +128,12 @@ export const routes: Routes = [
         title: 'Mis Materias - Estudiante',
       },
     ],
+  },
+{
+    path: 'invitation/:token',
+    loadComponent: () =>
+      import('./components/invitation/invitation-complete.component'),
+    title: 'Completar Registro',
   },
   {
     path: '**',
