@@ -1,11 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from '../../../services/user.service';
-import { SubjectService } from '../../../services/subject.service';
-import { User } from '../../../interfaces/user.interface';
-import { Subject } from '../../../interfaces/subject.interface';
 import mockTeachersInfo from '../../../data/mock-teachers-info.json';
+import { Subject } from '../../../interfaces/subject.interface';
+import { User } from '../../../interfaces/user.interface';
+import { SubjectService } from '../../../services/subject.service';
+import { UserService } from '../../../services/user.service';
 
 interface TeacherExtraInfo {
   universityCareer: string;
@@ -59,7 +59,7 @@ export class TeacherProfileComponent implements OnInit {
 
     // Carga materias asignadas
     this.assignedSubjects = this.subjectService.getSubjectsByTeacher(
-      this.currentUser.id
+      this.currentUser.id,
     );
 
     // Calcula estadísticas
@@ -67,9 +67,9 @@ export class TeacherProfileComponent implements OnInit {
       (total, subject) =>
         total +
         subject.groups.filter(
-          (group) => group.teacherId === this.currentUser!.id
+          (group) => group.teacherId === this.currentUser!.id,
         ).length,
-      0
+      0,
     );
 
     this.totalStudents = this.assignedSubjects.reduce(
@@ -79,9 +79,9 @@ export class TeacherProfileComponent implements OnInit {
           .filter((group) => group.teacherId === this.currentUser!.id)
           .reduce(
             (groupTotal, group) => groupTotal + group.studentIds.length,
-            0
+            0,
           ),
-      0
+      0,
     );
   }
 
@@ -96,6 +96,10 @@ export class TeacherProfileComponent implements OnInit {
   editProfile() {
     // TODO: Implementar edición de perfil
     console.log('Editar perfil del profesor');
+  }
+
+  goToChangePassword() {
+    this.router.navigate(['/cambiar-contrasena']);
   }
 
   getExperienceLevel(): string {

@@ -15,6 +15,27 @@ export const routes: Routes = [
     data: { animation: 'Login' },
   },
   {
+    path: 'recuperar-contrasena',
+    loadComponent: () =>
+      import('./components/authentication/password-recovery/password-recovery'),
+    title: 'Recuperar Contraseña - UIS Schedule System',
+    canActivate: [loginGuard],
+  },
+  {
+    path: 'restablecer-contrasena/:token',
+    loadComponent: () =>
+      import('./components/authentication/reset-password/reset-password'),
+    title: 'Restablecer Contraseña - UIS Schedule System',
+    canActivate: [loginGuard],
+  },
+  {
+    path: 'cambiar-contrasena',
+    loadComponent: () =>
+      import('./components/authentication/change-password/change-password'),
+    title: 'Cambiar Contraseña - UIS Schedule System',
+    canActivate: [authGuard],
+  },
+  {
     path: 'dashboard',
     loadComponent: () =>
       import('./components/shared/dashboard/dashboard.component'),
@@ -44,7 +65,7 @@ export const routes: Routes = [
         path: 'classrooms',
         loadComponent: () =>
           import('./components/admin/classrooms/classrooms.component').then(
-            (m) => m.default
+            (m) => m.default,
           ),
         title: 'Gestión de Aulas - Admin',
       },
@@ -56,16 +77,15 @@ export const routes: Routes = [
       },
       {
         path: 'roles',
-        loadComponent: () =>
-          import('./components/admin/roles/roles.component'),
+        loadComponent: () => import('./components/admin/roles/roles.component'),
         title: 'Gestión de Roles - Admin',
       },
       {
-          path: 'invitations',
-          loadComponent: () =>
-            import('./components/admin/invitations/invitations.component'),
-          title: 'Invitaciones - Admin',
-        },
+        path: 'invitations',
+        loadComponent: () =>
+          import('./components/admin/invitations/invitations.component'),
+        title: 'Invitaciones - Admin',
+      },
       // { path: 'settings', loadComponent: () => import('./components/admin/settings/settings.component') }
     ],
   },
@@ -77,23 +97,23 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () =>
           import('./components/teacher/profile/teacher-profile.component').then(
-            (m) => m.TeacherProfileComponent
+            (m) => m.TeacherProfileComponent,
           ),
         title: 'Mi Perfil - Profesor',
       },
       {
         path: 'schedule',
         loadComponent: () =>
-          import(
-            './components/teacher/schedule/teacher-schedule.component'
-          ).then((m) => m.TeacherScheduleComponent),
+          import('./components/teacher/schedule/teacher-schedule.component').then(
+            (m) => m.TeacherScheduleComponent,
+          ),
         title: 'Mi Horario - Profesor',
       },
       {
         path: 'subjects',
         loadComponent: () =>
           import('./components/teacher/subjects/index').then(
-            (m) => m.TeacherSubjectsComponent
+            (m) => m.TeacherSubjectsComponent,
           ),
         title: 'Mis Materias - Profesor',
       },
@@ -107,29 +127,29 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () =>
           import('./components/student/profile/student-profile.component').then(
-            (m) => m.StudentProfileComponent
+            (m) => m.StudentProfileComponent,
           ),
         title: 'Mi Perfil - Estudiante',
       },
       {
         path: 'schedule',
         loadComponent: () =>
-          import(
-            './components/student/schedule/student-schedule.component'
-          ).then((m) => m.StudentScheduleComponent),
+          import('./components/student/schedule/student-schedule.component').then(
+            (m) => m.StudentScheduleComponent,
+          ),
         title: 'Mi Horario - Estudiante',
       },
       {
         path: 'subjects',
         loadComponent: () =>
-          import(
-            './components/student/subjects/student-subjects.component'
-          ).then((m) => m.StudentSubjectsComponent),
+          import('./components/student/subjects/student-subjects.component').then(
+            (m) => m.StudentSubjectsComponent,
+          ),
         title: 'Mis Materias - Estudiante',
       },
     ],
   },
-{
+  {
     path: 'invitation/:token',
     loadComponent: () =>
       import('./components/invitation/invitation-complete.component'),
