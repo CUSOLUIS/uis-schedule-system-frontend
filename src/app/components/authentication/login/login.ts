@@ -1,14 +1,14 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { Router, RouterLink } from '@angular/router';
 import { LoginRequest } from '../../../interfaces/user.interface';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })

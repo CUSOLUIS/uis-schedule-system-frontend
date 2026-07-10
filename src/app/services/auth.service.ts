@@ -113,6 +113,88 @@ export class AuthService {
       );
   }
 
+  requestPasswordReset(
+    email: string,
+  ): Observable<{ success: boolean; message: string }> {
+    return this.http
+      .post<any>(`${this.apiUrl}/password/forgot`, { email })
+      .pipe(
+        map((response) => ({
+          success: true,
+          message:
+            response?.Message ??
+            response?.message ??
+            'Si el correo está registrado, recibirás instrucciones para recuperar tu contraseña',
+        })),
+        catchError((error) =>
+          of({
+            success: false,
+            message:
+              error.error?.Message ??
+              error.error?.message ??
+              'No fue posible enviar la solicitud. Intenta nuevamente.',
+          }),
+        ),
+      );
+  }
+
+  resetPassword(
+    token: string,
+    newPassword: string,
+  ): Observable<{ success: boolean; message: string }> {
+    return this.http
+      .post<any>(`${this.apiUrl}/password/reset/${encodeURIComponent(token)}`, {
+        newPassword,
+      })
+      .pipe(
+        map((response) => ({
+          success: true,
+          message:
+            response?.Message ??
+            response?.message ??
+            'Contraseña restablecida correctamente',
+        })),
+        catchError((error) =>
+          of({
+            success: false,
+            message:
+              error.error?.Message ??
+              error.error?.message ??
+              'No fue posible restablecer la contraseña.',
+          }),
+        ),
+      );
+  }
+
+  changePassword(
+    currentPassword: string,
+    newPassword: string,
+  ): Observable<{ success: boolean; message: string }> {
+    return this.http
+      .put<any>(`${this.apiUrl}/password/change`, {
+        currentPassword,
+        newPassword,
+      })
+      .pipe(
+        map((response) => ({
+          success: true,
+          message:
+            response?.Message ??
+            response?.message ??
+            'Contraseña actualizada correctamente',
+        })),
+        catchError((error) =>
+          of({
+            success: false,
+            message:
+              error.error?.Message ??
+              error.error?.message ??
+              'No fue posible cambiar la contraseña.',
+          }),
+        ),
+      );
+  }
+
   logout(): void {
     this.userService.logout();
     this.isAuthenticated.set(false);

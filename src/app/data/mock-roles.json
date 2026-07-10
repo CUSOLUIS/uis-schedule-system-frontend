@@ -34,7 +34,8 @@
         "/admin/schedules",
         "/admin/reports",
         "/admin/roles",
-        "/admin/invitations"
+        "/admin/invitations",
+        "/cambiar-contrasena"
       ],
       "menuItems": [
         {
@@ -78,6 +79,13 @@
           "icon": "fas fa-envelope-open-text",
           "route": "/admin/invitations",
           "order": 6
+        },
+        {
+          "id": "change-password",
+          "label": "Cambiar Contraseña",
+          "icon": "fas fa-key",
+          "route": "/cambiar-contrasena",
+          "order": 7
         }
       ]
     },
@@ -109,7 +117,8 @@
         "/teacher/subjects",
         "/teacher/schedule",
         "/teacher/groups",
-        "/teacher/profile"
+        "/teacher/profile",
+        "/cambiar-contrasena"
       ],
       "menuItems": [
         {
@@ -139,6 +148,13 @@
           "icon": "fas fa-user",
           "route": "/teacher/profile",
           "order": 4
+        },
+        {
+          "id": "change-password",
+          "label": "Cambiar Contraseña",
+          "icon": "fas fa-key",
+          "route": "/cambiar-contrasena",
+          "order": 5
         }
       ]
     },
@@ -169,7 +185,8 @@
         "/student/subjects",
         "/student/schedule",
         "/student/grades",
-        "/student/profile"
+        "/student/profile",
+        "/cambiar-contrasena"
       ],
       "menuItems": [
         {
@@ -199,6 +216,13 @@
           "icon": "fas fa-user",
           "route": "/student/profile",
           "order": 4
+        },
+        {
+          "id": "change-password",
+          "label": "Cambiar Contraseña",
+          "icon": "fas fa-key",
+          "route": "/cambiar-contrasena",
+          "order": 5
         }
       ]
     }

@@ -1,8 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from '../../../services/user.service';
 import { User } from '../../../interfaces/user.interface';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-student-profile',
@@ -48,5 +48,9 @@ export class StudentProfileComponent implements OnInit {
   editProfile() {
     // TODO: Implementar edición de perfil
     console.log('Editar perfil');
+  }
+
+  goToChangePassword() {
+    this.router.navigate(['/cambiar-contrasena']);
   }
 }
