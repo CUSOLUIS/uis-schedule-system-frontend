@@ -16,10 +16,16 @@ jobs:
           npm install --silent
           npm run build --silent
 
+      - name: Actualizar código en carpeta de despliegue
+        working-directory: /home/dev/proyects/uis-schedule-system-frontend
+        run: |
+          git fetch origin develop
+          git reset --hard origin/develop
+
       - name: Rebuild y reinicio del contenedor
         working-directory: /home/dev/proyects
         run: |
           docker-compose stop frontend
           docker-compose rm -f frontend
           docker-compose build --no-cache frontend
-          docker-compose up -d frontend
+          docker-compose up -d --no-deps frontend
