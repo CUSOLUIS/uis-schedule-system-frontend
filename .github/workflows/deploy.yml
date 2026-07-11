@@ -11,16 +11,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Instalar dependencias y build
-        run: |
-          npm install --silent
-          npm run build --silent
-
       - name: Actualizar código en carpeta de despliegue
         working-directory: /home/dev/proyects/uis-schedule-system-frontend
         run: |
-          git fetch origin develop
-          git reset --hard origin/develop
+          git fetch origin
+          git checkout --force ${{ github.sha }}
+          git clean -fd
+          npm install --silent
+          npm run build --silent
 
       - name: Rebuild y reinicio del contenedor
         working-directory: /home/dev/proyects
