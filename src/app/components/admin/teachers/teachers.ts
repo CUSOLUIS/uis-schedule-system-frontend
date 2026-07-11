@@ -1,3 +1,5 @@
+// src/app/components/admin/teachers/teachers.ts
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -79,7 +81,7 @@ export default class TeachersComponent {
     description: 'Administra los profesores y sus asignaciones',
     icon: 'fa-chalkboard-teacher',
     buttonText: 'Nuevo Profesor',
-    statistics: [], // Inicialmente vacío, se actualiza en el constructor
+    statistics: [],
   };
 
   // Getter para profesores filtrados
@@ -106,9 +108,7 @@ export default class TeachersComponent {
   }
 
   constructor(private searchService: SearchService) {
-    // Inicializa profesores desde mock data
     this.initializeTeachers();
-    // Inicializa estadísticas
     this.updateStatistics();
   }
 
@@ -122,10 +122,7 @@ export default class TeachersComponent {
     );
 
     this.teachers = teacherUsers.map((user) => {
-      // Obtiene todos los grupos de todas las materias asignados a este profesor
       const teacherGroups = this.getTeacherGroups(user.id);
-
-      // Información adicional del profesor
       const extraInfo = this.getTeacherExtraInfo(user.id);
 
       return {
@@ -139,11 +136,9 @@ export default class TeachersComponent {
   private getTeacherGroups(teacherId: string): Group[] {
     const groups: Group[] = [];
 
-    // Busca en todas las materias los grupos asignados a este profesor
     mockSubjectsData.subjects.forEach((subject) => {
       subject.groups.forEach((group) => {
         if (group.teacherId === teacherId) {
-          // Obtiene información del aula desde mock-classrooms
           const classroom = this.getClassroomInfo(
             group.schedule[0]?.classroomId
           );
@@ -164,7 +159,6 @@ export default class TeachersComponent {
   }
 
   private getTeacherExtraInfo(teacherId: string) {
-    // Obtiene información desde el mock
     const teacherInfo =
       mockTeachersInfo.teachersExtraInfo[
         teacherId as keyof typeof mockTeachersInfo.teachersExtraInfo
@@ -186,7 +180,6 @@ export default class TeachersComponent {
       };
     }
 
-    // Información por defecto si no se encuentra en el mock
     const defaultInfo = mockTeachersInfo.defaultInfo;
     return {
       universityCareer: defaultInfo.universityCareer,
@@ -255,7 +248,6 @@ export default class TeachersComponent {
 
   onCreateButtonClick(): void {
     console.log('Crear nuevo profesor');
-    // Aquí iría la lógica para abrir el modal/formulario de creación
   }
 
   selectTeacher(teacher: Teacher) {
@@ -294,7 +286,6 @@ export default class TeachersComponent {
     return Math.round(this.totalStudents / this.totalTeachers);
   }
 
-  // Métodos para manejar grupos
   viewGroupDetail(group: Group): void {
     this.selectedGroup = group;
   }
@@ -303,7 +294,6 @@ export default class TeachersComponent {
     this.selectedGroup = null;
   }
 
-  // Configuración para las tarjetas de grupo
   groupCardConfig: GroupCardConfig = {
     showTeacher: false,
     showSubject: true,
@@ -314,7 +304,6 @@ export default class TeachersComponent {
     compactMode: false,
   };
 
-  // Convierte Group a GroupCardData
   convertToGroupCardData(group: Group): GroupCardData {
     return {
       id: group.id,
@@ -326,7 +315,6 @@ export default class TeachersComponent {
     };
   }
 
-  // Maneja eventos del componente de tarjeta
   onGroupCardView(groupData: GroupCardData): void {
     const group = this.selectedTeacher?.groups.find(
       (g) => g.id === groupData.id
@@ -340,11 +328,9 @@ export default class TeachersComponent {
     this.onGroupCardView(groupData);
   }
 
-  // Método para obtener los estudiantes de un profesor
   getStudentsForTeacher(teacherId: string): User[] {
     const studentIds = new Set<string>();
 
-    // Recopila todos los IDs de estudiantes de todos los grupos del profesor
     mockSubjectsData.subjects.forEach((subject) => {
       subject.groups.forEach((group) => {
         if (group.teacherId === teacherId) {
@@ -353,17 +339,14 @@ export default class TeachersComponent {
       });
     });
 
-    // Obtiene información completa de los estudiantes desde mock-user
     return mockUserData.users.filter(
       (user) => user.role === 'student' && studentIds.has(user.id)
     );
   }
 
-  // Método para obtener estudiantes de un grupo específico
   getStudentsInGroup(groupId: number): User[] {
     let studentIds: string[] = [];
 
-    // Busca el grupo por ID y obtener sus estudiantes
     mockSubjectsData.subjects.forEach((subject) => {
       subject.groups.forEach((group) => {
         if (parseInt(group.id.replace('g', '')) === groupId) {
@@ -372,7 +355,6 @@ export default class TeachersComponent {
       });
     });
 
-    // Obtiene información completa de los estudiantes
     return mockUserData.users.filter(
       (user) => user.role === 'student' && studentIds.includes(user.id)
     );
