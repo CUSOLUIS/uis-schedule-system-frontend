@@ -19,8 +19,9 @@ jobs:
       - name: Actualizar código en carpeta de despliegue
         working-directory: /home/dev/proyects/uis-schedule-system-frontend
         run: |
-          git fetch origin develop
-          git reset --hard origin/develop
+          git fetch origin ${{ github.sha }}
+          git reset --hard ${{ github.sha }}
+          git clean -fd
 
       - name: Rebuild y reinicio del contenedor
         working-directory: /home/dev/proyects
