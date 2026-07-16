@@ -79,13 +79,10 @@ export class RoleService {
     const role = this.getRoleById(roleId);
     if (!role) return false;
 
-    // Verificar si la ruta está en las rutas permitidas del rol
     const allowedRoutes = role.routes || [];
 
-    // Primero coincidencia exacta
     if (allowedRoutes.includes(routePath)) return true;
 
-    // Verificar coincidencias de patrones (ej. /admin/* coincide con /admin/subjects)
     return allowedRoutes.some((route) => {
       if (route.endsWith('/*')) {
         const basePath = route.slice(0, -2);
@@ -115,5 +112,26 @@ export class RoleService {
       role.id === roleId ? { ...role, ...updates } : role
     );
     this.rolesSignal.set(updatedRoles);
+  }
+
+  // ── Mapeo entre nombres de rol del backend 
+  private static readonly TO_FRONTEND: Record<string, string> = {
+    DOCENTE: 'teacher',
+    ESTUDIANTE: 'student',
+    ADMINISTRADOR: 'admin',
+  };
+
+  private static readonly TO_BACKEND: Record<string, string> = {
+    teacher: 'DOCENTE',
+    student: 'ESTUDIANTE',
+    admin: 'ADMINISTRADOR',
+  };
+
+  toFrontendRoleId(backendRoleName: string): string {
+    return RoleService.TO_FRONTEND[backendRoleName] ?? 'student';
+  }
+
+  toBackendRoleName(frontendRoleId: string): string {
+    return RoleService.TO_BACKEND[frontendRoleId] ?? frontendRoleId.toUpperCase();
   }
 }

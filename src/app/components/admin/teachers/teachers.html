@@ -1,19 +1,21 @@
+<!-- src/app/components/admin/teachers/teachers.html -->
+
 <div class="teachers-container">
-  <!-- Header -->
+  <!-- Header (SIN CAMBIOS) -->
   <app-section-header
     [config]="sectionConfig"
     (createButtonClick)="onCreateButtonClick()"
   >
   </app-section-header>
 
-  <!-- Search Box -->
+  <!-- Search Box (SIN CAMBIOS) -->
   <app-search-box
     placeholder="Buscar por nombre, email, carrera, especialización, departamento o asignatura..."
     [value]="searchTerm"
     (valueChange)="onSearchChange($event)">
   </app-search-box>
 
-  <!-- Vista de lista de profesores -->
+  <!-- Vista de lista de profesores (SIN CAMBIOS) -->
   <div class="teachers-list" *ngIf="!showGroups">
     <div class="section-header">
       <h2>Lista de Profesores</h2>
@@ -52,7 +54,7 @@
     </div>
   </div>
 
-  <!-- Vista de grupos del profesor seleccionado -->
+  <!-- Vista de grupos del profesor seleccionado (SIN CAMBIOS) -->
   <div class="groups-view" *ngIf="showGroups && selectedTeacher">
     <div class="back-button" (click)="backToTeachers()">
       <i class="fas fa-arrow-left"></i>
@@ -179,7 +181,7 @@
     </div>
   </div>
 
-<!-- Modal para ver detalle de grupo -->
+<!-- Modal para ver detalle de grupo (SIN CAMBIOS) -->
 <div class="modal-overlay" *ngIf="selectedGroup" (click)="closeGroupDetail()">
   <div class="modal large" (click)="$event.stopPropagation()">
     <div class="modal-header">
@@ -239,4 +241,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

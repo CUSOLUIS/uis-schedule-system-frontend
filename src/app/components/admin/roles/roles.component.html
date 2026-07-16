@@ -17,27 +17,27 @@
       <form class="create-form" (ngSubmit)="createUser()">
         <div class="form-row">
           <div class="form-group">
-            <label for="username">Nombre de Usuario</label>
+            <label for="firstName">Nombre</label>
             <input
               type="text"
-              id="username"
-              [ngModel]="newUser().username"
-              (ngModelChange)="setNewUserField('username', $event)"
-              name="username"
-              placeholder="juan.perez"
+              id="firstName"
+              [ngModel]="newUser().firstName"
+              (ngModelChange)="setNewUserField('firstName', $event)"
+              name="firstName"
+              placeholder="Juan"
               required
             />
           </div>
 
           <div class="form-group">
-            <label for="fullName">Nombre Completo</label>
+            <label for="lastName">Apellido</label>
             <input
               type="text"
-              id="fullName"
-              [ngModel]="newUser().fullName"
-              (ngModelChange)="setNewUserField('fullName', $event)"
-              name="fullName"
-              placeholder="Juan Pérez"
+              id="lastName"
+              [ngModel]="newUser().lastName"
+              (ngModelChange)="setNewUserField('lastName', $event)"
+              name="lastName"
+              placeholder="Pérez"
               required
             />
           </div>
@@ -70,21 +70,40 @@
               (ngModelChange)="setNewUserField('role', $event)"
               name="role"
             >
-              <option value="student">Estudiante</option>
-              <option value="teacher">Profesor</option>
-              <option value="admin">Administrador</option>
+              <option *ngFor="let r of availableRoles" [value]="r.id">{{ r.name }}</option>
             </select>
           </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              [ngModel]="newUser().password"
+              (ngModelChange)="setNewUserField('password', $event)"
+              name="password"
+              placeholder="Mínimo 8 caracteres"
+              minlength="8"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="formError()">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ formError() }}
         </div>
 
         <div class="form-actions">
           <button type="button" class="cancel-btn" (click)="toggleCreateForm()">
             Cancelar
           </button>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="submit-btn"
-            [disabled]="newUserEmailError() || !newUser().username || !newUser().fullName || !newUser().email"
+            [disabled]="newUserEmailError() || !newUser().firstName || !newUser().lastName || !newUser().email || !newUser().password"
           >
             <i class="fas fa-save"></i>
             Crear Usuario
@@ -107,27 +126,25 @@
       <form class="create-form" (ngSubmit)="updateUser()">
         <div class="form-row">
           <div class="form-group">
-            <label for="edit-username">Nombre de Usuario</label>
+            <label for="edit-firstName">Nombre</label>
             <input
               type="text"
-              id="edit-username"
-              [ngModel]="editUser().username"
-              (ngModelChange)="setEditUserField('username', $event)"
-              name="edit-username"
-              placeholder="juan.perez"
+              id="edit-firstName"
+              [ngModel]="editUser().firstName"
+              (ngModelChange)="setEditUserField('firstName', $event)"
+              name="edit-firstName"
               required
             />
           </div>
 
           <div class="form-group">
-            <label for="edit-fullName">Nombre Completo</label>
+            <label for="edit-lastName">Apellido</label>
             <input
               type="text"
-              id="edit-fullName"
-              [ngModel]="editUser().fullName"
-              (ngModelChange)="setEditUserField('fullName', $event)"
-              name="edit-fullName"
-              placeholder="Juan Pérez"
+              id="edit-lastName"
+              [ngModel]="editUser().lastName"
+              (ngModelChange)="setEditUserField('lastName', $event)"
+              name="edit-lastName"
               required
             />
           </div>
@@ -142,7 +159,6 @@
               [ngModel]="editUser().email"
               (ngModelChange)="setEditUserField('email', $event)"
               name="edit-email"
-              placeholder="juan.perez@uis.edu.co"
               required
               [class.error]="editUserEmailError()"
             />
@@ -160,21 +176,24 @@
               (ngModelChange)="setEditUserField('role', $event)"
               name="edit-role"
             >
-              <option value="student">Estudiante</option>
-              <option value="teacher">Profesor</option>
-              <option value="admin">Administrador</option>
+              <option *ngFor="let r of availableRoles" [value]="r.id">{{ r.name }}</option>
             </select>
           </div>
+        </div>
+
+        <div class="error-message" *ngIf="formError()">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ formError() }}
         </div>
 
         <div class="form-actions">
           <button type="button" class="cancel-btn" (click)="closeEditForm()">
             Cancelar
           </button>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="submit-btn"
-            [disabled]="editUserEmailError() || !editUser().username || !editUser().fullName || !editUser().email"
+            [disabled]="editUserEmailError() || !editUser().firstName || !editUser().lastName || !editUser().email"
           >
             <i class="fas fa-save"></i>
             Actualizar Usuario
@@ -184,95 +203,105 @@
     </div>
   </div>
 
-  <!-- Search Bar -->
-  <div class="search-container">
-    <div class="search-box">
-      <i class="fas fa-search search-icon"></i>
-      <input
-        type="text"
-        placeholder="Buscar usuarios por nombre, email o rol..."
-        [ngModel]="searchTerm()"
-        (ngModelChange)="searchTerm.set($event)"
-        class="search-input"
-      />
+  <!-- Pestañas Docentes / Estudiantes con paginación (Tarea #58) -->
+  <div class="role-tabs-wrapper">
+    <div class="role-tabs">
+      <button
+        class="role-tab-btn"
+        [class.active]="activeTab() === 'docentes'"
+        (click)="switchTab('docentes')"
+      >
+        <i class="fas fa-chalkboard-teacher"></i>
+        Docentes
+        <span class="role-tab-count" *ngIf="docentesData()">
+          {{ docentesData()!.totalElements }}
+        </span>
+      </button>
+      <button
+        class="role-tab-btn"
+        [class.active]="activeTab() === 'estudiantes'"
+        (click)="switchTab('estudiantes')"
+      >
+        <i class="fas fa-user-graduate"></i>
+        Estudiantes
+        <span class="role-tab-count" *ngIf="estudiantesData()">
+          {{ estudiantesData()!.totalElements }}
+        </span>
+      </button>
     </div>
-  </div>
 
-  <!-- Users Table -->
-  <div class="users-table-container">
-    <div class="table-card">
-      <div class="table-header">
-        <h3><i class="fas fa-users"></i> Lista de Usuarios</h3>
-        <span class="user-count">{{ filteredUsers.length }} usuarios</span>
+    <!-- Búsqueda dentro de la pestaña activa -->
+    <div class="search-container">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          placeholder="Buscar en esta pestaña por nombre, email o usuario..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          class="search-input"
+        />
       </div>
+    </div>
 
-      <div class="table-responsive">
-        <table class="users-table">
-          <thead>
-            <tr>
-              <th>Usuario</th>
-              <th>Nombre Completo</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of filteredUsers" class="user-row">
-              <td class="user-info" data-label="Usuario">
-                <div
-                  class="user-avatar"
-                  [style.background-color]="user.role.colorScheme.primary"
-                >
-                  <i class="fas fa-user"></i>
-                </div>
-                <span class="username">{{ user.username }}</span>
-              </td>
+    <!-- Estado: cargando -->
+    <div class="role-tabs-state" *ngIf="isLoading()">
+      <i class="fas fa-circle-notch fa-spin"></i>
+      <span>Cargando...</span>
+    </div>
 
-              <td class="full-name" data-label="Nombre Completo">
-                {{ user.fullName }}
-              </td>
+    <!-- Estado: error -->
+    <div class="role-tabs-state role-tabs-error" *ngIf="!isLoading() && errorMessage()">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+      <button class="role-retry-btn" (click)="retryLoad()">
+        <i class="fas fa-redo"></i> Reintentar
+      </button>
+    </div>
 
-              <td class="email" data-label="Email">{{ user.email }}</td>
-
-              <td class="role-cell" data-label="Rol">
-                <select
-                  class="role-select"
-                  [value]="user.role.id"
-                  (change)="onRoleChange(user.id, $event)"
-                >
-                  <option value="student">Estudiante</option>
-                  <option value="teacher">Profesor</option>
-                  <option value="admin">Administrador</option>
-                </select>
-              </td>
-
-              <td class="actions" data-label="Acciones">
-                <button 
-                  class="action-btn edit-btn" 
-                  title="Editar Usuario"
-                  (click)="editUserById(user.id)"
-                >
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button
-                  class="action-btn delete-btn"
-                  title="Eliminar Usuario"
-                  (click)="deleteUser(user.id)"
-                >
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="table-footer" *ngIf="filteredUsers.length === 0">
-        <div class="empty-state">
-          <i class="fas fa-search"></i>
-          <p>No se encontraron usuarios que coincidan con la búsqueda</p>
+    <!-- Lista paginada de la pestaña activa -->
+    <div class="role-tabs-list" *ngIf="!isLoading() && !errorMessage() && currentData">
+      <div class="role-user-row" *ngFor="let user of filteredData; trackBy: trackByUserId">
+        <div class="role-user-initials" [class.docente]="activeTab() === 'docentes'">
+          {{ getInitials(user) }}
         </div>
+        <div class="role-user-info">
+          <span class="role-user-name">{{ getFullName(user) }}</span>
+          <span class="role-user-email">{{ user.email }}</span>
+        </div>
+        <span class="role-user-username">{{ '@' + user.username }}</span>
+        <span
+          class="role-status-badge"
+          [class.active]="user.active"
+          [class.inactive]="!user.active"
+        >
+          {{ user.active ? 'Activo' : 'Inactivo' }}
+        </span>
+
+        <div class="role-row-actions">
+          <button class="action-btn edit-btn" title="Editar" (click)="editUserById(user)">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="action-btn delete-btn" title="Eliminar" (click)="deleteUser(user.id)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="role-empty" *ngIf="filteredData.length === 0">
+        <i class="fas fa-search"></i>
+        <span>No hay {{ activeTab() === 'docentes' ? 'docentes' : 'estudiantes' }} que coincidan con la búsqueda.</span>
+      </div>
+
+      <!-- Paginación -->
+      <div class="role-pagination" *ngIf="totalPages > 1">
+        <button class="role-page-btn" [disabled]="currentPage === 0" (click)="goToPrevPage()">
+          <i class="fas fa-chevron-left"></i> Anterior
+        </button>
+        <span class="role-page-info"> Página {{ currentPage + 1 }} de {{ totalPages }} </span>
+        <button class="role-page-btn" [disabled]="isLastPage" (click)="goToNextPage()">
+          Siguiente <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     </div>
   </div>

@@ -16,8 +16,10 @@ export interface IUserService {
   /**
    * Crear un nuevo usuario
    * @param user - Datos del usuario a crear
+   * @param password - Contraseña del usuario (CAMBIO: el backend la exige
+   * en CreateUserRequest y no venía en la versión anterior de esta interfaz)
    */
-  createUser(user: Omit<User, 'id'>): Observable<User>;
+  createUser(user: Omit<User, 'id'>, password: string): Observable<User>;
 
   /**
    * Actualizar un usuario existente
@@ -45,16 +47,25 @@ export interface UserApiResponse {
   message?: string;
 }
 
+// CAMBIO: antes tenía { username, fullName, email, roleId }.
+// El backend real (CreateUserRequest.java) no recibe username (lo genera él)
+// ni roleId singular; pide firstName/lastName por separado, password, y
+// roles como arreglo (Set<String> en Java).
 export interface CreateUserRequest {
-  username: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  roleId: string;
+  password: string;
+  roles: string[];
 }
 
+// CAMBIO: antes tenía { username, fullName, roleId }.
+// El backend real (UpdateUserRequest.java) usa firstName/lastName por
+// separado, roles como arreglo, y además soporta 'active'.
 export interface UpdateUserRequest {
-  username?: string;
-  fullName?: string;
+  firstName?: string;
+  lastName?: string;
   email?: string;
-  roleId?: string;
+  active?: boolean;
+  roles?: string[];
 }

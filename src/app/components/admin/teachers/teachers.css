@@ -1,3 +1,6 @@
+/* src/app/components/admin/teachers/teachers.css */
+/* ── TODO EL CSS ORIGINAL SE MANTIENE SIN CAMBIOS ─────────────────────── */
+
 /* Variables de colores */
 :root {
   --primary-teal: #20c997;
@@ -925,7 +928,6 @@
   border-top: 1px solid #f1f5f9;
 }
 
-/* Botones de acción más compactos */
 .action-btn {
   flex: 1;
   padding: 0.6rem 1rem;
@@ -1061,7 +1063,6 @@
   }
 }
 
-/* Tooltip para textos truncados */
 .teacher-info p[title] {
   cursor: help;
   position: relative;
@@ -1072,16 +1073,15 @@
   position: relative;
 }
 
-/* Mejoras responsive para textos largos */
 @media (max-width: 1200px) {
   .teacher-info h3 {
     font-size: 1.1rem;
   }
-  
+
   .teacher-info p {
     font-size: 0.85rem;
   }
-  
+
   .teachers-grid {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   }
@@ -1108,19 +1108,19 @@
     min-height: auto;
     padding: 1.2rem;
   }
-  
+
   .teacher-info {
     width: 100%;
     text-align: center;
   }
-  
+
   .teacher-info h3,
   .teacher-info p {
     white-space: normal;
     text-overflow: initial;
     overflow: visible;
   }
-  
+
   .teacher-stats {
     flex-direction: row;
     justify-content: center;
@@ -1147,28 +1147,28 @@
     padding: 1rem;
     gap: 1rem;
   }
-  
+
   .teacher-info h3 {
     font-size: 1rem;
     margin-bottom: 0.3rem;
   }
-  
+
   .teacher-info p {
     font-size: 0.8rem;
     margin: 0.15rem 0;
   }
-  
+
   .teacher-info p i {
     font-size: 0.75rem;
     width: 10px;
   }
-  
+
   .teacher-avatar {
     width: 60px;
     height: 60px;
     font-size: 1.3rem;
   }
-  
+
   .group-card {
     padding: 1rem;
   }
@@ -1412,7 +1412,6 @@
   }
 }
 
-/* Responsive modal styles */
 @media (max-width: 768px) {
   .modal {
     width: 95%;
@@ -1435,3 +1434,4 @@
     grid-template-columns: 1fr;
   }
 }
+
