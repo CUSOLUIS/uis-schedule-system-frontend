@@ -264,28 +264,24 @@
 .card-icon::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
+  z-index: 1;
   opacity: 0;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 20px;
+  border-radius: 18px;
 }
 
 .card-icon::after {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
+  z-index: 1;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.3) 0%,
     rgba(255, 255, 255, 0.1) 100%
   );
-  border-radius: 20px;
+  border-radius: 18px;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -302,20 +298,21 @@
   color: #4a5568;
 }
 
-/* Animaciones de hover dinámicas por rol */
-.action-card[data-role="admin"]:hover .card-icon::before {
+/* Al pasar el mouse por la tarjeta, forzamos que el fondo del ícono
+   SIEMPRE se pinte, sin depender de un match exacto de [data-role].
+   Así el ícono (que se pone blanco) nunca queda invisible sobre
+   un fondo que sigue blanco. */
+.action-card:hover .card-icon::before {
+  opacity: 1 !important;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  opacity: 1;
 }
 
 .action-card[data-role="teacher"]:hover .card-icon::before {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  opacity: 1;
 }
 
 .action-card[data-role="student"]:hover .card-icon::before {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  opacity: 1;
 }
 
 .action-card:hover .card-icon {
@@ -337,7 +334,7 @@
 }
 
 .action-card:hover .card-icon i {
-  color: white;
+  color: white !important;
   transform: scale(1.15);
 }
 

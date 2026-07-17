@@ -441,11 +441,31 @@
   background: none;
   border: none;
   color: white;
+  font-family: inherit;
+  font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 5px;
   justify-content: center;
   margin-top: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.logout-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.6s ease;
 }
 
 .navbar:not(.mobile):hover .logout-btn {
@@ -455,6 +475,11 @@
 
 .logout-btn:hover {
   background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.logout-btn:hover::before {
+  left: 100%;
 }
 
 /* Estilos específicos para logout por rol */
