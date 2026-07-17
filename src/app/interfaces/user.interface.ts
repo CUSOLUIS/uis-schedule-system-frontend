@@ -42,4 +42,5 @@ export interface LoginResponse {
   user?: User;
   message?: string;
   token?: string;
+  refreshToken?: string;
 }

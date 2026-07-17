@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -36,6 +36,49 @@ export class AuthService {
     }
   }
 
+  private isJwtValid(token: string | null): boolean {
+    if (!token) {
+      return false;
+    }
+    const payload = this.decodeJwt(token);
+    return !!(payload && payload.exp && payload.exp * 1000 > Date.now());
+  }
+
+  private buildAuthenticatedUser(token: string): User {
+    const claims = this.decodeJwt(token);
+
+    // 'roles' claim puede ser un array o un string. Preferimos el primer role.
+    let roleAuthority: string = 'guest';
+    if (
+      claims?.roles &&
+      Array.isArray(claims.roles) &&
+      claims.roles.length > 0
+    ) {
+      roleAuthority = String(claims.roles[0]);
+    } else if (claims?.roles) {
+      roleAuthority = String(claims.roles);
+    } else if (claims?.role) {
+      roleAuthority = String(claims.role);
+    }
+
+    const frontendRoleId = this.roleService.toFrontendRoleId(roleAuthority);
+    const role =
+      this.roleService.getRoleById(frontendRoleId) ||
+      this.roleService.getDefaultRole();
+
+    const rawId = claims?.id ?? null;
+    const username =
+      claims?.username ?? claims?.sub ?? claims?.email ?? 'unknown';
+
+    return {
+      id: rawId !== null ? String(rawId) : String(username),
+      username: username,
+      fullName: username,
+      email: claims?.email ?? claims?.sub ?? username,
+      role,
+    };
+  }
+
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
       .post<any>(`${this.apiUrl}/login`, {
@@ -44,51 +87,23 @@ export class AuthService {
       })
       .pipe(
         map((response) => {
-          // Backend retorna ApiResponse<AuthResponse> -> Data.token
           const data = response?.Data ?? response?.data ?? null;
           const token = data?.token ?? response?.token ?? response?.jwt ?? null;
+          const refreshToken =
+            data?.refreshToken ?? response?.refreshToken ?? null;
 
           if (token) {
-            const claims = this.decodeJwt(token);
-
-            // 'roles' claim puede ser un array o un string. Preferimos el primer role.
-            let roleAuthority: string = 'guest';
-            if (
-              claims?.roles &&
-              Array.isArray(claims.roles) &&
-              claims.roles.length > 0
-            ) {
-              roleAuthority = String(claims.roles[0]);
-            } else if (claims?.roles) {
-              roleAuthority = String(claims.roles);
-            } else if (claims?.role) {
-              roleAuthority = String(claims.role);
-            }
-
-          const frontendRoleId = this.roleService.toFrontendRoleId(roleAuthority);
-            const role =
-              this.roleService.getRoleById(frontendRoleId) ||
-              this.roleService.getDefaultRole();
-
-            const rawId = claims?.id ?? null;
-            const username =
-              claims?.username ?? claims?.sub ?? claims?.email ?? 'unknown';
-            const authenticatedUser: User = {
-              id: rawId !== null ? String(rawId) : String(username),
-              username: username,
-              fullName: username,
-              email: claims?.email ?? claims?.sub ?? username,
-              role,
-            };
+            const authenticatedUser = this.buildAuthenticatedUser(token);
 
             this.userService.setCurrentUser(authenticatedUser);
             this.isAuthenticated.set(true);
-            this.saveSession(authenticatedUser, token);
+            this.saveSession(authenticatedUser, token, refreshToken);
 
             return {
               success: true,
               user: authenticatedUser,
               token,
+              refreshToken,
             };
           }
 
@@ -196,43 +211,120 @@ export class AuthService {
       );
   }
 
+  /**
+   * Cierra la sesión. Notifica al backend y limpia el estado local de
+   * inmediato para que la UI reaccione sin esperar la respuesta de red.
+   */
   logout(): void {
+    const token = this.getToken();
+    const refreshToken = this.getRefreshToken();
+
+    if (token) {
+      const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+      const body = refreshToken ? { refreshToken } : {};
+      this.http.post(`${this.apiUrl}/logout`, body, { headers }).subscribe({
+        error: () => {
+          // La sesión local se cierra de todas formas; ya que
+          // un fallo de red o un token ya expirado no debe
+          // impedir que el usuario salga.
+        },
+      });
+    }
+
     this.userService.logout();
     this.isAuthenticated.set(false);
     this.clearSession();
+  }
+
+  /**
+   * Solicita un nuevo access token usando el refresh token almacenado.
+   * Usado por el interceptor HTTP cuando una petición falla con 401.
+   * Si el refresh token no es válido, cierra la sesión local.
+   */
+  refreshAccessToken(): Observable<string | null> {
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      return of(null);
+    }
+
+    return this.http.post<any>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
+      map((response) => {
+        const data = response?.Data ?? response?.data ?? null;
+        const newToken = data?.token ?? null;
+        const newRefreshToken = data?.refreshToken ?? null;
+
+        if (!newToken || !newRefreshToken) {
+          throw new Error('Respuesta de refresh inválida');
+        }
+
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+          localStorage.setItem('token', newToken);
+          localStorage.setItem('refreshToken', newRefreshToken);
+        }
+
+        return newToken;
+      }),
+      catchError(() => {
+        // El refresh token es inválido, expiró o ya fue usado: se fuerza el
+        // cierre de sesión local (sin volver a llamar al backend).
+        this.userService.logout();
+        this.isAuthenticated.set(false);
+        this.clearSession();
+        return of(null);
+      }),
+    );
   }
 
   getIsAuthenticated() {
     return this.isAuthenticated.asReadonly();
   }
 
-  private saveSession(user: User, token: string): void {
+  private saveSession(
+    user: User,
+    token: string,
+    refreshToken?: string | null,
+  ): void {
     localStorage.setItem('currentUser', JSON.stringify(user));
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('token', token);
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    }
   }
 
   private checkStoredSession(): void {
     const storedUser = localStorage.getItem('currentUser');
     const isAuth = localStorage.getItem('isAuthenticated');
     const token = localStorage.getItem('token');
+    const refreshToken = localStorage.getItem('refreshToken');
 
-    if (storedUser && isAuth === 'true' && token) {
-      try {
-        const payload = this.decodeJwt(token);
-        // Validar que el token decodificado exista y no haya expirado
-        // payload.exp viene en segundos, Date.now() en milisegundos
-        if (payload && payload.exp && payload.exp * 1000 > Date.now()) {
-          const user: User = JSON.parse(storedUser);
-          this.userService.setCurrentUser(user);
-          this.isAuthenticated.set(true);
-        } else {
-          console.warn('Sesión expirada o token inválido.');
-          this.clearSession();
-        }
-      } catch (error) {
-        this.clearSession();
+    if (!storedUser || isAuth !== 'true' || !token) {
+      return;
+    }
+
+    try {
+      const user: User = JSON.parse(storedUser);
+
+      if (this.isJwtValid(token)) {
+        this.userService.setCurrentUser(user);
+        this.isAuthenticated.set(true);
+        return;
       }
+
+      // El access token expiró, pero si el refresh token sigue siendo
+      // válido mantenemos la sesión: el interceptor lo renovará
+      // automáticamente en la primera petición HTTP que se haga.
+      if (this.isJwtValid(refreshToken)) {
+        this.userService.setCurrentUser(user);
+        this.isAuthenticated.set(true);
+        return;
+      }
+
+      console.warn('Sesión expirada o token inválido.');
+      this.clearSession();
+    } catch {
+      this.clearSession();
     }
   }
 
@@ -240,9 +332,14 @@ export class AuthService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
   }
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
   }
 }
