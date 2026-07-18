@@ -115,22 +115,19 @@ export class RoleService {
   }
 
   // ── Mapeo entre nombres de rol del backend 
-  private static readonly TO_FRONTEND: Record<string, string> = {
-    DOCENTE: 'teacher',
-    ESTUDIANTE: 'student',
-    ADMINISTRADOR: 'admin',
+private static readonly TO_FRONTEND: Record<string, string> = {
+    ADMINISTRATOR: 'ADMINISTRADOR',
+    TEACHER: 'DOCENTE',
+    STUDENT: 'ESTUDIANTE',
   };
-
   private static readonly TO_BACKEND: Record<string, string> = {
-    teacher: 'DOCENTE',
-    student: 'ESTUDIANTE',
-    admin: 'ADMINISTRADOR',
+    ADMINISTRADOR: 'ADMINISTRATOR',
+    DOCENTE: 'TEACHER',
+    ESTUDIANTE: 'STUDENT',
   };
-
   toFrontendRoleId(backendRoleName: string): string {
-    return RoleService.TO_FRONTEND[backendRoleName] ?? 'student';
+    return RoleService.TO_FRONTEND[backendRoleName] ?? backendRoleName;
   }
-
   toBackendRoleName(frontendRoleId: string): string {
     return RoleService.TO_BACKEND[frontendRoleId] ?? frontendRoleId.toUpperCase();
   }

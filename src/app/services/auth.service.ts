@@ -65,8 +65,9 @@ export class AuthService {
               roleAuthority = String(claims.role);
             }
 
+          const frontendRoleId = this.roleService.toFrontendRoleId(roleAuthority);
             const role =
-              this.roleService.getRoleById(roleAuthority) ||
+              this.roleService.getRoleById(frontendRoleId) ||
               this.roleService.getDefaultRole();
 
             const rawId = claims?.id ?? null;
