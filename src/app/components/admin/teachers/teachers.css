@@ -1064,12 +1064,10 @@
 }
 
 .teacher-info p[title] {
-  cursor: help;
   position: relative;
 }
 
 .teacher-info h3[title] {
-  cursor: help;
   position: relative;
 }
 

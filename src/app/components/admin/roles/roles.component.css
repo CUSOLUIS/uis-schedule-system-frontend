@@ -162,7 +162,7 @@
 .search-input {
   width: 100%;
   padding: 1rem 1rem 1rem 3rem;
-  border: 2px solid #e9ecef;
+  border: 2px solid #e0e0e0;
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -171,8 +171,8 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #20c997;
-  box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
 }
 
 /* Empty State */
