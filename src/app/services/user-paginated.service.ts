@@ -43,11 +43,11 @@ export class UserPaginatedService {
   }
 
   getDocentes(page: number = 0, size: number = 10) {
-    return this.getUsersByRole('DOCENTE', page, size);
+    return this.getUsersByRole('TEACHER', page, size);
   }
 
   getEstudiantes(page: number = 0, size: number = 10) {
-    return this.getUsersByRole('ESTUDIANTE', page, size);
+    return this.getUsersByRole('STUDENT', page, size);
   }
 
   private handleError = (error: HttpErrorResponse): Observable<never> => {
