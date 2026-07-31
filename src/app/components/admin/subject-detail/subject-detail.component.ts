@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SubjectService } from '../../../services/subject.service';
 import { UserService } from '../../../services/user.service';
+import { UserPaginatedService } from '../../../services/user-paginated.service';
+import { RoleService } from '../../../services/role.service';
 import {
   Subject,
   Group,
@@ -29,6 +31,8 @@ export default class SubjectDetailComponent implements OnInit {
   private router = inject(Router);
   private subjectService = inject(SubjectService);
   private userService = inject(UserService);
+  private userPaginatedService = inject(UserPaginatedService);
+  private roleService = inject(RoleService);
 
   subject = signal<Subject | null>(null);
   teachers = signal<User[]>([]);
@@ -78,12 +82,33 @@ export default class SubjectDetailComponent implements OnInit {
     }
   }
 
-  private loadUsers(): void {
-    // Cargar usuarios desde el servicio
-    const allUsers = this.userService.getUsers();
+private loadUsers(): void {
 
-    this.teachers.set(allUsers.filter((user) => user.role.id === 'teacher'));
-    this.students.set(allUsers.filter((user) => user.role.id === 'student'));
+    const allUsers = this.userService.getUsers();
+    this.students.set(allUsers.filter((user) => user.role.id === 'ESTUDIANTE'));
+
+    
+    this.userPaginatedService.getDocentes(0, 100).subscribe({
+      next: (data) => {
+        const teacherRole =
+          this.roleService.getRoleById('DOCENTE') ??
+          this.roleService.getDefaultRole();
+
+        const teacherUsers: User[] = data.content.map((dto) => ({
+          id: dto.id,
+          username: dto.username,
+          fullName: `${dto.firstName} ${dto.lastName}`.trim(),
+          email: dto.email,
+          role: teacherRole,
+        }));
+
+        this.teachers.set(teacherUsers);
+      },
+      error: (err) => {
+        console.error('Error cargando profesores:', err);
+        this.teachers.set([]);
+      },
+    });
   }
 
   // Métodos para manejar grupos
