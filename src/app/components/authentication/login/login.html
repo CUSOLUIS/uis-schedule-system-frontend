@@ -61,6 +61,28 @@
         </div>
       </div>
 
+      <!-- Opción Recuérdame -->
+      <div class="remember-me-group">
+        <div class="checkbox-wrapper-46">
+          <input
+            type="checkbox"
+            id="rememberMe"
+            class="inp-cbx"
+            name="rememberMe"
+            [(ngModel)]="rememberMe"
+            [disabled]="isLoading"
+          />
+          <label for="rememberMe" class="cbx">
+            <span>
+              <svg viewBox="0 0 12 10" height="10px" width="12px" aria-hidden="true">
+                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+              </svg>
+            </span>
+            <span class="remember-me-text">Recuérdame</span>
+          </label>
+        </div>
+      </div>
+
       <div class="form-actions">
         <button type="submit" class="btn-signin" [disabled]="isLoading">
           <span *ngIf="!isLoading">Iniciar sesión</span>
