@@ -96,7 +96,7 @@ export default class RolesComponent implements OnInit, OnDestroy {
 
   private loadAdminCount(): void {
     this.userPaginatedService
-      .getUsersByRole('ADMINISTRADOR' as UserRole, 0, 1)
+      .getUsersByRole('ADMINISTRATOR' as UserRole, 0, 1)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {

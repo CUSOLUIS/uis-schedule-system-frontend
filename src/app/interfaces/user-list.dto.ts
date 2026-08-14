@@ -27,4 +27,4 @@ export interface ApiResponse<T> {
   Errors: string[];
 }
 
-export type UserRole = 'DOCENTE' | 'ESTUDIANTE' | 'ADMINISTRADOR' | 'OPERADOR';
+export type UserRole = 'TEACHER' | 'STUDENT' | 'ADMINISTRATOR' | 'OPERATOR';
