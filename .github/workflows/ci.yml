@@ -24,3 +24,10 @@ jobs:
 
       - name: Ejecutar tests
         run: npx ng test --no-watch --no-progress --browsers=ChromeHeadless
+
+      - name: Cleanup build cache and dangling layers
+        if: always()
+        run: |
+          echo "=== Limpieza post-build del frontend ==="
+          docker system prune -f
+          docker builder prune -f --filter until=24h || docker buildx prune -f --filter until=24h || true
