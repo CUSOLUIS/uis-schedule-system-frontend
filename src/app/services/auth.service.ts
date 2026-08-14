@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
@@ -16,6 +17,7 @@ import { UserService } from './user.service';
 export class AuthService {
   private isAuthenticated = signal<boolean>(false);
   private apiUrl = `${environment.apiUrl}/auth`;
+  private router = inject(Router);
 
   constructor(
     private http: HttpClient,
@@ -47,7 +49,6 @@ export class AuthService {
   private buildAuthenticatedUser(token: string): User {
     const claims = this.decodeJwt(token);
 
-    // 'roles' claim puede ser un array o un string. Preferimos el primer role.
     let roleAuthority: string = 'guest';
     if (
       claims?.roles &&
@@ -79,7 +80,12 @@ export class AuthService {
     };
   }
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
+  login(
+    credentials: LoginRequest,
+    rememberMe: boolean = false,
+  ): Observable<LoginResponse> {
+    const isRemember = credentials.rememberMe ?? rememberMe;
+
     return this.http
       .post<any>(`${this.apiUrl}/login`, {
         usernameOrEmail: credentials.username,
@@ -94,10 +100,16 @@ export class AuthService {
 
           if (token) {
             const authenticatedUser = this.buildAuthenticatedUser(token);
+            const expMs = this.getTokenExpirationMs();
 
             this.userService.setCurrentUser(authenticatedUser);
             this.isAuthenticated.set(true);
-            this.saveSession(authenticatedUser, token, refreshToken);
+            this.saveSession(
+              authenticatedUser,
+              token,
+              refreshToken,
+              isRemember,
+            );
 
             return {
               success: true,
@@ -117,7 +129,7 @@ export class AuthService {
           };
         }),
         catchError((error) => {
-          console.error('Error en login:', error);
+          console.error('[AuthService] Error en login:', error);
           return of({
             success: false,
             message:
@@ -213,7 +225,7 @@ export class AuthService {
 
   /**
    * Cierra la sesión. Notifica al backend y limpia el estado local de
-   * inmediato para que la UI reaccione sin esperar la respuesta de red.
+   * inmediato, redirigiendo a la pantalla de login.
    */
   logout(): void {
     const token = this.getToken();
@@ -223,27 +235,29 @@ export class AuthService {
       const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
       const body = refreshToken ? { refreshToken } : {};
       this.http.post(`${this.apiUrl}/logout`, body, { headers }).subscribe({
-        error: () => {
-          // La sesión local se cierra de todas formas; ya que
-          // un fallo de red o un token ya expirado no debe
-          // impedir que el usuario salga.
-        },
+        error: () => {},
       });
     }
 
     this.userService.logout();
     this.isAuthenticated.set(false);
     this.clearSession();
+    this.router.navigate(['/login']);
   }
 
   /**
    * Solicita un nuevo access token usando el refresh token almacenado.
-   * Usado por el interceptor HTTP cuando una petición falla con 401.
-   * Si el refresh token no es válido, cierra la sesión local.
+   * Solo procede si la opción 'Recuérdame' está activa y existe un refresh token.
    */
   refreshAccessToken(): Observable<string | null> {
+    const rememberMe = this.isRememberMeEnabled();
     const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
+
+    if (!rememberMe || !refreshToken) {
+      console.warn(
+        `[AuthService] refreshAccessToken() rechazado: Recuérdame=${rememberMe}, refreshToken=${!!refreshToken}. Cerrando sesión.`,
+      );
+      this.logout();
       return of(null);
     }
 
@@ -257,20 +271,18 @@ export class AuthService {
           throw new Error('Respuesta de refresh inválida');
         }
 
-        const storedUser = localStorage.getItem('currentUser');
-        if (storedUser) {
-          localStorage.setItem('token', newToken);
+        localStorage.setItem('token', newToken);
+        if (rememberMe) {
           localStorage.setItem('refreshToken', newRefreshToken);
         }
+        this.isAuthenticated.set(true);
+        const expMs = this.getTokenExpirationMs();
 
         return newToken;
       }),
-      catchError(() => {
-        // El refresh token es inválido, expiró o ya fue usado: se fuerza el
-        // cierre de sesión local (sin volver a llamar al backend).
-        this.userService.logout();
-        this.isAuthenticated.set(false);
-        this.clearSession();
+      catchError((err) => {
+        console.error('[AuthService] Error al renovar token:', err);
+        this.logout();
         return of(null);
       }),
     );
@@ -280,16 +292,56 @@ export class AuthService {
     return this.isAuthenticated.asReadonly();
   }
 
+  /**
+   * Indica si el usuario seleccionó la opción 'Recuérdame' para la sesión actual.
+   */
+  isRememberMeEnabled(): boolean {
+    return localStorage.getItem('rememberMe') === 'true';
+  }
+
+  getTokenExpirationMs(): number | null {
+    const token = this.getToken();
+    if (!token) {
+      return null;
+    }
+    const payload = this.decodeJwt(token);
+    if (payload && typeof payload.exp === 'number') {
+      return payload.exp * 1000;
+    }
+    return null;
+  }
+
+  getTokenRemainingMs(): number | null {
+    const expMs = this.getTokenExpirationMs();
+    if (expMs === null) {
+      return null;
+    }
+    return expMs - Date.now();
+  }
+
+  isTokenExpiringSoon(bufferMs: number = 2 * 60 * 1000): boolean {
+    const remaining = this.getTokenRemainingMs();
+    if (remaining === null) {
+      return false;
+    }
+    return remaining <= bufferMs;
+  }
+
   private saveSession(
     user: User,
     token: string,
     refreshToken?: string | null,
+    rememberMe: boolean = false,
   ): void {
     localStorage.setItem('currentUser', JSON.stringify(user));
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('token', token);
-    if (refreshToken) {
+    if (rememberMe && refreshToken) {
+      localStorage.setItem('rememberMe', 'true');
       localStorage.setItem('refreshToken', refreshToken);
+    } else {
+      localStorage.removeItem('rememberMe');
+      localStorage.removeItem('refreshToken');
     }
   }
 
@@ -297,7 +349,8 @@ export class AuthService {
     const storedUser = localStorage.getItem('currentUser');
     const isAuth = localStorage.getItem('isAuthenticated');
     const token = localStorage.getItem('token');
-    const refreshToken = localStorage.getItem('refreshToken');
+    const rememberMe = this.isRememberMeEnabled();
+    const refreshToken = this.getRefreshToken();
 
     if (!storedUser || isAuth !== 'true' || !token) {
       return;
@@ -307,23 +360,28 @@ export class AuthService {
       const user: User = JSON.parse(storedUser);
 
       if (this.isJwtValid(token)) {
+        const remainingMs = this.getTokenRemainingMs();
         this.userService.setCurrentUser(user);
         this.isAuthenticated.set(true);
         return;
       }
 
-      // El access token expiró, pero si el refresh token sigue siendo
-      // válido mantenemos la sesión: el interceptor lo renovará
-      // automáticamente en la primera petición HTTP que se haga.
-      if (this.isJwtValid(refreshToken)) {
+      // El access token expiró: solo se mantiene viva la sesión
+      // si 'Recuérdame' está activo Y existe un refresh token válido.
+      if (rememberMe && refreshToken && this.isJwtValid(refreshToken)) {
         this.userService.setCurrentUser(user);
         this.isAuthenticated.set(true);
         return;
       }
 
-      console.warn('Sesión expirada o token inválido.');
+      console.warn(
+        '[AuthService] Sesión expirada: token inválido y Recuérdame no está activo o refreshToken inválido. Limpiando.',
+      );
       this.clearSession();
     } catch {
+      console.error(
+        '[AuthService] Error al parsear sesión almacenada. Limpiando.',
+      );
       this.clearSession();
     }
   }
@@ -333,6 +391,7 @@ export class AuthService {
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('rememberMe');
   }
 
   getToken(): string | null {

@@ -17,7 +17,10 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private authService: AuthService) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler,
+  ): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
     const authReq = token ? this.addToken(req, token) : req;
 
@@ -28,6 +31,9 @@ export class AuthInterceptor implements HttpInterceptor {
           error.status === 401 &&
           !this.isAuthEndpoint(req.url)
         ) {
+          console.warn(
+            `[AuthInterceptor] 401 recibido en: ${req.url}. Intentando manejar...`,
+          );
           return this.handle401(req, next);
         }
         return throwError(() => error);
@@ -52,8 +58,18 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  private handle401(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!this.authService.getRefreshToken()) {
+  private handle401(
+    req: HttpRequest<any>,
+    next: HttpHandler,
+  ): Observable<HttpEvent<any>> {
+    const rememberMe = this.authService.isRememberMeEnabled();
+    const hasRefreshToken = !!this.authService.getRefreshToken();
+
+    // Si 'Recuérdame' NO está activo o no hay refresh token: cerrar sesión
+    if (!rememberMe || !hasRefreshToken) {
+      console.warn(
+        `[AuthInterceptor] 401 sin posibilidad de refresh (rememberMe=${rememberMe}, refreshToken=${hasRefreshToken}). Cerrando sesión.`,
+      );
       this.authService.logout();
       return throwError(() => new Error('Sesión expirada'));
     }
@@ -67,7 +83,13 @@ export class AuthInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
 
           if (!newToken) {
-            return throwError(() => new Error('No fue posible renovar la sesión'));
+            console.warn(
+              '[AuthInterceptor] Renovación reactiva fallida. Cerrando sesión.',
+            );
+            this.authService.logout();
+            return throwError(
+              () => new Error('No fue posible renovar la sesión'),
+            );
           }
 
           this.refreshTokenSubject.next(newToken);
@@ -75,14 +97,17 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
         catchError((err) => {
           this.isRefreshing = false;
+          console.error(
+            '[AuthInterceptor] Error al renovar token reactivamente:',
+            err,
+          );
+          this.authService.logout();
           return throwError(() => err);
         }),
       );
     }
 
-    // Ya hay un refresh en curso (varias peticiones fallaron con 401 al
-    // mismo tiempo): esperamos a que termine y reintentamos con el token
-    // nuevo, en vez de disparar múltiples llamadas a /auth/refresh.
+    // Ya hay un refresh en curso: esperar y reintentar con el nuevo token
     return this.refreshTokenSubject.pipe(
       filter((token): token is string => token !== null),
       take(1),
