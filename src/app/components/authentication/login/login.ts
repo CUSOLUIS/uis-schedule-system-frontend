@@ -15,6 +15,7 @@ import { AuthService } from '../../../services/auth.service';
 export default class LoginComponent {
   username: string = '';
   password: string = '';
+  rememberMe: boolean = false;
   showPassword: boolean = false;
   isLoading: boolean = false;
   errorMessage: string = '';
@@ -39,9 +40,10 @@ export default class LoginComponent {
     const credentials: LoginRequest = {
       username: this.username,
       password: this.password,
+      rememberMe: this.rememberMe,
     };
 
-    this.authService.login(credentials).subscribe({
+    this.authService.login(credentials, this.rememberMe).subscribe({
       next: (response) => {
         if (response.success && response.user) {
           this.redirectToRolePage(response.user.role.id);
@@ -63,15 +65,6 @@ export default class LoginComponent {
 
   private redirectToRolePage(roleId: string): void {
     switch (roleId) {
-      /* case 'admin':
-        this.router.navigate(['/admin/schedule']);
-        break;
-      case 'teacher':
-        this.router.navigate(['/teacher/schedule']);
-        break;
-      case 'student':
-        this.router.navigate(['/student/schedule']);
-        break; */
       default:
         this.router.navigate(['dashboard']);
     }

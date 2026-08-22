@@ -35,6 +35,7 @@ export interface LoginUser {
 export interface LoginRequest {
   username: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export interface LoginResponse {
@@ -42,4 +43,5 @@ export interface LoginResponse {
   user?: User;
   message?: string;
   token?: string;
+  refreshToken?: string;
 }
