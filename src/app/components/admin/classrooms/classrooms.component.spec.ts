@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import ClassroomsComponent from './classrooms.component';
 import { ClassroomService } from '../../../services/classroom.service';
-import { of } from 'rxjs';
+import mockClassroomsData from '../../../data/mock-classrooms.json';
 
 describe('ClassroomsComponent', () => {
   let component: ClassroomsComponent;
@@ -11,12 +13,14 @@ describe('ClassroomsComponent', () => {
   beforeEach(async () => {
     mockClassroomService = jasmine.createSpyObj('ClassroomService', [
       'getAllClassrooms',
+      'deleteClassroom',
     ]);
-    mockClassroomService.getAllClassrooms.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [ClassroomsComponent],
       providers: [
+        provideZonelessChangeDetection(),
+        provideHttpClient(),
         { provide: ClassroomService, useValue: mockClassroomService },
       ],
     }).compileComponents();
@@ -30,24 +34,16 @@ describe('ClassroomsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load classrooms on init', () => {
-    const mockClassrooms = [
-      {
-        id: '1',
-        name: 'Aula 101',
-        code: 'A101',
-        building: 'Edificio A',
-        floor: 1,
-        capacity: 30,
-        resources: ['Proyector'],
-        schedule: [],
-        isAvailable: true,
-      },
-    ];
+  it('should load classrooms from local mock data on init', () => {
+    const expected = mockClassroomsData.classrooms.map((classroom) => ({
+      ...classroom,
+      schedule: [],
+    }));
 
-    mockClassroomService.getAllClassrooms.and.returnValue(of(mockClassrooms));
-    component.ngOnInit();
-    expect(component.classrooms).toEqual(mockClassrooms);
+    expect(component.classrooms).toEqual(expected);
+    expect(component.classrooms.length).toBe(
+      mockClassroomsData.classrooms.length,
+    );
   });
 
   it('should select classroom', () => {
