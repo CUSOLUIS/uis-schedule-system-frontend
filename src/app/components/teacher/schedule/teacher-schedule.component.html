@@ -1,41 +1,47 @@
 <div class="teacher-schedule-container">
   <!-- Header usando el template compartido -->
   <app-section-header
-    [config]="sectionConfig"
+    [config]="sectionConfig()"
     (createButtonClick)="onGenerateReport()"
   ></app-section-header>
 
-  <!-- Información del profesor -->
+  @if (isLoading()) {
+  <div class="schedule-state" role="status" aria-live="polite">
+    <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+    <span>Cargando tu horario...</span>
+  </div>
+  } @else if (errorMessage()) {
+  <div class="schedule-state schedule-state-error" role="alert">
+    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+    <span>{{ errorMessage() }}</span>
+    <button type="button" class="schedule-retry-btn" (click)="retryLoad()">
+      <i class="fas fa-redo" aria-hidden="true"></i> Reintentar
+    </button>
+  </div>
+  } @else if (!hasClasses()) {
+  <div class="schedule-state schedule-state-empty" role="status">
+    <i class="fas fa-calendar-times" aria-hidden="true"></i>
+    <div>
+      <p class="schedule-state-title">Aún no tienes grupos asignados</p>
+      <p>
+        Cuando la coordinación te asigne grupos con horario, aparecerán aquí.
+      </p>
+    </div>
+  </div>
+  } @else {
+  <!-- Identidad del profesor: los totales de carga ya están en las estadísticas del encabezado -->
   <div class="teacher-info-card" [style.background]="getUserRoleGradient()">
     <div class="teacher-details">
-      <h3>{{ currentUser?.fullName }}</h3>
+      <h3>{{ getTeacherName() }}</h3>
       <p>{{ currentUser?.email }}</p>
       <div class="professional-info">
-        <span class="department-badge">{{ getDepartment() }}</span>
-        <span class="subjects-badge"
-          >{{ teachingSubjects.length }} Materias</span
-        >
-      </div>
-    </div>
-    <div class="teaching-summary">
-      <h4>Resumen de Carga Académica</h4>
-      <div class="summary-stats">
-        <div class="stat">
-          <span class="number">{{ getTotalGroups() }}</span>
-          <span class="label">Grupos</span>
-        </div>
-        <div class="stat">
-          <span class="number">{{ getTotalStudents() }}</span>
-          <span class="label">Estudiantes</span>
-        </div>
-        <div class="stat">
-          <span class="number">{{ getTotalHours() }}</span>
-          <span class="label">Horas/Semana</span>
-        </div>
-        <div class="stat">
-          <span class="number">{{ getActiveDays() }}</span>
-          <span class="label">Días de Clase</span>
-        </div>
+        <span class="department-badge">
+          <i class="fas fa-building" aria-hidden="true"></i> {{ getDepartment() }}
+        </span>
+        <span class="days-badge">
+          <i class="fas fa-calendar-day" aria-hidden="true"></i>
+          {{ getActiveDays() }} {{ getActiveDays() === 1 ? 'día' : 'días' }} de clase
+        </span>
       </div>
     </div>
   </div>
@@ -43,66 +49,58 @@
   <!-- Vista del horario -->
   <div class="schedule-section">
     <app-schedule-view
-      [scheduleSlots]="scheduleSlots"
+      [scheduleSlots]="scheduleSlots()"
       [config]="scheduleConfig"
     ></app-schedule-view>
   </div>
 
   <!-- Materias que enseña -->
   <div class="teaching-subjects-section">
-    <h3>Materias a Cargo</h3>
+    <h3><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> Materias a Cargo</h3>
     <div class="subjects-grid">
-      @for (subjectInfo of teachingSubjects; track subjectInfo.subject.id) {
-      <div class="subject-card">
-        <div class="subject-header">
-          <h4>{{ subjectInfo.subject.name }}</h4>
-          <span class="subject-code">{{ subjectInfo.subject.code }}</span>
-        </div>
-        <div class="subject-stats">
-          <div class="stat-item">
-            <span class="stat-label">Grupos:</span>
-            <span class="stat-value">{{ subjectInfo.groups.length }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Estudiantes:</span>
-            <span class="stat-value">{{ subjectInfo.totalStudents }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Créditos:</span>
-            <span class="stat-value">{{ subjectInfo.subject.credits }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Horas/Semana:</span>
-            <span class="stat-value">{{ subjectInfo.totalHours }}</span>
-          </div>
-        </div>
-
-        <!-- Grupos de la materia -->
-        <div class="groups-section">
-          <h5>Grupos:</h5>
-          @for (group of subjectInfo.groups; track group.id) {
-          <div class="group-card">
-            <div class="group-header">
-              <span class="group-number">Grupo {{ group.groupNumber }}</span>
-              <span class="students-count"
-                >{{ group.studentIds.length }}/{{ group.maxStudents }}</span
-              >
-            </div>
-            <div class="group-schedule">
-              @for (schedule of group.schedule; track $index) {
-              <div class="schedule-item">
-                <span class="day">{{ schedule.day }}</span>
-                <span class="time"
-                  >{{ schedule.startTime }} - {{ schedule.endTime }}</span
-                >
-                <span class="classroom">{{ schedule.classroom }}</span>
-              </div>
-              }
-            </div>
-          </div>
+      @for (subjectInfo of teachingSubjects(); track subjectInfo.key) {
+      <article class="subject-card">
+        <header class="subject-header">
+          <span
+            class="subject-swatch"
+            [style.background]="subjectInfo.color.background"
+            [style.border-color]="subjectInfo.color.ink"
+            aria-hidden="true"
+          ></span>
+          <h4>{{ subjectInfo.name }}</h4>
+          @if (subjectInfo.code) {
+          <span class="subject-code">{{ subjectInfo.code }}</span>
           }
-        </div>
-      </div>
+        </header>
+        <p class="subject-meta">
+          @if (subjectInfo.credits !== null) {
+          <span>{{ subjectInfo.credits }} {{ subjectInfo.credits === 1 ? 'crédito' : 'créditos' }}</span>
+          }
+          <span>{{ subjectInfo.totalHours }} h por semana</span>
+        </p>
+
+        @for (group of subjectInfo.groups; track group.id) {
+        <section class="group-block">
+          <h5 class="group-title">
+            {{ group.title }}
+            @if (group.capacity !== null) {
+            <span class="group-capacity">Cupo {{ group.capacity }}</span>
+            }
+          </h5>
+          <ul class="slot-list">
+            @for (slot of group.schedule; track $index) {
+            <li class="slot-row">
+              <span class="slot-day">{{ slot.day }}</span>
+              <span class="slot-time">{{ slot.startTime }}–{{ slot.endTime }}</span>
+              <span class="slot-room" [class.no-room]="slot.location === 'Sin aula'">{{
+                slot.location
+              }}</span>
+            </li>
+            }
+          </ul>
+        </section>
+        }
+      </article>
       }
     </div>
   </div>
@@ -111,24 +109,9 @@
   <div class="additional-info-section">
     <div class="info-grid">
       <div class="info-card">
-        <h4>Distribución por Semestre</h4>
-        <div class="semester-distribution">
-          @for (semester of getSemesterDistribution(); track semester.number) {
-          <div class="semester-item">
-            <span class="semester-number">Semestre {{ semester.number }}</span>
-            <div class="semester-bar">
-              <div class="bar-fill" [style.width.%]="semester.percentage"></div>
-            </div>
-            <span class="semester-count">{{ semester.count }} materias</span>
-          </div>
-          }
-        </div>
-      </div>
-
-      <div class="info-card">
         <h4>Horarios por Día</h4>
         <div class="daily-distribution">
-          @for (day of getDailyDistribution(); track day.name) {
+          @for (day of dailyDistribution(); track day.name) {
           <div class="day-item">
             <span class="day-name">{{ day.name }}</span>
             <span class="hours-count">{{ day.hours }} horas</span>
@@ -143,7 +126,7 @@
       <div class="info-card">
         <h4>Próximas Clases</h4>
         <div class="upcoming-classes">
-          @for (nextClass of getUpcomingClasses(); track $index) {
+          @for (nextClass of upcomingClasses(); track $index) {
           <div class="class-item">
             <div class="class-time">
               <span class="day">{{ nextClass.day }}</span>
@@ -151,13 +134,18 @@
             </div>
             <div class="class-details">
               <span class="subject">{{ nextClass.subject }}</span>
-              <span class="group">Grupo {{ nextClass.group }}</span>
+              @if (nextClass.group) {
+              <span class="group">{{ nextClass.group }}</span>
+              }
               <span class="classroom">{{ nextClass.classroom }}</span>
             </div>
           </div>
+          } @empty {
+          <p class="no-upcoming">No tienes más clases esta semana.</p>
           }
         </div>
       </div>
     </div>
   </div>
+  }
 </div>
