@@ -1,13 +1,43 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { RoleService } from '../../../services/role.service';
+
+export interface QuickAccessItem {
+  icon: string;
+  label: string;
+  route: string;
+  description: string | null;
+}
+
+/**
+ * Descripción de cada acceso según el final de su ruta. El menú del rol solo trae
+ * "<título> - <rol>", que no aporta nada al usuario.
+ */
+const QUICK_ACCESS_DESCRIPTIONS: Record<string, string> = {
+  schedule: 'Consulta tus clases de la semana',
+  subjects: 'Revisa las materias que tienes a cargo o inscritas',
+  profile: 'Actualiza tus datos personales',
+  'cambiar-contrasena': 'Cambia tu contraseña de acceso',
+  classrooms: 'Administra aulas y su disponibilidad',
+  teachers: 'Gestiona el cuerpo docente',
+  roles: 'Asigna roles y permisos',
+  invitations: 'Invita nuevos usuarios',
+  settings: 'Ajusta la configuración del sistema',
+};
+
+const DASHBOARD_ROUTE = '/dashboard';
+
+function describeRoute(route: string): string | null {
+  const last = route.split('/').filter(Boolean).pop() ?? '';
+  return QUICK_ACCESS_DESCRIPTIONS[last] ?? null;
+}
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -18,21 +48,15 @@ export default class DashboardComponent {
 
   currentUser = this.userService.getCurrentUser();
 
-  // Métodos para obtener colores dinámicos
-  getUserRoleColor(): string {
-    const roleId = this.currentUser()?.role?.id;
-    const role = this.roleService.getRoleById(roleId || 'admin');
-    return role?.colorScheme?.background || '#4A148C';
-  }
-
-  getUserRoleGradient(): string {
-    const roleId = this.currentUser()?.role?.id;
-    const role = this.roleService.getRoleById(roleId || 'admin');
-    return (
-      role?.colorScheme?.gradient ||
-      'linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%)'
-    );
-  }
+  /** Colores del rol que el CSS usa como variables; los valores por defecto son los del docente. */
+  readonly roleColors = computed(() => {
+    const scheme = this.roleService.getRoleById(this.currentUser()?.role?.id || '')?.colorScheme;
+    return {
+      gradient: scheme?.gradient || 'linear-gradient(135deg, #1E5A9F 0%, #1565C0 100%)',
+      primary: scheme?.primary || '#D1E7FB',
+      text: scheme?.text || '#1565C0',
+    };
+  });
 
   navigateToSchedule(): void {
     const user = this.currentUser();
@@ -70,21 +94,20 @@ export default class DashboardComponent {
     }
   }
 
- // Devuelve las opciones del menú según el rol del usuario
-  getMenuItems() {
+  /** Accesos del rol, sin la página actual y con una descripción útil. */
+  readonly quickAccess = computed<QuickAccessItem[]>(() => {
     const roleId = this.currentUser()?.role?.id || 'ESTUDIANTE';
-    return this.userService.getMenuItemsForUser(roleId);
-  }
-  trackByRoute(_: number, item: { route: string }): string {
-    return item.route;
-  }
-
-  // Navega a la ruta indicada
-  navigateTo(route: string) {
-    if (route) {
-      this.router.navigate([route]);
-    }
-  }
+    const current = this.router.url.split('?')[0];
+    return (this.userService.getMenuItemsForUser(roleId) ?? [])
+      .filter((item) => item.route && item.visible !== false)
+      .filter((item) => item.route !== DASHBOARD_ROUTE && item.route !== current)
+      .map((item) => ({
+        icon: item.icon,
+        label: item.label,
+        route: item.route,
+        description: describeRoute(item.route),
+      }));
+  });
 
   navigateToProfile(): void {
     const user = this.currentUser();
