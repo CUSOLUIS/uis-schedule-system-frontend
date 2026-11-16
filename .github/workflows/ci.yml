@@ -5,6 +5,7 @@ on:
     branches: [develop, main]
   push:
     branches: [develop, main]
+  workflow_call:
 
 jobs:
   test:
@@ -24,6 +25,9 @@ jobs:
 
       - name: Ejecutar tests
         run: npx ng test --no-watch --no-progress --browsers=ChromeHeadless
+
+      - name: Compilar build de producción
+        run: npx ng build
 
       - name: Cleanup build cache and dangling layers
         if: always()
