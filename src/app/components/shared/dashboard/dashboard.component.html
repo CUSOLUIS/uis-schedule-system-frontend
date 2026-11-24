@@ -1,66 +1,67 @@
-<div class="dashboard-container">
-  <!-- Header de bienvenida -->
-  <div class="welcome-section">
-    <div class="welcome-card" [style.background]="getUserRoleGradient()">
-      <div class="user-avatar">
-        <i class="fas fa-user-circle"></i>
-      </div>
-
+<div
+  class="dashboard-container"
+  [style.--role-gradient]="roleColors().gradient"
+  [style.--role-primary]="roleColors().primary"
+  [style.--role-ink]="roleColors().text"
+>
+  <!-- Bienvenida: mismo encabezado que el resto de vistas (degradado del rol, alineado a la izquierda) -->
+  <header class="welcome-card">
+    <div class="welcome-text">
       <h1 class="welcome-title">
+        <i class="fas fa-user-circle" aria-hidden="true"></i>
         ¡Bienvenido, {{ currentUser()?.fullName || currentUser()?.username }}!
       </h1>
-
       <p class="welcome-subtitle">Sistema de Horarios UIS</p>
-
-      <div class="role-info">
-        <span class="role-badge">
-          <i class="fas fa-id-badge"></i>
-          {{ currentUser()?.role?.name }}
-        </span>
-      </div>
     </div>
-  </div>
+    @if (currentUser()?.role?.name) {
+    <span class="role-badge">
+      <i class="fas fa-id-badge" aria-hidden="true"></i>
+      {{ currentUser()?.role?.name }}
+    </span>
+    }
+  </header>
 
-  <!-- Tarjetas de acciones rápidas -->
-  <div class="quick-actions-section">
-    <h2 class="section-title">Accesos Rápidos</h2>
-
-    <div class="actions-grid">
-      <div
-        class="action-card"
-        *ngFor="let item of getMenuItems()"
-        [attr.data-role]="currentUser()?.role?.id"
-      >
-        <div class="card-icon" [style.color]="getUserRoleColor()">
-          <i class="fas" [ngClass]="item.icon"></i>
-        </div>
-        <div class="card-content">
-          <h3>{{ item.label }}</h3>
-          <p>{{ item.description || "" }}</p>
-        </div>
-        <button
-          class="card-button"
-          (click)="navigateTo(item.route)"
-          [style.background]="getUserRoleGradient()"
-        >
-          <i class="fas fa-arrow-right"></i>
-          Ver
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- Accesos rápidos: cada tarjeta entera es el enlace -->
+  @if (quickAccess().length) {
+  <nav class="dashboard-panel quick-access" aria-labelledby="quick-access-title">
+    <h2 id="quick-access-title" class="panel-title">
+      <i class="fas fa-bolt" aria-hidden="true"></i> Accesos rápidos
+    </h2>
+    <ul class="access-grid">
+      @for (item of quickAccess(); track item.route) {
+      <li>
+        <a class="access-link" [routerLink]="item.route">
+          <span class="access-icon" aria-hidden="true">
+            <i class="fas" [ngClass]="item.icon"></i>
+          </span>
+          <span class="access-text">
+            <span class="access-title">{{ item.label }}</span>
+            @if (item.description) {
+            <span class="access-description">{{ item.description }}</span>
+            }
+          </span>
+          <i class="fas fa-chevron-right access-chevron" aria-hidden="true"></i>
+        </a>
+      </li>
+      }
+    </ul>
+  </nav>
+  }
 
   <!-- Información del sistema -->
-  <div class="system-info">
-    <div class="info-card">
-      <div class="info-content">
-        <h4>Universidad Industrial de Santander</h4>
-        <p>Sistema de Gestión de Horarios Académicos</p>
-        <div class="version-info">
-          <span class="version-badge">v0.0.1</span>
-          <span class="status-badge active">Sistema Activo</span>
-        </div>
-      </div>
+  <section class="dashboard-panel system-info" aria-labelledby="system-info-title">
+    <span class="access-icon" aria-hidden="true">
+      <i class="fas fa-university"></i>
+    </span>
+    <div class="system-text">
+      <h2 id="system-info-title" class="system-title">Universidad Industrial de Santander</h2>
+      <p class="system-subtitle">Sistema de Gestión de Horarios Académicos</p>
     </div>
-  </div>
+    <div class="version-info">
+      <span class="version-badge">v0.0.1</span>
+      <span class="status-badge">
+        <span class="status-dot" aria-hidden="true"></span> Sistema activo
+      </span>
+    </div>
+  </section>
 </div>

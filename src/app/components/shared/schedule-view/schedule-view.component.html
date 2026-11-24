@@ -1,235 +1,161 @@
-<div
-  class="schedule-view-container"
-  [style.border-color]="getUserRoleAccent()"
-  [style.background]="
-    'linear-gradient(135deg, ' +
-    getUserRolePrimary() +
-    ' 0%, ' +
-    getUserRoleSecondary() +
-    ' 100%)'
-  "
->
-  <!-- Controles de vista -->
-  <div class="schedule-controls">
-    @if (config.allowViewToggle) {
-    <div class="view-toggle">
+<section class="schedule-view" [attr.aria-label]="config.title">
+  @if (config.allowViewToggle) {
+  <div class="schedule-toolbar">
+    <div class="view-toggle" role="group" aria-label="Tipo de vista">
       <button
+        type="button"
         class="toggle-btn"
-        [class.active]="isWeekView"
-        (click)="toggleView('week')"
-        [style.background]="isWeekView ? getUserRoleGradient() : ''"
+        [class.active]="view() === 'week'"
+        [attr.aria-pressed]="view() === 'week'"
+        (click)="setView('week')"
       >
-        Vista Semanal
+        <i class="fas fa-calendar-week" aria-hidden="true"></i> Semana
       </button>
       <button
+        type="button"
         class="toggle-btn"
-        [class.active]="!isWeekView"
-        (click)="toggleView('day')"
-        [style.background]="!isWeekView ? getUserRoleGradient() : ''"
+        [class.active]="view() === 'day'"
+        [attr.aria-pressed]="view() === 'day'"
+        (click)="setView('day')"
       >
-        Vista Diaria
+        <i class="fas fa-list" aria-hidden="true"></i> Día
       </button>
     </div>
-    }
   </div>
+  }
 
-  <!-- Selector de día para vista diaria -->
-  @if (!isWeekView) {
-  <div class="day-selector">
-    <div class="day-tabs">
-      @for (day of days; track $index) {
-      <button
-        class="day-tab"
-        [class.active]="selectedDayIndex === $index"
-        (click)="selectDay($index)"
-        [style.background]="
-          selectedDayIndex === $index ? getUserRoleGradient() : ''
-        "
-        [style.border-color]="getUserRoleAccent()"
-      >
-        {{ day.substring(0, 3) }}
-      </button>
+  @if (view() === 'week') {
+  <!-- Grilla semanal: cada clase es un bloque posicionado por minutos -->
+  <div class="week-scroll">
+    <div
+      class="week-grid"
+      [style.--day-count]="weekDays().length"
+      [style.--grid-height.px]="gridHeight()"
+    >
+      <div class="corner" aria-hidden="true"></div>
+      @for (day of weekDays(); track day) {
+      <div class="day-header" [class.today]="isToday(day)">{{ day }}</div>
       }
-    </div>
-  </div>
-  }
 
-  <!-- Vista semanal -->
-  @if (isWeekView) {
-  <div
-    class="schedule-table-container"
-    [style.border-color]="getUserRoleAccent()"
-  >
-    <table class="schedule-table">
-      <thead>
-        <tr>
-          <th class="time-header-cell">Hora</th>
-          @for (day of days; track day) {
-          <th
-            class="day-header-cell"
-            [style.background]="
-              'linear-gradient(135deg, ' +
-              getUserRoleSecondary() +
-              ' 0%, ' +
-              getUserRoleAccent() +
-              ' 100%)'
-            "
-          >
-            {{ day }}
-          </th>
-          }
-        </tr>
-      </thead>
-      <tbody>
-        @for (time of timeSlots; track time) {
-        <tr>
-          <td class="time-cell">{{ time }}</td>
-          @for (day of days; track day) {
-          <td
-            class="schedule-cell"
-            [class.has-class]="getScheduleForSlot(day, time)"
-            [class.available]="!getScheduleForSlot(day, time)"
-            [class.current-time]="
-              config.highlightCurrentTime && isCurrentTimeSlot(day, time)
-            "
-            [style.background]="
-              config.highlightCurrentTime && isCurrentTimeSlot(day, time)
-                ? getCurrentTimePastelColor()
-                : ''
-            "
-            [style.border-color]="
-              config.highlightCurrentTime && isCurrentTimeSlot(day, time)
-                ? getCurrentTimeBorderColor()
-                : ''
-            "
-            [style.box-shadow]="
-              config.highlightCurrentTime && isCurrentTimeSlot(day, time)
-                ? '0 4px 12px ' + getUserRoleAccent() + '40'
-                : ''
-            "
-          >
-            @if (getScheduleForSlot(day, time); as schedule) {
-            <div class="class-info">
-              <div class="subject-name">{{ schedule.subjectName }}</div>
-              @if (schedule.subjectCode) {
-              <div class="subject-code">{{ schedule.subjectCode }}</div>
-              } @if (schedule.teacherName) {
-              <div class="teacher-name">{{ schedule.teacherName }}</div>
-              } @if (schedule.groupNumber) {
-              <div class="group-info">Grupo {{ schedule.groupNumber }}</div>
-              }
-              <div class="location-info">
-                <div class="classroom-info">
-                  {{ schedule.classroom }}
-                  @if (schedule.building) {
-                  <span class="building-inline"> - {{ schedule.building }}@if (schedule.floor) { - Piso {{ schedule.floor }} }</span>
-                  }
-                </div>
-              </div>
-              <div class="time-info">
-                {{ schedule.startTime }} - {{ schedule.endTime }}
-              </div>
-            </div>
-            } @else {
-            <div class="empty-slot">
-              <span class="empty-text">Libre</span>
-            </div>
-            }
-          </td>
-          }
-        </tr>
+      <div class="hour-column" aria-hidden="true">
+        @for (hour of hours(); track hour) {
+        <span class="hour-label">{{ hour }}</span>
         }
-      </tbody>
-    </table>
-  </div>
-  }
+      </div>
 
-  <!-- Vista diaria -->
-  @if (!isWeekView) {
-  <div class="daily-schedule" [style.border-color]="getUserRoleAccent()">
-    <div class="daily-header" [style.background]="getUserRoleGradient()">
-      <h4>{{ getSelectedDay() }}</h4>
-      <span class="date-info">{{ getCurrentDate() }}</span>
-    </div>
-
-    <!-- Vista estudiante sin clases: leyenda informativa -->
-    @if (config.isStudentView && getFilteredTimeSlots().length === 0) {
-    <div class="no-classes-legend" [style.border-color]="getUserRoleAccent()">
-      <p>No tienes clases este día</p>
-    </div>
-    }
-
-    <div class="daily-slots">
-      @for (time of getFilteredTimeSlots(); track time) {
+      @for (day of weekDays(); track day) {
       <div
-        class="daily-slot-card"
-        [class.has-class]="getScheduleForSlot(getSelectedDay(), time)"
-        [class.available]="!getScheduleForSlot(getSelectedDay(), time)"
-        [class.current-time]="
-          config.highlightCurrentTime &&
-          isCurrentTimeSlot(getSelectedDay(), time)
-        "
-        [style.border-color]="
-          getScheduleForSlot(getSelectedDay(), time)
-            ? getUserRoleAccent()
-            : config.highlightCurrentTime &&
-              isCurrentTimeSlot(getSelectedDay(), time)
-            ? getCurrentTimeBorderColor()
-            : ''
-        "
-        [style.background]="
-          getScheduleForSlot(getSelectedDay(), time)
-            ? 'linear-gradient(135deg, ' +
-              getUserRolePrimary() +
-              ' 0%, ' +
-              getUserRoleSecondary() +
-              ' 100%)'
-            : config.highlightCurrentTime &&
-              isCurrentTimeSlot(getSelectedDay(), time)
-            ? getCurrentTimePastelColor()
-            : ''
-        "
-        [style.box-shadow]="
-          config.highlightCurrentTime &&
-          isCurrentTimeSlot(getSelectedDay(), time)
-            ? '0 4px 12px ' + getUserRoleAccent() + '40'
-            : ''
-        "
+        class="day-column"
+        role="list"
+        [attr.aria-label]="'Clases del ' + day"
+        [attr.data-day]="day"
+        [class.today]="isToday(day)"
       >
-        <div class="slot-time">{{ time }}</div>
-        <div class="slot-content">
-          @if (getScheduleForSlot(getSelectedDay(), time); as schedule) {
-          <div class="class-details">
-            <h5 class="subject-name">{{ schedule.subjectName }}</h5>
-            @if (schedule.subjectCode) {
-            <span class="subject-code">{{ schedule.subjectCode }}</span>
-            } @if (schedule.teacherName) {
-            <p class="teacher-name">{{ schedule.teacherName }}</p>
-            } @if (schedule.groupNumber) {
-            <p class="group-info">Grupo {{ schedule.groupNumber }}</p>
-            }
-            <div class="location-time">
-              <div class="location-details">
-                <span class="classroom">{{ schedule.classroom }}
-                  @if (schedule.building) {
-                  <span class="building-inline"> - {{ schedule.building }}@if (schedule.floor) { - Piso {{ schedule.floor }} }</span>
-                  }
-                </span>
-              </div>
-              <span class="duration"
-                >{{ schedule.startTime }} - {{ schedule.endTime }}</span
-              >
-            </div>
-          </div>
-          } @else {
-          <div class="empty-slot-daily">
-            <span class="empty-message">Tiempo libre</span>
-          </div>
+        @for (block of blocksFor(day); track $index) {
+        <div
+          class="schedule-block"
+          [class.compact]="block.compact"
+          [style.top.px]="block.top"
+          [style.height.px]="block.height"
+          [style.background]="block.color.background"
+          [style.color]="block.color.ink"
+          [attr.data-color]="block.color.background"
+          [attr.title]="block.label"
+          [attr.aria-label]="block.label"
+          role="listitem"
+        >
+          <span class="block-code">{{ block.slot.subjectCode || block.slot.subjectName }}</span>
+          @if (!block.compact) {
+          <span class="block-room">{{ location(block.slot) }}</span>
+          <span class="block-time">{{ block.slot.startTime }}–{{ block.slot.endTime }}</span>
           }
         </div>
+        }
+        @if (isToday(day) && nowLineTop() !== null) {
+        <div class="now-line" [style.top.px]="nowLineTop()" aria-hidden="true"></div>
+        }
       </div>
       }
     </div>
   </div>
+  } @else {
+  <!-- Vista diaria: lista de clases del día elegido -->
+  <div class="day-tabs" role="tablist" aria-label="Día">
+    @for (day of days(); track day; let i = $index) {
+    <button
+      type="button"
+      role="tab"
+      class="day-tab"
+      [class.active]="selectedDayIndex() === i"
+      [class.today]="isToday(day)"
+      [attr.aria-selected]="selectedDayIndex() === i"
+      [attr.aria-label]="day"
+      (click)="selectDay(i)"
+    >
+      {{ shortDay(day) }}
+    </button>
+    }
+  </div>
+
+  @if (selectedDaySlots().length) {
+  <ul class="day-list">
+    @for (item of selectedDaySlots(); track $index) {
+    <li class="day-list-item">
+      <span class="item-time">{{ item.slot.startTime }}–{{ item.slot.endTime }}</span>
+      <span class="item-body">
+        <span class="item-title">
+          <span
+            class="subject-dot"
+            [style.background]="item.color.ink"
+            aria-hidden="true"
+          ></span>
+          {{ item.slot.subjectName || 'Materia sin nombre' }}
+          @if (item.slot.subjectCode) {
+          <span class="item-code">{{ item.slot.subjectCode }}</span>
+          }
+        </span>
+        <span class="item-meta">
+          @if (item.slot.groupNumber) {
+          <span>{{ groupLabel(item.slot) }}</span>
+          }
+          <span>{{ location(item.slot) }}</span>
+          @if (item.slot.teacherName) {
+          <span>{{ item.slot.teacherName }}</span>
+          }
+        </span>
+      </span>
+    </li>
+    }
+  </ul>
+  } @else {
+  <p class="day-list-empty">Sin clases este día.</p>
   }
-</div>
+  }
+
+  @if (showLegend()) {
+  <ul class="schedule-legend" aria-label="Materias del horario">
+    @for (item of legend(); track item.key) {
+    <li class="legend-item">
+      <span
+        class="legend-swatch"
+        [style.background]="item.color.background"
+        [style.border-color]="item.color.ink"
+        aria-hidden="true"
+      ></span>
+      <span class="legend-text">
+        @if (item.code) {
+        <strong>{{ item.code }}</strong>
+        }
+        {{ item.name }}
+        @if (item.group) {
+        <span class="legend-muted">{{ item.group }}</span>
+        }
+        @if (item.teacher) {
+        <span class="legend-muted">{{ item.teacher }}</span>
+        }
+      </span>
+    </li>
+    }
+  </ul>
+  }
+</section>

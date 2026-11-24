@@ -17,11 +17,11 @@
 </div>
 
 <!-- Estadísticas rápidas -->
-<div class="stats-container">
+<div class="stats-container" [style.--stat-count]="config.statistics.length">
   <div
     class="stat-card"
     *ngFor="let stat of config.statistics; let i = index"
-    [style.animation-delay]="(i + 1) * 0.1 + 's'"
+    [style.animation-delay]="i * 50 + 'ms'"
     [style.background]="'linear-gradient(135deg, ' + getUserRolePrimary() + ' 0%, ' + getUserRoleSecondary() + ' 100%)'"
     [style.border-color]="getUserRoleAccent()"
   >
